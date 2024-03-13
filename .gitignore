@@ -3,4 +3,5 @@
 
 .envrc
 
-*.ipynb_checkpoints  # ignore everywhere
+# Ignore everywhere
+*.ipynb_checkpoints
