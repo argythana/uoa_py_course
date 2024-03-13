@@ -2,3 +2,5 @@
 /course_venv
 
 .envrc
+
+*.ipynb_checkpoints  # ignore everywhere
