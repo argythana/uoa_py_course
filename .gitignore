@@ -1,8 +1,11 @@
 /admin_docs
 /course_venv
 /lectures_memes
+practice_exercises/outdated_files
+students_work/
 
 .envrc
+.idea/
 
 # Ignore everywhere
 *.ipynb_checkpoints
