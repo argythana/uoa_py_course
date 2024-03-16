@@ -1,0 +1,107 @@
+BIS UOA course
+author: Argyriou Thanasis
+Lecture 2, instructions, Path and Files location
+
+----------------------
+MANAGE FILES LOCATION:
+----------------------
+
+	Next thing to learn:
+	a)"working directory",
+	b) "Path".
+	c) "Absolute Path"
+	d) "Relative Path"
+
+	Read the wikipedia article: https://en.wikipedia.org/wiki/Path_(computing)
+	Read carefully the section: "Absolute and relative paths"
+
+	If you installed python properly:
+	Python is able to start its interpreter and is also able to "run" .py files from any location in the PC.
+	
+	Definitions:
+	- "Path": is a series of characters to indentify a unique "location" in a PC.
+	  Simply, "path" is the path to open a saved file.
+	- In programming the "path" is a necessary part of the name of a file.
+	  You may "reference" a file from anywhere if you use its path.
+	- "Directory": type of catalogue that contains a list of files and other catalogues.
+	  The common name is "folder".
+	
+	----------------------------------------------------
+	Examples on running python from different locations:
+	
+	i) Open python interpreter or IDLE from the "start menu".
+	In the python interpreter type the following and press enter at end of each line:
+	>>>import os
+	>>>os.getcwd()
+		
+	In Windows the output is: 'C:\\Users\\tharg\\AppData\\Local\\Programs\\Python\\Python311'
+	
+	This is the *path* to the location in which python is installed.
+	This is the default path from which Windows runs Python.
+	All python installed files are insside the directory "Python310".
+	You may also navigate there using the mouse and the graphics to see what's in there.
+	
+	KEY thing to remember:
+	DO NOT SAVE FILES IN THIS LOCATION (in the folder in which python is installed).
+	
+	* "os" is a python built-in module, don't worry about this for now.
+	os.getcwd() is a command to show the "Current Working Directory".
+	
+	
+	ii) Open python interpreter or IDLE from Command Line.
+	Type the following and press enter at end of each line:
+	>>>import os
+	>>>os.getcwd()
+	In Windows the output is:
+	'C:\Users\your_windows_user_name>'
+	
+	
+	iii) Open python IDLE from any folder you want.
+	Open any folder with the mouse and click inside the path bar.
+	Type "cmd" and press enter.
+	The Windows terminal will open and you may run python.
+	
+	Remember: python is run in different directory in each case.
+	
+	
+	--------------------------------------------
+	Basic Windows commands that you should know.
+	--------------------------------------------
+	
+	a) "dir" => list the files and folders in current directory (from the word directory).
+	* the equivalent command in Mac is "ls"  (from the word list).
+	
+	b) "cd" => change directory
+	
+	Examples and practice:
+	Open the Windows terminal.
+	Type "dir" and presss "enter". (Without quotes).
+	Chose a folder you want to go into. eg: "OneDrive".
+	Type "cd uoa_course" and press Enter. You have moved to:
+	
+	C:\Users\tharg\python_course>     (tharg is me, NOT you!)
+	
+	"cd .." => go "up" one folder.
+	C:\Users\tharg>
+	
+	"cd python_course\lectures" => you change directory to two folders "down".
+	"cd ..\.." => you change directory and move two folders "up".	
+	
+
+	--------------------------------------------
+	Move from terminal to graphics Windows and back.
+	--------------------------------------------
+
+	If you type "cmd" in any window's search bar, it will open the terminal in that path.
+
+	If you type "start." in the terminal, it will open a window in that path.
+
+	If you type "start" in the terminal, it will open another terminal in that path.
+
+	Advanced Hackers tip: Did you know that there are "wildcards" in programming?
+	Read: https://en.wikipedia.org/wiki/Wildcard_character
+
+	Using the commang line, try the command:
+	"dir *.py"
+	or go to a directory with many word fires and try:
+	"dir *.doc*"

@@ -1,0 +1,54 @@
+
+BIS UOA course
+author: Argyriou Thanasis
+Lecture 1, Instructions part A, Install python
+
+---------------
+INSTALL PYTHON:
+---------------
+
+	First thing to learn: Version control matters.
+	(Version of python, version of Operating System.)
+	
+	Don't download the latest version of python.
+	Use a major release that is at least more than 1+ year old, unless you're a pro, or you want to check out the new features.
+	
+	(Hundreds of packages need to be updated for compatibility.)
+	(Online help is scarce.)
+	
+	For example:
+	Python 3.12.0 has been released some months ago =>
+	Install major version 3.11
+	(Note: If on Windows 7 => install 3.8, but some parts will differ.)
+
+    i) Go to https://www.python.org/downloads/
+		Scroll down and click on "Release version":
+		Python 3.11.8
+
+		
+    ii) Download the python installer (scroll down to bottom of page).
+		
+		Click on "Windows installer (64-bit)" if your PC is on Windows 64-bit.
+		In the "Description" column it must bt the recommended installer for your PC.
+		Since most students by far use Windows, we will do the course in Windows.
+		Support will be provided for all Operating Systems.
+	
+    iv) Run the downloaded executable file.
+
+    iii) Make sure to check boxes:
+		- tick all Optional features if asked.
+		- tick all Advanced Options.
+		- Install launcher for all users.
+		- tick "Add python to to PATH".
+		- In Windows disable the path length limit.
+
+	Important:
+	You can have more than one versions of python installed.
+	Make sure you understand which version of python you run each time.
+	
+	Alternatively, on Windows you may install python from the "Microsoft Store".
+	This has some benefits but misses the goal of this lecture.
+	Again make sure:
+	Install a major version that is one number before the latest one.
+	For example if python 3.12 has been released recently then you should install python 3.11.
+	
