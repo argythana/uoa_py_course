@@ -1,0 +1,20 @@
+:: Save the commands in this file as "activate_venv.bat" file.
+:: Place the "activate_venv.bat" file on your desktop.
+:: In the commands below set the proper directory path to your course folder and your venv folder.
+:: The first command will open a terminal and activate the venv. Use this terminal to install packages.
+:: The second command will open a terminal, activate the venv and run jupyter-lab.
+:: This works on Windows OS only.
+
+:: Note: this is not the optimal way to work with venvs.
+:: The optimal way is to set the necessary environment variables in the working directory.
+:: However, this is a simple way to work with venvs for beginners.
+:: In a linux OS, you may edit the ".bashrc" file to set the necessary environment variables.
+:: Or, in a linux OS, you may use "direnv" to set the necessary environment variables.
+
+:: In a Windows OS, you may use the "setx" command to set the necessary environment variables.
+:: In a macOS, you may use the "launchctl" command to set the necessary environment variables.
+:: Search the internet, or ask an AI about anything you don't already know.
+
+@ ECHO off
+start cmd /K "cd ..\..\uoa_py_course && course_venv\Scripts\activate"
+start cmd /K "cd ..\..\uoa_py_course && course_venv\Scripts\activate && jupyter-lab"

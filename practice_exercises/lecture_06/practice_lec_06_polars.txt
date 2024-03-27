@@ -1,0 +1,8 @@
+# Replicate all the examples in the two lecture files using the `polars` package. 
+
+Create two new .ipynb files.
+Name them `practice_lec_06_polars_index.ipynb` and `practice_lec_06_polars_methods.ipynb`.
+
+You may do this on the same data or select any other dataset you prefer.
+
+Extra: do the same using the `pySpark` package. You may try the `Koalas` package as well.
