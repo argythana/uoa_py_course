@@ -1,0 +1,22 @@
+# Optional advanced practice exrcise:
+
+---  
+**Replicate some of the examples in the two lecture files using the `polars` package.**   
+---  
+
+If you don't feel confident to start on YOUR OWN and find EVERYTHING about using POLARS, you  have 2 options:
+a) don't try this exercise,
+b) even better, just use an AI coding assistant (recommended option).
+
+Hint: The goal of the exercise, is to encourage you to start using AI as much as possible, not just ot try out polars, which is great of course.
+
+Instructions:
+
+Create two new .ipynb files.
+
+Name the files `practice_lec_06_polars_index.ipynb` and `practice_lec_06_polars_methods.ipynb`.
+
+You may do this on the same dataset or select any other dataset you prefer.
+
+Extra advanced: do the same using the `pySpark` package. You may try the `Koalas` package as well.
+Of course, use an AI.
