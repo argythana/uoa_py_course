@@ -9,3 +9,5 @@ students_work/
 
 # Ignore everywhere
 *.ipynb_checkpoints
+
+practice_exercises/simple_cases/
