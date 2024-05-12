@@ -1,9 +1,10 @@
 # Welcome to the *"Python for Data Science, Machine Learning and Artificial Intelligence"* Course.  
-This repo contains the lectures materila of the [Business Information Systems](https://bis-analytics.econ.uoa.gr/) Postgraduate Program.
+This repo contains the lectures' material of the [Business Information Systems](https://bis-analytics.econ.uoa.gr/) Postgraduate Program.  
 
-[Teacher's CV](https://bis-analytics.econ.uoa.gr/fileadmin/depts/econ.uoa.gr/bis-analytics/uploads/argyriou_cv_nov_23_gr.pdf)   
+Administrative Documents, ephemeral issues (schedule, grades, questions), announcements, and any internal communication will be done through the e-class of the course.   
 
-Administrative Documents, ephemeral issues (schedule, grades, questions), announcements, and any internal communication will be done through the e-class of the course.
+[Teacher's CV](https://bis-analytics.econ.uoa.gr/fileadmin/depts/econ.uoa.gr/bis-analytics/uploads/argyriou_cv_nov_23_gr.pdf)    
+
 
 ## Course Philosophy (WIP)
 * No previous coding experience required at all. Designed for absolute beginners.
@@ -33,29 +34,28 @@ The moral of the story above does not apply in business neither in education, so
 * No exams, one final assignment, which is different for each student.
 * Two types of practice exercises: beginners and intermediate. Both are optional and are graded only positively (extra points if you submit them).
 * Only "intermediate" practice exercises will be given feedback.
-* The final assigment topic is chosen by the student. The student will be graded on the quality of the work and the presentation of the work.  
+* The final assigment topic is chosen by the student.    
 
 ## Course Content
 ### Topic 1: Basic python for Everything
-See lecture files 1-5 of the e-class.  
-The goal of this section is to learn the basics of python to work with Data.
+See lectures 1 to 5.  
+The goal of this section is to learn some of the very basics of python.
 
 ### Topis 2: Working with Data and Dataframes
-See lecture 6 files of the e-class.
+See lecture 6.
 
 ### Topic 3: EDA, Static and Interactive Visualisations
-See lecture 7 files of the e-class.  
+See lecture 7.
 
 ### Topic 4: Machine Learning Algos
-See lectures 8-12 files of the e-class.
+See lectures 8-12.
 
 ### Section 5: Deep Learning and AI (WIP)
-Lectures 13-14 files of the e-class.
+Lectures 13-14.
 
-### Section 6: Python and Databases (WIP)
 
 ### Extra: Python in the workplace by Program graduates.
 "Beta" optional presentations, started in 2024, scehduled June 2024.
-Example A: Worklow with data and python in a betting company.
+Example A: Data management and reporting worklow in a betting company.
 Example B: Auditing Cybersecurity Documents with a fine-tuned LLM.
 Example C: Administrative work tasks at a University. (Generate mass word documents, pdfs, and emails).
