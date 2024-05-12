@@ -25,8 +25,8 @@ Administrative Documents, ephemeral issues (schedule, grades, questions), announ
 
 ## Course eveluation
 * There is a greek saying: "Με όποιο δάσκαλο καθίσεις, τέτοια γράμματα θα μάθεις".  
-A translation would be: "You will learn as much as the teacher you sit with" or literally "with whomever teacher you sit, such teachings you are gonna learn".   
-I would be happy to get a good grade. That can by acheived if you submit excellent final assignemnts.   
+A translation would be: "You will learn as much as the teacher you sit with" or literally "with whomever teacher you sit, such teachings you are going to learn".   
+I would be happy to get a good grade. That can be acheived if you submit excellent final assignemnts.   
 Each topic, if necessary, is explained three times. If you didn't get it, it means I did not explain it well enough and I am mainly accountable for it.   
 But, there is a limit to this. I can't think of a good joke about it yet, just an [anecdotal Sun Tzu story](https://titusng.com/2013/03/04/the-test-of-sun-tzus-art-of-war-on-concubines/).   
 The moral of the story above does not apply in business neither in education, so I would kindly ask you think about it and assume responsibility for your learning.  
@@ -56,8 +56,7 @@ Lectures 13-14.
 
 
 ### Extra: Python in the workplace by Program graduates.
-"Beta" optional presentations, started in 2024, scehduled June 2024.
-Example A: Data management and reporting worklow in a betting company.
-Example B: Auditing Cybersecurity Documents with a fine-tuned LLM.
-Example C: Administrative work tasks at a University. (Generate mass word documents, pdfs, and emails).
-
+"Beta" optional presentations, started in 2024, scehduled June 2024.  
+Example A: Data management and reporting worklow in a betting company.  
+Example B: Auditing Cybersecurity Documents with a fine-tuned LLM.  
+Example C: Administrative work tasks at a University. (Generate mass word documents, pdfs, and emails).  
