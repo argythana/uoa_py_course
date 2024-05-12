@@ -1,5 +1,5 @@
 # Welcome to the *"Python for Data Science, Machine Learning and Artificial Intelligence"* Course.  
-This repo contains the lectures' material of the [Business Information Systems](https://bis-analytics.econ.uoa.gr/) Postgraduate Program.  
+This repo contains the lectures' material for the [Business Information Systems](https://bis-analytics.econ.uoa.gr/) Postgraduate Program.  
 
 Administrative Documents, ephemeral issues (schedule, grades, questions), announcements, and any internal communication will be done through the e-class of the course.   
 
@@ -20,7 +20,8 @@ Administrative Documents, ephemeral issues (schedule, grades, questions), announ
 * Prepare for continous updates: Python is a fast-evolving language. You will learn how to control for and keep up with the changes.
 * Work simulation environment: Jupyter Notebooks are great, but you need a modern editor too. We will use both.
 * Working with Python requiers knowledge of the command line. We will use it extensively.
-* Extra points if you ask questions in or after class. Nine out of ten times the reply will be "google it" or "ask an AI". 
+* Extra points if you ask questions in or after class. Nine out of ten times the reply will be "google it" or "ask an AI".   
+* Extra point for pointing out typos, mistakes, or improvements in the material.  
 
 ## Course eveluation
 * There is a greek saying: "Με όποιο δάσκαλο καθίσεις, τέτοια γράμματα θα μάθεις".  
@@ -59,3 +60,4 @@ Lectures 13-14.
 Example A: Data management and reporting worklow in a betting company.
 Example B: Auditing Cybersecurity Documents with a fine-tuned LLM.
 Example C: Administrative work tasks at a University. (Generate mass word documents, pdfs, and emails).
+
