@@ -81,6 +81,8 @@ CREATE, RUN, EDIT py SCRIPT:
 	i) open IDLE menu "File" -> "Open" and select the file.
 	or:
 	ii) from a graphics window: right click and select "edit with IDLE".
+
+	Note:
 	If you double-click on a .py file:
-	It will not open for editing, but it will "run" it.
-	So, in this case we will see nothing.
+	It will not open for "editing". Python will "run" it.
+	So, in this case you will see nothing.
