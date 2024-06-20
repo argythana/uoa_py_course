@@ -1,13 +1,25 @@
 BIS UOA class, February 2022
 author: Argyriou Thanasis
-Lecture 1, insructions, part C, Simple script
+Lecture 1, instructions, part C, Simple script.
 
 -------------------------
 CREATE, RUN, EDIT py SCRIPT:
 -------------------------
 
 	Third thing to learn: Create a script, save, run, edit it.
-	Notice! "run" a script and open a script to "edit" it is not the same thing.
+
+	--------------
+    Important Note: To "run" a script and to open a script file in order to "edit" is not the same thing.
+    ---------------
+
+    ---------------
+    Important Note:
+    ---------------
+	If you double-click on a .py file of this lecture: 
+	It will not open for "editing". Python will "run" it.
+	So, in this case you will see nothing.
+    -----------------------------------------------------
+
 	
 	1) First contact, be brave!
 	
@@ -81,8 +93,3 @@ CREATE, RUN, EDIT py SCRIPT:
 	i) open IDLE menu "File" -> "Open" and select the file.
 	or:
 	ii) from a graphics window: right click and select "edit with IDLE".
-
-	Note:
-	If you double-click on a .py file:
-	It will not open for "editing". Python will "run" it.
-	So, in this case you will see nothing.

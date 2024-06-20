@@ -7,7 +7,7 @@ MANAGE FILES LOCATION:
 ----------------------
 
 	Next thing to learn:
-	a)"working directory",
+	a) "working directory",
 	b) "Path".
 	c) "Absolute Path"
 	d) "Relative Path"
@@ -105,3 +105,4 @@ MANAGE FILES LOCATION:
 	"dir *.py"
 	or go to a directory with many word fires and try:
 	"dir *.doc*"
+

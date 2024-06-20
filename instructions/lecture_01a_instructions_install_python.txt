@@ -1,7 +1,7 @@
 
 BIS UOA course
 author: Argyriou Thanasis
-Lecture 1, Instructions part A, Install python
+Lecture 1, Instructions part A, Install python.
 
 ---------------
 INSTALL PYTHON:

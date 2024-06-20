@@ -1,7 +1,7 @@
 
 BIS UOA course
 author: Argyriou Thanasis
-Lecture 1, instructions, part B, Run python
+Lecture 1, instructions, part B, Start python.
 
 ----------------------------------------
 OPEN the PYTHON "INTERPRETER" and "IDLE"
@@ -20,12 +20,17 @@ OPEN the PYTHON "INTERPRETER" and "IDLE"
 	b) "python interpreter"
 	Documentation, please read:
 	https://docs.python.org/3.9/tutorial/interpreter.html
-	Simplistic explantation:
-	We speak a programming language (called Python) to the "interpeter".
-	It translates to computer language and replies back to us in human language.
-	But, only if we use the right words. "Please" does not work, "sorry" neither.
 	
-	Keyword to remember: the "interpeter" works INTERACTIVELY (used for testing, debugging, to find errors)
+    Simplistic explantation:
+	We talk to the "interpeter" using a programming language (called Python).
+	The "interpreter":
+    translates python to computer language,
+    communicates with the Computer and,
+    replies back to us in human language.
+    
+    But, only if we use the right words. "Please" does not work, "sorry" neither.
+	
+	Keyword to remember: the "interpeter" works INTERACTIVELY (use for testing, debugging, to find errors)
 	
 	c) "python IDLE"
 	IDLE is Python’s Integrated Development and Learning Environment.
