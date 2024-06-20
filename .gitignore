@@ -2,10 +2,13 @@
 /course_venv
 /lectures_memes
 /images
-/dissertations
+
+/lectures_13_16_NNs_CV_AI_LLMs/data/
+
 
 practice_exercises/outdated_files
 students_work/
+dissertations
 
 .envrc
 .idea/
