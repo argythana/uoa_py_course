@@ -1,10 +1,10 @@
 """
 BIS UOA class
 author: Argyriou Thanasis
-Lecture 3, Preview
+Lecture 2, Preview
 """
 
-# Lecture C: Preview: Built-in Modules and dot notation.  
+# Lecture 2: Preview: Built-in Modules and dot notation.
 # > Import a module, from module, use aliases.  
 # > math, random, statistics.  
 # > Function and method dot notation.

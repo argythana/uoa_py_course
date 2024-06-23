@@ -2,7 +2,7 @@
 """
 BIS UOA class
 author: Argyriou Thanasis
-Lecture 2, Part B: Intro to "functions".
+Lecture 2, Part B: Intro to "built-in functions".
 """
 
 # Assignment = assign **value** and also **attributes** to a "name".  

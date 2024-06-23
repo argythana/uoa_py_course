@@ -1,6 +1,11 @@
 BIS UOA course
 author: Argyriou Thanasis
-Lecture 2, instructions, Path and Files location
+Lecture 2, instructions, Path and Files location.
+
+Todo, refactor for 2025:
+Todo: The last two sections of this should be a separate file.
+Todo: Explain CLI commands extensively before Venvs in lecture 3.
+Todo: Combine windows CLI with linux CLI commands that can be used in ipynbs.
 
 ----------------------
 MANAGE FILES LOCATION:
@@ -69,27 +74,27 @@ MANAGE FILES LOCATION:
 	--------------------------------------------
 	
 	a) "dir" => list the files and folders in current directory (from the word directory).
-	* the equivalent command in Mac is "ls"  (from the word list).
+	* the equivalent command in Mac and in Linux is "ls"  (from the word list).
 	
-	b) "cd" => change directory
+	b) "cd" => change directory (the same in in Mac and in Linux)
 	
 	Examples and practice:
-	Open the Windows terminal.
+	Open a Windows terminal.
 	Type "dir" and presss "enter". (Without quotes).
-	Chose a folder you want to go into. eg: "OneDrive".
-	Type "cd uoa_course" and press Enter. You have moved to:
+	Chose a folder you want to go into. eg: "uoa_py_course".
+	Type "cd uoa_py_course" and press Enter. You have moved to:
 	
-	C:\Users\tharg\python_course>     (tharg is me, NOT you!)
+	C:\Users\tharg\uoa_py_course>     (tharg is me, NOT you!)
 	
 	"cd .." => go "up" one folder.
 	C:\Users\tharg>
 	
-	"cd python_course\lectures" => you change directory to two folders "down".
+	"cd uoa_py_course\lectures" => you change directory to two folders "down".
 	"cd ..\.." => you change directory and move two folders "up".	
 	
 
 	--------------------------------------------
-	Move from terminal to graphics Windows and back.
+	Move from terminal to graphical interface windows and back.
 	--------------------------------------------
 
 	If you type "cmd" in any window's search bar, it will open the terminal in that path.
