@@ -1,10 +1,17 @@
 
 ## Course Material: (Under extensive refactoring, given the feedback from the class of 2024).
+
+Two kinds of material are provided:  
+1. "Guides" with instructions to install, set up, and/or use various tools.  
+Some tools are about python, some are on how to use the PC.  
+2. Python content.
+
+Both kinds of material is explained in the lectures and should be studied.
+
 ### Section 1: Basic python for Data Science
 See lectures 1 to 5.  
 The goal of this section is to learn some of the very basics of python.
 Focus on how the basic concepts are used in data science, machine learning, and AI.
-
 
 ### Section 2: Working with Data and Dataframes
 See lecture 6.  
@@ -18,7 +25,6 @@ b) after teaching the algos within the material about "pipelines" and "Grid sear
 
 ### Topic 3: EDA, Static and Interactive Visualisations
 See lecture 7. Todo: Refactor to lecture 8.
-
 
 ### Topic 4: Machine Learning Algos
 See lectures 8-12. To be refactored as 9 to 13.
@@ -34,7 +40,6 @@ Suggestions from class of 2024:
 14: Computer Vision, OpenCV, Image Processing
 15: PYtorch Locally
 16: PYtorch on the cloud, Google Colab, Kaggle, etc.
-
 
 ### Extra: Python in the workplace by UoA - BIS graduates.
 "Experimental". Extra, optional presentations, started in 2024, scheduled for June 2024.  
