@@ -38,8 +38,8 @@ Lectures 13-16. Requires a lot of refactoring and thought.
 Suggestions from class of 2024:
 13: Neural Networks, Keras, TensorFlow, LSTMs
 14: Computer Vision, OpenCV, Image Processing
-15: PYtorch Locally
-16: PYtorch on the cloud, Google Colab, Kaggle, etc.
+15: Pytorch Locally
+16: Pytorch on the cloud, Google Colab, Kaggle, etc.
 
 ### Extra: Python in the workplace by UoA - BIS graduates.
 "Experimental". Extra, optional presentations, started in 2024, scheduled for June 2024.  

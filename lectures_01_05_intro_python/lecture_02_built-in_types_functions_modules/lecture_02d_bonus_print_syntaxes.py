@@ -1,8 +1,8 @@
 
 """
-BIS UOA class, February 2022
+BIS UOA class, February 2025
 author: Argyriou Thanasis
-BONUS file! Because the 2022 class is AMAZING!  :-)
+BONUS file! Because the 2025 class is AMAZING!  :-)
 
 Notes for print formatting syntax.
 Since Python 3.6 we have: "formatted string literals" (f-strings)=>
@@ -10,7 +10,7 @@ Code reability and speed improvement.
 
 Goal: Learn various print syntaxes and find the optimal one.
 
-Try the "timeit" modified example form:
+Try the "timeit" method. This is a modified example form:
 https://cito.github.io/blog/f-strings/
 """
 
