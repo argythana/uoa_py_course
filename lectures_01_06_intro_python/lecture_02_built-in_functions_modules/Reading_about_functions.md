@@ -17,7 +17,7 @@ Arguments are the values actually passed to a function when calling it.
 
 Remember: Parameters are "names" (and in best practice also "types") in the function definition, arguments are "values" in the function call.
 In short:  
-* Parameters = "names (and "type") in definition.
+* Parameters = "names" (and "type") in definition.
 * Arguments = "values" in call.
 
 There are five types of [parameters](https://docs.python.org/3/glossary.html#term-parameter):  

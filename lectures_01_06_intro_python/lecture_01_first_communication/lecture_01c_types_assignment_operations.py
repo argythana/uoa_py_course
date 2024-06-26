@@ -5,7 +5,8 @@ author: Argyriou Thanasis
 Lecture 1, Part C: Intro to basic data types, assignments, operations.
 """
 
-# Assignment = assign **value** and also **attributes** to a "name".  
+# assignment = assign **value** and also **attributes** to a "name".
+# an assignment binds a "name" to a "value";
 
 # Naming conventions for this course:  
 # * snake_case_for_variables_names
@@ -15,22 +16,40 @@ Lecture 1, Part C: Intro to basic data types, assignments, operations.
 # [keywords](https://docs.python.org/3.9/reference/lexical_analysis.html#keywords)
 # [functions](https://docs.python.org/3.9/library/functions.html)
 
+"""
+Goal: After lecture 1, when you read a python file. you should understand what part of the code is a:
+- comment
+- docstring
+- variable name
+- value of a variable
+- which words have been created by the programmer that wrote the script.
+- which words are names of python functions.
+"""
+
 # After the 1st lecture you should be able to:
-# => Understand, a bit, what this ugly poem means:
+# => Understand, the message that this very romantic poem conveys:
 
 """
 In python everything we create is an "object",  
-We give it a "name",  
-we "call" it by its "name",  
-We "assign" a "value" to it (and attributes and methods too).   
-So, when you "call" an "object" by its "name", e.g "foo",   
+We are not gods but, 
+we can create as many objects without shame.
+We give each object a "name",  
+we "call" it by that "name",  
+We "assign" a "value" to it,
+and it gets "attributes" and "methods" too.   
+So, when we "call" an "object" by its "name", e.g "foo",   
 python "returns" its "value" to you.   
-After this lecture, this ugly poem should make sense to you! Yahoooo!  
+After this lecture, this poem should make sense to you! Yoohooo!  
 """
+
+# If you don't get the poem after the lecture, then either:
+# a) your tutor should write the poem on the board ten times using a chalk.
+# b) you should read the lecture notes again.
+# The choice is yours.
 
 
 # CONTENTS:
-# Lecture 1, Part C. Basic built-in types and operations.
+# Lecture 1, Part C. Basic built-in types, assignments and operations.
 # [Official basic built-in types tutorial](https://docs.python.org/3/library/stdtypes.html)  
 # > Numeric types: Integer and float.  
 # > Basic Numeric types operations.  
@@ -127,6 +146,8 @@ so that:\n the printed output is more readable by the user.\n\n")  # This is one
 print(text_type)
 print(type(text_type))
 
+
+
 example_name = "John"  # "John" is a value of a variable here.
 
 type(example_name)
@@ -150,6 +171,11 @@ print()
 # "john" ** "jack"
 # "john" / "jack"
 
+# Python FAQ: How can I find the methods or attributes of an object?
+#https://docs.python.org/3/faq/programming.html#how-can-i-find-the-methods-or-attributes-of-an-object
+dir(example_name)  # This will return the methods and attributes of the object.
+
+
 
 # ### An extensive example, in class exercise.
 ## Learning goal: assignment, naming, values, order of assignment.
@@ -170,7 +196,7 @@ monthly_income = daily_income * days_work  # Work 25 days
 print('The monthly income is: ')
 print(monthly_income)
 # Not the best way to print. Can you tell why?
-# Check the "bonus" file to learn various print formatting syntax.
+# Check the "bonus" file of the next lecture to learn about print formatting syntax.
 
 
 ## The script below does not work.

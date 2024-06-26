@@ -13,6 +13,21 @@ Lecture 2, Part B: Built-in Modules and dot notation.
 # [Numeric and Mathematical Modules](https://docs.python.org/3/library/numeric.html)
 
 
+"""
+Goal: After lecture 2, when you read a python file. you should understand what part of the code is a:
+- comment
+- docstring
+- variable name
+- value of a variable
+- which words have been created by the programmer that wrote the script.
+- which words have been created by the programmer that wrote the python modules that the script uses.
+- which words are python keywords.
+- which words are python built-in functions.
+- which words are python built-in modules.
+- which words in my lecture refer to application in your PC and not stricly to python. 
+"""
+
+
 ###-----------------------------------------------------------------
 # ### ["math" module methods](https://docs.python.org/3/library/math.html)
 
