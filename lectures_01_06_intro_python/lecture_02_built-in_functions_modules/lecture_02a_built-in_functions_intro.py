@@ -2,9 +2,10 @@
 """
 BIS UOA class
 author: Argyriou Thanasis
-Lecture 2, Part B: Intro to "built-in functions".
+Lecture 2, Part A: Intro to "built-in functions".
 """
 
+# Remember from the previous lecture:
 # Assignment = assign **value** and also **attributes** to a "name".  
 
 # Naming conventions for this course:  
@@ -18,7 +19,7 @@ Lecture 2, Part B: Intro to "built-in functions".
 
 # CONTENTS:
 
-# ## 2b. Functions.
+# ## 2a. Functions.
 # > Different Functions => different data types (as input and as output).
 # > Built-in functions.    
 # > Parentheses, function call.  
@@ -32,10 +33,19 @@ Lecture 2, Part B: Intro to "built-in functions".
 # Built-in functions: https://docs.python.org/3/library/functions.html   
 # Similar to mathematics ==>  processes, the output of which depends on parameters' value.
 # Arguments (= formal name  for parameters values, parameters' values).
-# Optional VS mandatory arguments.
+# Optional VS required arguments.
+# Positional VS Keyword arguments.
 # Default argument values.  
 # A function can be called inside another function f(g(x)).
 
+
+# Important:
+#Identify which arguments are: positional, keyword, optional, required, for print().
+help(print)
+
+print(print.__doc__)
+
+print(print._)
 
 # ### Functions for data types.
 

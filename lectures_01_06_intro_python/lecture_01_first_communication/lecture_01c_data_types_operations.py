@@ -2,7 +2,7 @@
 """
 BIS UOA class
 author: Argyriou Thanasis
-Lecture 2, Part A: Intro to basic data types, operations.
+Lecture 1, Part C: Intro to basic data types, assignments, operations.
 """
 
 # Assignment = assign **value** and also **attributes** to a "name".  
@@ -15,7 +15,7 @@ Lecture 2, Part A: Intro to basic data types, operations.
 # [keywords](https://docs.python.org/3.9/reference/lexical_analysis.html#keywords)
 # [functions](https://docs.python.org/3.9/library/functions.html)
 
-# After the 2nd lecture you should be able to:   
+# After the 1st lecture you should be able to:
 # => Understand, a bit, what this ugly poem means:
 
 """
@@ -30,7 +30,7 @@ After this lecture, this ugly poem should make sense to you! Yahoooo!
 
 
 # CONTENTS:
-# Lecture 2, Part a. Basic built-in types and operations.
+# Lecture 1, Part C. Basic built-in types and operations.
 # [Official basic built-in types tutorial](https://docs.python.org/3/library/stdtypes.html)  
 # > Numeric types: Integer and float.  
 # > Basic Numeric types operations.  
@@ -152,7 +152,7 @@ print()
 
 
 # ### An extensive example, in class exercise.
-## Learning goal: assignments, names, values, order of assignment.
+## Learning goal: assignment, naming, values, order of assignment.
 ## Find the monthly wage of someone who:
 ## works 8 hours a day, for 20 days a month and gets 20€ per hour.
 
