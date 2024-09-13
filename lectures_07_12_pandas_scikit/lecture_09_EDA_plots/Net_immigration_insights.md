@@ -1,6 +1,7 @@
 # How to misinform with official data and why Greece should pay closer attention to Net Migration. 
 
-5 minutes read
+5 minutes read  
+
 *Comparing apples to oranges and elephants to cats is a frequent "misstep" in data analysis.*
 
 ## Greece made it to the top of the list of countries with the highest Negative Net Migration in 2023.
@@ -58,29 +59,27 @@ It makes little sense to compare the Net migration of a country in war condition
 
 In fact, according to the official UN estimates, if we exclude war-torn areas and very small nation states, **Greece is number one** in terms of Negative Net Migration.
 It is estimated that 1.55% of the population left Greece in 2023.
-The top 20 countries, in conditions of peace, in terms of Negative Net Migration in 2023, as a percentage of the population, are presented in the following [table](github).
+The top 20 countries, in conditions of peace, in terms of Negative Net Migration in 2023, as a percentage of the population, are presented in the table above. Feel free to download and reuse it from [GitHub](https://github.com/argythana/uoa_py_course/blob/main/lectures_07_12_pandas_scikit/lecture_09_EDA_plots/top20_in_negative_migration_2023.png).
 
 
 ### 3) Numbers do add up. 
 The third major issue is that the data refer just to a single point in time (2023) not providing any context or trend analysis.
 For example, the fact that 300 thousand people left Ukraine in 2023, misinforms the reader by missing the fact that 5.7 million people left Ukraine in 2022. 
-Similarly, 
+Similarly, it is informative to examine whether this is a long-term trend.  
+In fact, after 35 years of steady growth, Greece has lost more than five percent of its population to migration since 2010. 
 
-### 4) Regulatory and institutional context matter the most.
-Perhaps the most important issue is that data do not provide context concerning the regulatory and institutional foundations that provide the basis for the development of the observed patterns.
-Greece has been a member of the Schengen Area since 2000, allowing free movement of people within the EU and the Schengen Area, making it easy for people to leave the country and even easier for skilled professionals.
-On the other hand, Greece is located in a "crossroad" of three continents and has been a destination for refugees and immigrants during the past decades.
-An effective tightening of border controls during the recent years in Greece, may have reduced significantly the number of people entering the country, but not the number of people leaving the country.
-Before making any conclusions, one should always consider the context and the regulatory framework that governs the data, while at the same examine the trend over time.
 
-Using the official UN data, a more informative and accurate view the following tables and plots provide a more informative and accurate view of the Net migration in Greece in comparison to the rest of the world.
-Data are presented as a percentage of the population, the countries in war conditions are excluded, and the trend for the last 10 years is presented.
+### 4) Regulatory and institutional context matter too.
+A similarly important issue is that the raw data do not provide context concerning the regulatory and institutional foundations that provide the basis for the development of the observed patterns.  
+Greece has been a member of the Schengen Area since 2000, allowing free movement of people within the EU and the Schengen Area, making it easy for people to leave the country and even easier for skilled professionals. To get the whole picture, we need to get the data for emigrants from Greece to other EU countries.  
+On the other hand, Greece is located in a "crossroad" of three continents and has been a destination for refugees and immigrants during the past decades.  
+A separate inquiry into the net migration flows from Libya and Syria will shed more light on the extent of the problem.
+For example, assuming effective tightening of border controls during the recent years in Greece, may have reduced significantly the number of people entering the country, but not the number of people leaving the country.   
+In any case, a quick look at the data shows that Greece has been losing far more skilled professionals than the data on Net Migration show.
+To conclude, one should always consider the context and the regulatory framework that "governs" the data, to understand the fundamentals of a trend over time.
 
-### 5) Estimations are not always accurate and the official data differ 
-On a positive note, the data are estimates, and may be subject to revisions, since they have some discrepancies with the official data provided by Eurostat.
-To avoid another common mistake in data analysis, very small nation states with a population less than 100 thousand are excluded.  
+### There are longer and more significant trends at play besides Net Migration
+What really got me intrigued was the global population peak that comes earlier than expected, and the projections concerning the population of Europe.
+I find the assumptions for Europe slightly optimistic, but this is also another fascinating story.
 
-The data show that while Greece is not a war zone, there most be adverse socio-economic conditions that drive people to leave the country.
-
-What really got me intrigued was the population peak that comes earlier than expected, and the steady decline in the population of Europe.
-Not to forget, I find the assumptions for Europe slightly optimistic.
+Thank you for your time.
