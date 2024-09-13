@@ -29,10 +29,10 @@ The data show that *Greece ranks number one* in the whole world, in terms of Neg
 ![Top 20 countries in Negative Migration](https://github.com/argythana/uoa_py_course/blob/main/lectures_07_12_pandas_scikit/lecture_09_EDA_plots/top20_in_negative_migration_2023.png)  
 
 It is also useful to note that this is a longer-term issue that merits closer examination.
-![Net migration rare as a % of the population, Greece, 1950 to 2023](https://github.com/argythana/uoa_py_course/blob/main/lectures_07_12_pandas_scikit/lecture_09_EDA_plots/net_migration_rate_greece_1950_2023.html)
+![Net migration rare as a % of the population, Greece, 1950 to 2023](https://github.com/argythana/uoa_py_course/blob/main/lectures_07_12_pandas_scikit/lecture_09_EDA_plots/net_migration_since_1950_GR.png)
 
 
-Please read below for a more detailed analysis on the methodology and the data. To Do Your Own Research, please take a look at the [Notebook in GitHub](https://github.com/argythana/uoa_py_course/blob/main/lectures_07_12_pandas_scikit/lecture_09_EDA_plots/lecture_07f_wpp_eda.ipynb).
+Please read below for a more detailed analysis on the methodology and the data. To "Do Your Own Research", please take a look at the [Notebook in GitHub](https://github.com/argythana/uoa_py_course/blob/main/lectures_07_12_pandas_scikit/lecture_09_EDA_plots/lecture_07f_wpp_eda.ipynb).
 
 ## Why it matters
 
