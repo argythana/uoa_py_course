@@ -10,20 +10,10 @@ d) PEP8 style: https://www.python.org/dev/peps/pep-0008/
 c) PEMDAS and basic operations.
 """
 
-# load python modules with import.
-# We will learn about modules and imports soon, but not today.
-import sys
-import os
 
-# Command to show python version within a script.
-print(sys.version)
-print()  # Print an empty line.
 
-# Command to show working directory within a script.
-print(os.getcwd())
-print()
-
-"""Introduction to python.
+"""
+Introduction to python.
 Valid syntax and invalid syntax.
 Use the # sign for comments in python. The interpeter ingores them.
 Use to leave hints.

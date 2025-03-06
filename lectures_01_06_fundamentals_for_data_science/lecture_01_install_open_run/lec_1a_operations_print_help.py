@@ -13,10 +13,14 @@ addition = x + y
 substraction = x - y
 multiplication = x * y
 
-print("Examples of the print() function and its parameters.\n")  #\n means new line.
+print("Examples of the print() function and its parameters.\n")  #\n denotes a new line.
 print(addition)
+print()
 print(substraction)
+print()
 print(addition, substraction, multiplication)
+print()
 print(addition, substraction, multiplication, sep=", ")
+print()
 print(addition, substraction, multiplication, sep=", ", end=" this is a custom print end.\n")
 print()

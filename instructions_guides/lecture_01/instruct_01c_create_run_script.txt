@@ -49,8 +49,7 @@ CREATE, RUN, EDIT py SCRIPT:
 	After some lectures, this ugly poem will make sense to you.
 	------ (end of ugly poem)
 
-	ASSIGNMENT:
-	This is the official explanation, definition of "assignment":
+	What is an "ASSIGNMENT" according to the official definition:
 	"Assignment" statements are used to (re)bind names to values and to
     modify attributes or items of mutable objects.
 
@@ -78,9 +77,9 @@ CREATE, RUN, EDIT py SCRIPT:
 	
 	Save and select "Run".
 	
-	WoW, we just created a small script.
+	WoW, you just created a small script.
 	It prints a value in the window of the interpeter.
-	A small step for us, an even smaller step for humanity.
+	A small step for us, and a big-nothing-burger for humanity.
 	
 	To "run" a py file from windows command line:
 	> python file_name.py

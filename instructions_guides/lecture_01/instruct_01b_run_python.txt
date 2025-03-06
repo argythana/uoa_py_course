@@ -8,7 +8,7 @@ OPEN the PYTHON "INTERPRETER" and "IDLE"
 ----------------------------------------
 
 	Second thing to learn: python "interpreter" and python "IDLE".
-	For the first lectures we will work with the IDLE.
+	We use the IDLE only in the first lecture.
 
 	Preliminary Definitions:
 	------------------------
@@ -42,7 +42,7 @@ OPEN the PYTHON "INTERPRETER" and "IDLE"
 
 	Using the IDLE you may work either "interactively", or "non-interactively".
 	
-	Documentation, please read it to get an idea:
+	Documentation, please just read once it to get an idea:
 	https://docs.python.org/3/library/idle.html
 
 =============================================================================
@@ -65,11 +65,13 @@ OPEN the PYTHON "INTERPRETER" and "IDLE"
     
 	First open Windows CLI:
 		a) press "Windows key" + "R",
-		b) type the word "cmd", press Enter,
+		b) type the word "cmd", press Enter.
+
 		You are in the Windows Command Line if you see:
 		the first line with the Windows version and the Windows prompt.
 		C:\Users\your_windows_user_name>_
-		
+
+
 	Now open the python interpreter command line:
 		c) type "python" or "py" and press "Enter".
 		You 're in the python interpreter terminal if you see:
@@ -78,13 +80,13 @@ OPEN the PYTHON "INTERPRETER" and "IDLE"
 
 	* On Windows, if you have installed different versions you can run then  
 	  from the CLI using the "py -version.number" argument:
-	  "py -3.9"
+	  "py -3.12"
 	  
 		e.g.
-		C:\Users\tharg>py -3.9
-		C:\Users\tharg>py -3.10
+		C:\Users\tharg>py -3.11
+		C:\Users\tharg>py -3.12
 		
-		* On Mac, the keyboard shortcut to the CLI is: "command" key + "space".
+	* On Mac, the keyboard shortcut to the CLI is: "command key" + "space".
 	
 =============================================================================
 

@@ -11,44 +11,47 @@ INSTALL PYTHON:
 	(Version of python, version of Operating System.)
 	
 	Don't download the latest version of python.
-	Use a major release that is at least more than 1+ year old, unless you're a pro, or you want to check out the new features.
+	Use a major release that is at least more than 1+ year old, unless you're a pro, or you want to test the new features.
 	
 	(Hundreds of packages need to be updated for compatibility.)
 	(Online help is scarce.)
 	
 	For example:
-	Python 3.12.0 has been released some months ago =>
-	Install major version 3.11
+	Because Python 3.13.0 has been released some months ago =>
+
+	You should install major version 3.12
 	(Note: If on Windows 7 => install 3.8, but some parts will differ.)
 
-    i) Go to https://www.python.org/downloads/
+    1. Go to https://www.python.org/downloads/
 		Scroll down and click on "Release version":
-		Python 3.11.8
+		Python 3.12.9
 
 		
-    ii) Download the python installer (scroll down to bottom of page).
+    2. Download the python installer (scroll down to bottom of page).
 		
 		Click on "Windows installer (64-bit)" if your PC is on Windows 64-bit.
-		In the "Description" column it must bt the recommended installer for your PC.
-		Since most students by far use Windows, we will do the course in Windows.
-		Support will be provided for all Operating Systems.
+		In the "Description" column it must be the recommended installer for your PC.
+		Since most students use Windows, the course is in Windows.
+		Support will be provided for all Operating Systems, btw I use Linux.
 	
-    iv) Run the downloaded executable file.
+    3. Run the downloaded executable file.
 
-    iii) Make sure to check boxes:
+    4. Make sure to check boxes:
 		- tick all Optional features if asked.
 		- tick all Advanced Options.
 		- Install launcher for all users.
-		- tick "Add python to to PATH".
+		- tick "Add python to PATH".
 		- In Windows disable the path length limit.
 
 	Important:
 	You can have more than one versions of python installed.
+	Sometimes you need to use different versions for different projects. or even in the same project.
 	Make sure you understand which version of python you run each time.
 	
 	Alternatively, on Windows you may install python from the "Microsoft Store".
 	This has some benefits but misses the goal of this lecture.
 	Again make sure:
+
 	Install a major version that is one number before the latest one.
-	For example if python 3.12 has been released recently then you should install python 3.11.
+	For example, if python 3.13 has been released recently then you should install python 3.12.
 	
