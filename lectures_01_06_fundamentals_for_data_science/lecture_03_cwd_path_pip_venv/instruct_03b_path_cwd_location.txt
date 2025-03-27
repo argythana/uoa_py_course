@@ -1,0 +1,67 @@
+BIS UOA course
+author: Argyriou Thanasis
+Lecture 3b, instructions, Current Working Directory, Path and Files location.
+
+
+----------------------
+MANAGE FILES LOCATION:
+----------------------
+
+	Next thing to learn:
+	a) "Current working directory",
+	b) "Path".
+	c) "Absolute Path"
+	d) "Relative Path"
+
+	Read the wikipedia article: https://en.wikipedia.org/wiki/Path_(computing)
+	Read carefully the section: "Absolute and relative paths"
+
+	If you installed python properly:
+	Python is able to start its interpreter and is also able to "run" .py files from any location in the PC.
+	
+	Definitions:
+	- "Path": is a series of characters to indentify a unique "location" in a PC.
+	   Simply, "path" is the path to work with a saved file.
+	- In programming the "path" is a necessary part of the name of a file.
+	  You may "reference" a file from anywhere if you use its path.
+	    * Do not confuse "path" with "URL". A "URL" is a path to a file on the internet.
+	    * Do not confuse "path" with "PATH". "PATH" is an environment variable in the OS.
+	- "Directory": type of catalogue that contains a list of files and other catalogues.
+	  The common name is "folder".
+	
+	----------------------------------------------------
+	Examples on running python from different locations:
+	
+	1. Open python interpreter from the "start menu".
+	In the python interpreter type the following and press enter at end of each line:
+	>>> import os
+	>>> os.getcwd() # get current working directory
+		
+	In Windows the output is: 'C:\\Users\\tharg\\AppData\\Local\\Programs\\Python\\Python312'
+	
+	This is the *path* to the location in which python is installed.
+	This is the default path from which Windows runs Python.
+	All python installed files are inside the directory "Python312".
+	You may also navigate there using the mouse and the graphics to see what's in there.
+	
+	KEY thing to remember:
+	DO NOT SAVE FILES in the location of the python executable (in the folder in which python is installed).
+	
+	* `os` is a python built-in module, don't worry about this for now.
+	os.getcwd() is a command to show the "Current Working Directory" within python.
+	
+	
+	2. Open python interpreter from Editor Command Line.
+	Type the following and press enter at end of each line:
+	>>> import os
+	>>> os.getcwd()
+	In Windows the output is:
+	'C:\Users\your_windows_user_name>'
+	
+	
+	3. Open python from any folder you want.
+	Open any folder with the mouse and click inside the path bar.
+	Type "cmd" and press enter.
+	The Windows terminal will open, and you may run python.
+	
+	Remember: python looks to open or run files in different directory in each case.
