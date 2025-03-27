@@ -103,11 +103,12 @@ MANAGE FILES LOCATION:
 
 	If you type "start" in the terminal, it will open another terminal in that path.
 
-	Advanced Hackers tip: Did you know that there are "wildcards" in programming?
+	Advanced Hackers tip:
+	Did you know that there are "wildcards" in programming?
 	Read: https://en.wikipedia.org/wiki/Wildcard_character
 
 	Using the commang line, try the command:
 	"dir *.py"
-	or go to a directory with many word fires and try:
+	or go to a directory with many word files and try:
 	"dir *.doc*"
 

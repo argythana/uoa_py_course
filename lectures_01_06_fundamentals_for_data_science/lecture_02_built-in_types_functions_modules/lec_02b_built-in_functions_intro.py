@@ -2,7 +2,7 @@
 """
 BIS UOA class
 author: Argyriou Thanasis
-Lecture 2, Part A: Intro to "built-in functions".
+Lecture 2, Part B: Intro to "built-in functions".
 """
 
 # Remember from the previous lecture:
@@ -19,7 +19,7 @@ Lecture 2, Part A: Intro to "built-in functions".
 
 # CONTENTS:
 
-# ## 2a. Functions.
+#   Functions.
 # > Different Functions => different data types (as input and as output).
 # > Built-in functions.    
 # > Parentheses, function call.  
@@ -40,21 +40,21 @@ Lecture 2, Part A: Intro to "built-in functions".
 
 
 # Important:
-#Identify which arguments are: positional, keyword, optional, required, for print().
+# Identify which arguments are: positional, keyword, optional, required, for print().
 help(print)
 
 print(print.__doc__)
 
 print(print._)
 
-# ### Functions for data types.
+#### Functions for data types.
 
-# type() # check type  
+# type() # check type of name.
 # str() # convert to string.  
 # int() # convert to integer.  
 # float() # convert to float.
 
-size = "5.9"  # string because denoted with quotes.
+size = "5.9"  # String because denoted with quotes.
 print(type(size))
 
 size = float(size)  # convert to float.
@@ -110,7 +110,7 @@ type(ten)
 
 ten
 
-print(f"ten = {ten}")  # f-string notation sneakily slipped in. Read bonus file.
+print(f"ten = {ten}")  # f-string notation sneakily slipped in. Read lec_02d file.
 
 print("ten =", 10)
 
@@ -118,7 +118,7 @@ print("ten =", 10)
 # ### Examples with print()
 
 greetings = "Welcome to lecture 2..."
-compliments = "You are my favorite class"
+compliments = "You are my favorite class!"
 
 greetings, compliments
 
@@ -139,8 +139,8 @@ print('Comma separated output', "with second argument.", sep=", ", end=",")
 print('Five Extra lines print output.', end="\n" * 5)
 
 
-# ### Examples with input()
-# input() always returns a string
+# Examples with input()
+# input() always returns a string.
 
 student_name = input("What is your name: ")  # Ask for user input and wait for it.
 
@@ -168,7 +168,7 @@ number = float(input("give a number sfgsfdg: "))  # The message does not matter 
 print(number)
 
 
-# ### Various built-in functions.
+### Various built-in functions.
 # [built-in functions docs](https://docs.python.org/3.9/library/functions.html)
 
 x = -3
@@ -228,3 +228,5 @@ print(z)
 
 # Please try some functions for string data types:
 # https://docs.python.org/3/library/stdtypes.html#string-methods
+
+# When I say "Please", I mean that you definetely have to do it at home.

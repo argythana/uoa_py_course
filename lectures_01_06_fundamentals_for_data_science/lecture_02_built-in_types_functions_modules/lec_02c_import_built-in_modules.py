@@ -1,10 +1,10 @@
 """
 BIS UOA class
 author: Argyriou Thanasis
-Lecture 2, Part B: Built-in Modules and dot notation.
+Lecture 2, Part C: Built-in Modules and dot notation.
 """
 
-# Lecture 2, Part B: Built-in Modules and dot notation.
+# Lecture 2, Part C: Built-in Modules and dot notation.
 # > Import a module, from module, use aliases.  
 # > math, random, statistics.  
 # > Function and method dot notation.
@@ -14,7 +14,7 @@ Lecture 2, Part B: Built-in Modules and dot notation.
 
 
 """
-Goal: After lecture 2, when you read a python file. you should understand what part of the code is a:
+Goal: After this lecture, when you read a python file. you should understand what part of the code is a:
 - comment
 - docstring
 - variable name
@@ -27,20 +27,32 @@ Goal: After lecture 2, when you read a python file. you should understand what p
 - which words in my lecture refer to application in your PC and not stricly to python. 
 """
 
+# load python modules with import.
+# We will learn about modules and imports today.
+import sys
+import os
 
-###-----------------------------------------------------------------
-# ### ["math" module methods](https://docs.python.org/3/library/math.html)
+# Command to show python version within a script.
+print(sys.version)
+print()  # Print an empty line.
+
+# Command to show working directory within a script.
+print(os.getcwd())
+print()
+
+
+#["math" module methods](https://docs.python.org/3/library/math.html)
 
 import math
 
-#Uncomment the line below to read help on math module.
+# Uncomment the line below to read help on math module.
 # help(math)
 
 # uncomment and try autocomplete and suggested methods.
 # math.
 
-###-----------------------------------------------------------------
-#method dot notation
+
+# method dot notation
 math.cos(1)
 
 help(math.exp)
@@ -68,16 +80,15 @@ from math import sqrt as square_root  # alias = ψευδώνυμο
 
 square_root(16)
 
-# Not recommended practice. SUPER IMPORTANT.
+# Not recommended, bad practice. SUPER IMPORTANT.
 from math import *  # import everything from math module.
 
-cos(1)  # this works now. But is a very bad practice.
+cos(1)  # this works now. But, is a very bad practice.
 
 
-###-----------------------------------------------------------------
-# ### ["statistics" module methods](https://docs.python.org/3/library/statistics.html)
+# ["statistics" module methods](https://docs.python.org/3/library/statistics.html)
 
-## use aliases!
+# use aliases!
 import statistics as stats
 
 
@@ -88,8 +99,8 @@ print(stats.mean(list_of_x))
 stats.stdev(list_of_x)
 
 
-###-----------------------------------------------------------------
-# ### ["random" module methods](https://docs.python.org/3/library/random.html)
+
+# ["random" module methods](https://docs.python.org/3/library/random.html)
 
 import random as rm
 

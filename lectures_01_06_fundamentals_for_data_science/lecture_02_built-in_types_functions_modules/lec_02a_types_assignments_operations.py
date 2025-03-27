@@ -2,13 +2,13 @@
 """
 BIS UOA class
 author: Argyriou Thanasis
-Lecture 1, Part C: Intro to basic data types, assignments, operations.
+Lecture 2, Part A: Intro to basic data types, assignments, operations.
 """
 
 # assignment = assign **value** and also **attributes** to a "name".
-# an assignment binds a "name" to a "value";
+# an assignment "binds" a "name" to a "value";
 
-# Naming conventions for this course:  
+# Naming conventions for this course:
 # * snake_case_for_variables_names
 # * english_names
 # * no_blank_spaces_in_names
@@ -17,16 +17,16 @@ Lecture 1, Part C: Intro to basic data types, assignments, operations.
 # [functions](https://docs.python.org/3.9/library/functions.html)
 
 """
-Goal: After lecture 1, when you read a python file. you should understand what part of the code is a:
-- comment
-- docstring
-- variable name
-- value of a variable
-- which words have been created by the programmer that wrote the script.
-- which words are names of python functions.
+Goal: After this lecture , when you read a python file, you should understand what part of the code is:
+- comment,
+- docstring,
+- variable name,
+- value of a variable name,
+- which words have been created by the programmer that wrote the script,
+- which words are names of python language.
 """
 
-# After the 1st lecture you should be able to:
+# More impotant: after this lecture you should be able to:
 # => Understand, the message that this very romantic poem conveys:
 
 """
@@ -43,22 +43,22 @@ After this lecture, this poem should make sense to you! Yoohooo!
 """
 
 # If you don't get the poem after the lecture, then either:
-# a) your tutor should write the poem on the board ten times using a chalk.
+# a) your tutor should write the poem on the board ten times using chalk.
 # b) you should read the lecture notes again.
 # The choice is yours.
 
 
 # CONTENTS:
-# Lecture 1, Part C. Basic built-in types, assignments and operations.
+# Lecture 2, Part A. "Built-in" "types", "assignments" and "operations".
 # [Official basic built-in types tutorial](https://docs.python.org/3/library/stdtypes.html)  
 # > Numeric types: Integer and float.  
 # > Basic Numeric types operations.  
 # > Strings and basic string operations.  
 
 
-###-----------------------------------------------------------------
-# ### Numeric types: Integer and float.
-### [Built-in Numeric types docs](https://docs.python.org/3/library/stdtypes.html#numeric-types-int-float-complex)
+
+# Numeric types: Integer and float.
+# [Built-in Numeric types docs](https://docs.python.org/3/library/stdtypes.html#numeric-types-int-float-complex)
 
 # integer numbers
 x = 3
@@ -82,13 +82,16 @@ type(z)  # Without print, it will show nothing when the script is executed.
 
 # floats are like decimal numbers but BE CAREFUL: precision differs!
 a = 0.1 + 0.2
+
 a  # We call it by its name.
+
+a/3  # Divide a by 3.
 
 print()  # this prints and empty line.
 print('0.1 + 0.2 =', a, 'and is type float: ', type(a))
 
 
-# ### Basic Numeric types "operations" and "operators".
+# Basic Numeric types "operations" and "operators".
 # plus: +  
 # minus: -  
 # multiplication: *  
@@ -122,24 +125,26 @@ division_result, remainder = divmod(10,3)
 division_result, remainder  # We "call" the "names" and get the "values".
 
 
-###-----------------------------------------------------------------
-# ### Strings ("Ordered Text Sequence") and basic string operations.
+
+# Strings ("Ordered Text Sequence") and basic string operations.
 # [strings docs](https://docs.python.org/3.9/library/stdtypes.html#text-sequence-type-str)
 
-#string is like representation of a text
+# A string is like representation of a text.
 text_type = "String types are ordered sequences of characters. Appear as text. Can contain numbers."
 
-# the \ sign denotes line break in the code python. The code continues in the next line.
-# the \n denotes a new line in a string.
-# try it in the interpreter
-# If you read and run the lecture files material you will find extra material.
+# the \ sign denotes a "line break" in the code python. The code continues in the next line.
+# the \n denotes a "new line" in a string.
+# try it in the interpreter.
+
+# If you read and run the lecture files you will find extra material.
 print("\nThe difference between \ and \\n : The one slash character \
 is used to break a long line of code, \
 so that the code is more readable by the programmer.\n But: \
 \n \\n means a new line in a text, \
 so that:\n the printed output is more readable by the user.\n\n")  # This is one line of code.
-# Notice when \ or \n are printed? They disappear if we use then and if we don't "escape" them.
-# A extra \ is a special character that "escape" (cancels) the next special character.
+
+# Can you notice when \ or \n are printed? They disappear if we use then and if we don't "escape" them.
+# An extra \ is a special character that "escapes" (cancels) the next special character.
 # Black magic, don't worry about it for the moment.
 
 
@@ -167,20 +172,21 @@ print(added_string)
 print("\nBelow is the added string multiplied by 5:")
 print((added_string + " ") * 5)
 print()
+
 # Uncomment the 2 lines below to try the errors.
 # "john" ** "jack"
 # "john" / "jack"
 
 # Python FAQ: How can I find the methods or attributes of an object?
-#https://docs.python.org/3/faq/programming.html#how-can-i-find-the-methods-or-attributes-of-an-object
+# https://docs.python.org/3/faq/programming.html#how-can-i-find-the-methods-or-attributes-of-an-object
 dir(example_name)  # This will return the methods and attributes of the object.
 
 
 
-# ### An extensive example, in class exercise.
-## Learning goal: assignment, naming, values, order of assignment.
-## Find the monthly wage of someone who:
-## works 8 hours a day, for 20 days a month and gets 20€ per hour.
+# A small example, in-class exercise.
+# Learning goal: assignment, naming, values, order of assignment.
+# Find the monthly wage of someone who:
+# works 8 hours a day, for 20 days a month and gets 20€ per hour.
 
 # To assign is to "name" and "assign" some "value".
 # Python will also "auto-assign" attributes.
@@ -199,12 +205,12 @@ print(monthly_income)
 # Check the "bonus" file of the next lecture to learn about print formatting syntax.
 
 
-## The script below does not work.
-##  Can you tell why? Can you fix it?
-## Copy the lines below IN A NEW PY FILE and fix it.
+# The script below does not work.
+# Can you tell why? Can you fix it?
+# Copy the lines below IN A NEW PY FILE and fix it.
 
 # hour_w = 10  # is this hours of work or hourly wage?
-## Not descriptive names => bad practice! (But not the coding "error").
+# Not descriptive names => bad practice! (But not the coding "error").
 
 # work_days = 25
 

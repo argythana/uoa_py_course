@@ -15,27 +15,29 @@ https://cito.github.io/blog/f-strings/
 """
 
 
-import timeit #  help(timeit) Read it only if you have the courage.
+import timeit  # help(timeit) Read it only if you have the courage.
 
 ex_rate = 1.11
-dollars = 10000 #  Play with larger numbers to check results.
+dollars = 10000  # Play with larger numbers to check results.
 euros = dollars/ex_rate
 
-##  Uncomment line to change default digits rounding of floats.
+# Uncomment line to change default digits rounding of floats.
 # euros = round(euros, 5) #  Play with number of digits
 
 
-##  String format syntaxes:
+# String format syntaxes:
 
-## https://docs.python.org/3/reference/lexical_analysis.html#f-strings
+# This is the best way to format strings in Python 3.6 and later.
+# https://docs.python.org/3/reference/lexical_analysis.html#f-strings
 print('\n1) f-strings, default format is 16 digits in total:')
 print(f'{dollars} Dollars = {euros} Euros \n')
 
 print('2) f-strings and format euros to 6 digits in total:')
-print(f'{dollars} Dollars = {euros:.6} Euros \n') #  Play with number of digits
+print(f'{dollars} Dollars = {euros:.6} Euros \n') # Play with number of digits
 
 
-## https://docs.python.org/3/library/stdtypes.html#old-string-formatting
+# This is the old way to format strings in Python.
+# https://docs.python.org/3/library/stdtypes.html#old-string-formatting
 print('3) String formating with % operator, default format is 6 decimals:')
 print('%i Dollars = Euros %f \n' % (dollars, euros))
 
@@ -47,7 +49,7 @@ print('5) Print and concatenate strings, default is 16 digits in total:')
 print(str(dollars) + " Dollars = " + str(euros) + " Euros" + "\n")
 
 
-## https://docs.python.org/3/library/stdtypes.html#str.format
+# https://docs.python.org/3/library/stdtypes.html#str.format
 print('6) str.format method. Default is 16 digits in total:')
 print("{} Dollars = {} Euros \n".format(dollars, euros))
 
@@ -57,8 +59,8 @@ print(""*5)
 
 
 
-## The script below measures the Seconds that it takes to:
-## run 1000 times the test with each format syntax
+# The script below measures the Seconds that it takes to:
+# run 1000 times the test with each format syntax
  
 print("\n ======= Execution time of various print syntaxes =======\n\
 Seconds that it takes to run 1 thousand times the test with each format:\n")
