@@ -1,0 +1,136 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title></title></head><body><h2>Parameters and arguments: keyword, positional, optional, required, and Combinations</h2>
+<p>Remember: “variables” in Python are: a “name” which refers to an object and is always a “name = value” pair.<br />
+Remember: such a “name” is a “reference” to an object and has always a “type”, which means that it has some special characteristics, attributes, “properties” and “methods”.</p>
+<p>Parameters: the names that appear in a function definition.<br />
+Argument: the values that a function uses as input to return as result as output.</p>
+<p><a href="https://docs.python.org/3/glossary.html#term-argument">What is an argument</a><br />
+&gt; Argument is a value passed to a function (or method) when calling the function.</p>
+<p><a href="https://docs.python.org/3/glossary.html#term-parameter">What is a Parameter</a> is a named entity that specifies what argument a function may accept.</p>
+<p><a href="https://docs.python.org/3/faq/programming.html#what-is-the-difference-between-arguments-and-parameters">Difference between Parameters and Arguments:</a></p>
+<p>Parameters are defined by the names that appear in a function definition.<br />
+Parameters define what types of arguments a function can accept.<br />
+Arguments are the values actually passed to a function when calling it.</p>
+<p>Remember: Parameters are “names” (and in best practice also “types”) in the function definition.<br />
+Arguments are “values” in the function call.</p>
+<p>In short:</p>
+<ul>
+<li>Parameters = “names” (and “type”) used in definition.</li>
+<li>Arguments = “values” used in call.</li>
+</ul>
+<p>There are <a href="https://docs.python.org/3/glossary.html#term-parameter">five types of parameters</a>:</p>
+<ul>
+<li>positional-or-keyword: positional argument or keyword argument.</li>
+<li>positional-only: positional argument only.</li>
+<li>keyword-only: keyword argument only.</li>
+<li>var-positional: variable positional argument.</li>
+<li>var-keyword: variable keyword argument.</li>
+</ul>
+<p>There are <a href="https://docs.python.org/3/glossary.html#term-argument">two types of arguments</a>:</p>
+<ul>
+<li>keyword.</li>
+<li>positional.</li>
+</ul>
+<p><a href="https://docs.python.org/3/glossary.html#term-argument">What is an argument</a> is a value passed to a function when calling the function:</p>
+<blockquote>
+<p>keyword =&gt; referenced by the name, assign value to a name.<br />
+positional =&gt; referenced by position.</p>
+</blockquote>
+<blockquote>
+<p>Argument is a value passed to a function (or method) when calling the function. There are two kinds of argument:</p>
+</blockquote>
+<blockquote>
+<p>keyword argument: an argument preceded by an identifier (e.g. name=) in a function call or passed as a value in a dictionary preceded by **. For example, 3 and 5 are both keyword arguments in the following calls to complex():</p>
+</blockquote>
+<pre><code class="language-python">complex(real=3, imag=5)
+complex(**{'real': 3, 'imag': 5})
+</code></pre>
+<blockquote>
+<p>positional argument: an argument that is not a keyword argument. Positional arguments can appear at the beginning of an argument list and/or be passed as elements of an iterable preceded by *. For example, 3 and 5 are both positional arguments in the following calls:</p>
+</blockquote>
+<pre><code class="language-python">complex(3, 5)
+complex(*(3, 5))
+</code></pre>
+<p>Depending on the function definition, the arguments can be:</p>
+<ul>
+<li>optional.</li>
+<li>required.</li>
+</ul>
+<h3>Required arguments</h3>
+<p>Required arguments are arguments that must be passed to the function in the function call.</p>
+<h3>Optional arguments</h3>
+<p>Optional arguments are arguments that have a default value in the function definition.<br />
+In the function call, the argument reference is optional, because the default value is used if a different value is not provided.
+Assigning a default value for the parameter in the function definition =&gt; The argument reference is optional when calling the function.</p>
+<h3>Positional arguments</h3>
+<p>Positional argument: Neither default value, not default name, no name at all.<br />
+Optional value assignment at definition, necessary value assignment when calling the function.<br />
+When calling a function you have to assign values for the positional arguments before the keyword arguments (else =&gt; SyntaxError).<br />
+TypeError: missing required positional argument.</p>
+<p>Assigning a default value for the parameter in the function definition =&gt; The argument reference is optional when calling the function.<br />
+Optional arguments are arguments that have a default value.<br />
+Positional arguments: Neither default value, not default name, no name at all.<br />
+Optional value assignment at definition, necessary value assignment when calling the function.</p>
+<p><strong>When calling a function you have to assign values for the positional arguments before the keyword arguments</strong><br />
+(else =&gt; SyntaxError).<br />
+<code>TypeError: missing required positional argument.</code></p>
+<pre><code class="language-python">def example_function(a, b, c):
+    print(a, b, c)
+
+# Correct usage
+example_function(1, 2, 3)  # All positional arguments
+example_function(a=1, b=2, c=3)  # All keyword arguments
+example_function(1, b=2, c=3)  # Positional arguments before keyword arguments
+
+# Incorrect usage
+example_function(a=1, 2, 3)  # SyntaxError: positional argument follows keyword argument
+</code></pre>
+<p>Must Read: <a href="https://stackoverflow.com/a/57819001">Positional, Keyword, optional, required:</a><br />
+Oftenly: The accepted answer is not always the most useful answer in stackoverflow.<br />
+In this case the two top answers are both useful.</p>
+<blockquote>
+<p>Notice: check dates, check versions. google search is not a simple skill.</p>
+</blockquote>
+<p>Python docs, <a href="https://docs.python.org/3.8/whatsnew/3.8.html#positional-only-parameters">since python 3.8 we may also use positional only parameters</a>.<br />
+In my humble opinion, this is one great “new” feature of Python.<br />
+positional-only:<br />
+specifies an argument that can be supplied only by position.<br />
+Positional-only parameters can be defined by including a / character in the parameter list of the function definition after them.<br />
+for example <code>posonly1</code> and <code>posonly2</code> in the following:</p>
+<pre><code class="language-python">def func(posonly1, posonly2, /, positional_or_keyword): ...
+</code></pre>
+<h3>Important:</h3>
+<p>Identify which arguments are:<br />
+positional, keyword, optional, required,
+for the print() function.</p>
+<pre><code class="language-python">help(print)
+</code></pre>
+<pre><code>Help on built-in function print in module builtins:
+
+print(...)
+    print(value, ..., sep=' ', end='\n', file=sys.stdout, flush=False)
+    
+    Prints the values to a stream, or to sys.stdout by default.
+    Optional keyword arguments:
+    file:  a file-like object (stream); defaults to the current sys.stdout.
+    sep:   string inserted between values, default a space.
+    end:   string appended after the last value, default a newline.
+    flush: whether to forcibly flush the stream.
+</code></pre>
+<h3>More Reading:</h3>
+<ul>
+<li>
+<p><a href="https://docs.python.org/3/glossary.html#term-parameter">var-positional</a></p>
+<blockquote>
+<p>an arbitrary sequence of positional arguments can be provided,
+(in addition to any positional arguments already accepted by other parameters.</p>
+</blockquote>
+</li>
+<li>
+<p><a href="https://docs.python.org/3/glossary.html#term-parameter">var-keyword</a></p>
+<blockquote>
+<p>arbitrarily many keyword arguments can be provided
+(in addition to any keyword arguments already accepted by other parameters).</p>
+</blockquote>
+</li>
+</ul>
+</body></html>

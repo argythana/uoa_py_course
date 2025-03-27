@@ -68,6 +68,7 @@ type(x)  # this prints output only interactively
 
 print(type(x))  # This is the standard way to print non-interactively.
 
+
 x = 3
 y = 4.1
 z = x + y
@@ -120,7 +121,7 @@ print(10 % 3, '\nThe modulo sign % returns the remainder.')  #\n denotes new lin
 divmod(10, 3)
 
 # Two assignments because this function returns two values when we call it.
-division_result, remainder = divmod(10,3)
+division_result, remainder = divmod(10, 3)
 
 division_result, remainder  # We "call" the "names" and get the "values".
 
@@ -153,7 +154,7 @@ print(type(text_type))
 
 
 
-example_name = "John"  # "John" is a value of a variable here.
+example_name = "John "  # "John" is a value of a variable here.
 
 type(example_name)
 
@@ -190,6 +191,7 @@ dir(example_name)  # This will return the methods and attributes of the object.
 
 # To assign is to "name" and "assign" some "value".
 # Python will also "auto-assign" attributes.
+
 hour_wage = 20  # Assign value to a name
 daily_hours_work = 8
 days_work = 20

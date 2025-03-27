@@ -42,16 +42,20 @@ There are [two types of arguments](https://docs.python.org/3/glossary.html#term-
 > keyword => referenced by the name, assign value to a name.   
 > positional => referenced by position.  
 
-> Argument is a value passed to a function (or method) when calling the function. There are two kinds of argument:
+> Argument is a value passed to a function (or method) when calling the function.    
+> There are two kinds of arguments:
 
-> keyword argument: an argument preceded by an identifier (e.g. name=) in a function call or passed as a value in a dictionary preceded by **. For example, 3 and 5 are both keyword arguments in the following calls to complex():
+> keyword argument: an argument preceded by an identifier (e.g. name=) in a function call or passed as a value in a dictionary preceded by **.    
+> For example, 3 and 5 are both keyword arguments in the following calls to complex():
     
 ```python
 complex(real=3, imag=5)
 complex(**{'real': 3, 'imag': 5})
 ```
 
-> positional argument: an argument that is not a keyword argument. Positional arguments can appear at the beginning of an argument list and/or be passed as elements of an iterable preceded by *. For example, 3 and 5 are both positional arguments in the following calls: 
+> Positional argument: an argument that is not a keyword argument.   
+> Positional arguments can appear at the beginning of an argument list and/or be passed as elements of an iterable preceded by *.   
+> For example, 3 and 5 are both positional arguments in the following calls: 
 
 ```python
 complex(3, 5)
@@ -148,4 +152,3 @@ print(...)
 * [var-keyword](https://docs.python.org/3/glossary.html#term-parameter)
     > arbitrarily many keyword arguments can be provided
     > (in addition to any keyword arguments already accepted by other parameters).
-  > 
