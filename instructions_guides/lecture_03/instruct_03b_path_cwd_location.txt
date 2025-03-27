@@ -1,18 +1,14 @@
 BIS UOA course
 author: Argyriou Thanasis
-Lecture 3b, instructions, Path and Files location.
+Lecture 3b, instructions, Current Working Directory, Path and Files location.
 
-Todo, refactor for 2025:
-Todo: The last two sections of this should be a separate file.
-Todo: Explain CLI commands extensively before Venvs in lecture 3.
-Todo: Combine windows CLI with linux CLI commands that can be used in ipynbs.
 
 ----------------------
 MANAGE FILES LOCATION:
 ----------------------
 
 	Next thing to learn:
-	a) "working directory",
+	a) "Current working directory",
 	b) "Path".
 	c) "Absolute Path"
 	d) "Relative Path"
