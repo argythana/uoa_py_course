@@ -18,3 +18,5 @@ dissertations
 *.ipynb_checkpoints
 
 practice_exercises/simple_cases/
+
+experimental/
