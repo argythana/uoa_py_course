@@ -1,136 +1,315 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title></title></head><body><h2>Parameters and arguments: keyword, positional, optional, required, and Combinations</h2>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>-</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1 id="function-parameters-and-arguments-keyword-positional-optional-required-and-combinations">Function Parameters and Arguments: keyword, positional, optional, required, and combinations</h1>
 <p>Remember: “variables” in Python are: a “name” which refers to an object and is always a “name = value” pair.<br />
 Remember: such a “name” is a “reference” to an object and has always a “type”, which means that it has some special characteristics, attributes, “properties” and “methods”.</p>
-<p>Parameters: the names that appear in a function definition.<br />
-Argument: the values that a function uses as input to return as result as output.</p>
-<p><a href="https://docs.python.org/3/glossary.html#term-argument">What is an argument</a><br />
-&gt; Argument is a value passed to a function (or method) when calling the function.</p>
-<p><a href="https://docs.python.org/3/glossary.html#term-parameter">What is a Parameter</a> is a named entity that specifies what argument a function may accept.</p>
+<h2 id="1-the-difference-between-parameters-and-arguments">1. The difference between <code>parameters</code> and <code>arguments</code></h2>
+<p><code>Parameters</code>: the names that appear in a function definition.<br />
+<code>Arguments</code>: the values that a function uses as input, then does something and then “returns” an output.</p>
+<p><a href="https://docs.python.org/3/glossary.html#term-parameter">What is a Parameter</a></p>
+<blockquote>
+<p>Parameters is a named entity that specifies what argument a function may accept.</p>
+</blockquote>
+<p><a href="https://docs.python.org/3/glossary.html#term-argument">What is an argument</a></p>
+<blockquote>
+<p>Argument is a value passed to a function (or method) when calling the function.</p>
+</blockquote>
 <p><a href="https://docs.python.org/3/faq/programming.html#what-is-the-difference-between-arguments-and-parameters">Difference between Parameters and Arguments:</a></p>
 <p>Parameters are defined by the names that appear in a function definition.<br />
 Parameters define what types of arguments a function can accept.<br />
-Arguments are the values actually passed to a function when calling it.</p>
-<p>Remember: Parameters are “names” (and in best practice also “types”) in the function definition.<br />
-Arguments are “values” in the function call.</p>
-<p>In short:</p>
+Arguments are the values actually <strong>passed</strong> to a function when calling it.</p>
+<p><strong>Summary:</strong><br />
+<code>Parameters</code> are “names” defined in the function definition.<br />
+<code>Arguments</code> are “values” provided in the function call.</p>
+<p><strong>Shorter Summary:</strong></p>
 <ul>
-<li>Parameters = “names” (and “type”) used in definition.</li>
-<li>Arguments = “values” used in call.</li>
+<li><code>Parameters</code> = “names” in definition.</li>
+<li><code>Arguments</code> = “values” in call.</li>
 </ul>
-<p>There are <a href="https://docs.python.org/3/glossary.html#term-parameter">five types of parameters</a>:</p>
+<p><strong>Shortest Summary:</strong></p>
 <ul>
-<li>positional-or-keyword: positional argument or keyword argument.</li>
-<li>positional-only: positional argument only.</li>
-<li>keyword-only: keyword argument only.</li>
-<li>var-positional: variable positional argument.</li>
-<li>var-keyword: variable keyword argument.</li>
+<li><code>Parameters</code> = “names”.</li>
+<li><code>Arguments</code> = “values”.</li>
 </ul>
-<p>There are <a href="https://docs.python.org/3/glossary.html#term-argument">two types of arguments</a>:</p>
+<h2 id="2-the-difference-between-the-concepts-of-positional-and-keyword">2. The difference between the concepts of <code>positional</code> and <code>keyword</code></h2>
+<p>There are <a href="https://docs.python.org/3/glossary.html#term-parameter">five types of parameters.</a></p>
+<p>The different types of parameters accept different types of arguments, shown in the table below:</p>
+<table>
+<thead>
+<tr class="header">
+<th><strong>Parameter type</strong></th>
+<th><strong>Accepted Argument type</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>positional-or-keyword</strong></td>
+<td>Positional argument or keyword argument</td>
+</tr>
+<tr class="even">
+<td><strong>positional-only</strong></td>
+<td>Positional argument only</td>
+</tr>
+<tr class="odd">
+<td><strong>keyword-only</strong></td>
+<td>Keyword argument only</td>
+</tr>
+<tr class="even">
+<td><strong>var-positional</strong></td>
+<td>Variable positional argument</td>
+</tr>
+<tr class="odd">
+<td><strong>var-keyword</strong></td>
+<td>Variable keyword argument</td>
+</tr>
+</tbody>
+</table>
+<p>There are <a href="https://docs.python.org/3/glossary.html#term-argument">two types of arguments.</a></p>
 <ul>
-<li>keyword.</li>
-<li>positional.</li>
+<li><code>keyword</code> (or ‘var-keyword’).</li>
+<li><code>positional</code> (or ‘var-positional’).</li>
 </ul>
-<p><a href="https://docs.python.org/3/glossary.html#term-argument">What is an argument</a> is a value passed to a function when calling the function:</p>
+<p>Focus on the difference between <code>keyword</code> and <code>positional</code> arguments.</p>
+<h3 id="keyword-arguments"><code>keyword</code> arguments</h3>
 <blockquote>
-<p>keyword =&gt; referenced by the name, assign value to a name.<br />
-positional =&gt; referenced by position.</p>
+<p>An argument preceded by an identifier (e.g. name=) in the function call.<br />
+Referenced by the corresponding parameter name, and a value is assigned to that name.</p>
 </blockquote>
+<p>For example, 2 and 5 are both keyword arguments in the following calls to pow():</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="co"># 2 to the power of 5. Using keyword arguments for base (βάση) and exponent (εκθέτης).</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="bu">pow</span>(base<span class="op">=</span><span class="dv">2</span>, exp<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>Out[<span class="dv">11</span>]: <span class="dv">32</span></span></code></pre></div>
+<h3 id="positional-arguments"><code>positional</code> arguments</h3>
 <blockquote>
-<p>Argument is a value passed to a function (or method) when calling the function. There are two kinds of argument:</p>
+<p>An argument that is not a keyword argument.<br />
+Referenced by its position in the function call, not by its name.<br />
+No argument name in function call, just the “value”.<br />
+The value is assigned to the corresponding parameter by its position.</p>
 </blockquote>
+<p>Example:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="co"># 2 to the power of 5. Using positional arguments.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="bu">pow</span>(<span class="dv">2</span>, <span class="dv">5</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>Out[<span class="dv">11</span>]: <span class="dv">32</span></span></code></pre></div>
 <blockquote>
-<p>keyword argument: an argument preceded by an identifier (e.g. name=) in a function call or passed as a value in a dictionary preceded by **. For example, 3 and 5 are both keyword arguments in the following calls to complex():</p>
+<p>The order of positional arguments in the function call is important, must match the order of the parameters in the function definition.</p>
 </blockquote>
-<pre><code class="language-python">complex(real=3, imag=5)
-complex(**{'real': 3, 'imag': 5})
-</code></pre>
-<blockquote>
-<p>positional argument: an argument that is not a keyword argument. Positional arguments can appear at the beginning of an argument list and/or be passed as elements of an iterable preceded by *. For example, 3 and 5 are both positional arguments in the following calls:</p>
-</blockquote>
-<pre><code class="language-python">complex(3, 5)
-complex(*(3, 5))
-</code></pre>
-<p>Depending on the function definition, the arguments can be:</p>
+<p>Think that:</p>
 <ul>
-<li>optional.</li>
-<li>required.</li>
+<li>the parameters in the definition is a like a list of names, and</li>
+<li>the values in the “call” is a like list of values that correspond to the names in the definition.</li>
 </ul>
-<h3>Required arguments</h3>
-<p>Required arguments are arguments that must be passed to the function in the function call.</p>
-<h3>Optional arguments</h3>
-<p>Optional arguments are arguments that have a default value in the function definition.<br />
-In the function call, the argument reference is optional, because the default value is used if a different value is not provided.
-Assigning a default value for the parameter in the function definition =&gt; The argument reference is optional when calling the function.</p>
-<h3>Positional arguments</h3>
-<p>Positional argument: Neither default value, not default name, no name at all.<br />
-Optional value assignment at definition, necessary value assignment when calling the function.<br />
-When calling a function you have to assign values for the positional arguments before the keyword arguments (else =&gt; SyntaxError).<br />
-TypeError: missing required positional argument.</p>
-<p>Assigning a default value for the parameter in the function definition =&gt; The argument reference is optional when calling the function.<br />
-Optional arguments are arguments that have a default value.<br />
-Positional arguments: Neither default value, not default name, no name at all.<br />
-Optional value assignment at definition, necessary value assignment when calling the function.</p>
-<p><strong>When calling a function you have to assign values for the positional arguments before the keyword arguments</strong><br />
-(else =&gt; SyntaxError).<br />
-<code>TypeError: missing required positional argument.</code></p>
-<pre><code class="language-python">def example_function(a, b, c):
-    print(a, b, c)
-
-# Correct usage
-example_function(1, 2, 3)  # All positional arguments
-example_function(a=1, b=2, c=3)  # All keyword arguments
-example_function(1, b=2, c=3)  # Positional arguments before keyword arguments
-
-# Incorrect usage
-example_function(a=1, 2, 3)  # SyntaxError: positional argument follows keyword argument
-</code></pre>
-<p>Must Read: <a href="https://stackoverflow.com/a/57819001">Positional, Keyword, optional, required:</a><br />
-Oftenly: The accepted answer is not always the most useful answer in stackoverflow.<br />
-In this case the two top answers are both useful.</p>
+<p>Since positional arguments do not have a name, you need to “pass them” to the function in the correct order.<br />
+This should be obvious, but is not always the case.<br />
+For example,</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="co"># 2 to the power of 5</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="bu">pow</span>(<span class="dv">2</span>, <span class="dv">5</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>Out[<span class="dv">5</span>]: <span class="dv">32</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="co"># 5 to the power of 2</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="bu">pow</span>(<span class="dv">5</span>, <span class="dv">2</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a>Out[<span class="dv">6</span>]: <span class="dv">25</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a><span class="co"># 2 to the power of 4</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a><span class="bu">pow</span>(<span class="dv">2</span>, <span class="dv">4</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a>Out[<span class="dv">7</span>]: <span class="dv">16</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a><span class="co"># 4 to the power of 2</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a><span class="bu">pow</span>(<span class="dv">4</span>, <span class="dv">2</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true"></a>Out[<span class="dv">8</span>]: <span class="dv">16</span></span></code></pre></div>
+<p><strong>Important:</strong> Assign values for positional arguments first before passing values to keyword arguments.<br />
+Python does not allow you to pass a positional argument after a keyword argument.<br />
+It is a way to avoid confusion and make the code more readable.</p>
+<p>Examples:<br />
+The following code will raise a <code>SyntaxError</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="co"># Using keyword argument before positional argument =&gt; SyntaxError</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="bu">pow</span>(base<span class="op">=</span><span class="dv">2</span>, <span class="dv">5</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>  Cell In[<span class="dv">13</span>], line <span class="dv">1</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>    <span class="bu">pow</span>(base<span class="op">=</span><span class="dv">2</span>, <span class="dv">5</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>                 <span class="op">^</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a><span class="pp">SyntaxError</span>: positional argument follows keyword argument</span></code></pre></div>
+<p>The following code will raise a <code>TypeError</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="co"># no argument for base =&gt; TypeError missing required argument</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="bu">pow</span>(exp<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="pp">TypeError</span>: <span class="bu">pow</span>() missing required argument <span class="st">&#39;base&#39;</span> (pos <span class="dv">1</span>)</span></code></pre></div>
+<p>This will work:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="co"># 2 to the power of 5. Using positional argument for base and keyword for exponent.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="bu">pow</span>(<span class="dv">2</span>, exp<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>Out[<span class="dv">15</span>]: <span class="dv">32</span></span></code></pre></div>
+<p><strong>Summary:</strong></p>
+<ul>
+<li><code>keyword</code> arguments are passed by name, and the order does not matter.</li>
+<li><code>positional</code> arguments are passed by position, and the order matters.</li>
+</ul>
+<p><strong>Shorter Summary:</strong></p>
+<ul>
+<li><code>keyword</code> arguments are passed by name.</li>
+<li><code>positional</code> arguments are passed by position.</li>
+</ul>
+<p><strong>Shortest Summary:</strong></p>
+<ul>
+<li><code>keyword</code>: name = value.</li>
+<li><code>positional</code>: value.</li>
+</ul>
+<h2 id="3-the-difference-between-the-concepts-optional-and-required">3. The difference between the concepts <code>optional</code> and <code>required</code>.</h2>
+<p>Depending on the function definition, arguments can be:</p>
+<ul>
+<li><code>optional</code>.</li>
+<li><code>required</code>.</li>
+</ul>
+<h3 id="required-arguments"><code>required</code> arguments</h3>
+<p>Required arguments are arguments that must always be passed to the function in the function call.<br />
+There is no value set in the function definition, so a value must be passed in the function call.</p>
+<h3 id="optional-arguments"><code>optional</code> arguments</h3>
+<p>Optional arguments are arguments that have a “default value” set in the function definition.<br />
+Therefore, they are not required to be used in the function call. Optinally, you may pass a different value in the function call, but it is not required. In the function call, if a different value is not provided, the default value is used.</p>
+<p>Assigning a default value for the parameter in the function definition =&gt; The argument reference is optional when calling the function.</p>
+<p>Optional value assignment at definition, necessary value assignment when calling the function.</p>
+<p>Examples of wrong usage with missing required arguments:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="kw">def</span> example_function(a, b):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>  <span class="co">&quot;&quot;&quot;Simple function that takes two arguments and prints them.&quot;&quot;&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>    <span class="bu">print</span>(a, b)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a><span class="co"># Incorrect usage: missing the second required positional argument</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>example_function(<span class="dv">1</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a><span class="pp">TypeError</span>: example_function() missing <span class="dv">1</span> required positional argument: <span class="st">&#39;b&#39;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true"></a><span class="co"># Incorrect usage: missing the first required positional argument</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true"></a>example_function(b<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true"></a><span class="pp">TypeError</span>: example_function() missing <span class="dv">1</span> required positional argument: <span class="st">&#39;a&#39;</span></span></code></pre></div>
+<p><strong>Summary:</strong></p>
+<ul>
+<li><code>optional</code>: argument value in function definition -&gt; The argument is optional when calling the function.<br />
+</li>
+<li><code>reuired</code>: No value in function definition -&gt; necessary value passing when calling the function.</li>
+</ul>
+<p><strong>Shorter Summary:</strong></p>
+<ul>
+<li><code>optional</code>: value in definition, optional different value in call.</li>
+<li><code>required</code>: no value in definition, required value in call.</li>
+</ul>
+<p><strong><mark>Homework reading on Parameters</mark></strong><br />
+<a href="https://stackoverflow.com/a/57819001">Examples of positional, keyword, optional, required Parameters</a></p>
+<p>The accepted answer is not always the most useful answer in Stackoverflow.<br />
+Also check the date of each reply because things change.<br />
+In this case the 2 top answers are both useful.</p>
 <blockquote>
-<p>Notice: check dates, check versions. google search is not a simple skill.</p>
+<p>Conclusion: A parameter can be required or optional but not both at the same time.<br />
+A parameter can also be positional, keyword, or both at the same time.</p>
 </blockquote>
-<p>Python docs, <a href="https://docs.python.org/3.8/whatsnew/3.8.html#positional-only-parameters">since python 3.8 we may also use positional only parameters</a>.<br />
-In my humble opinion, this is one great “new” feature of Python.<br />
-positional-only:<br />
-specifies an argument that can be supplied only by position.<br />
-Positional-only parameters can be defined by including a / character in the parameter list of the function definition after them.<br />
-for example <code>posonly1</code> and <code>posonly2</code> in the following:</p>
-<pre><code class="language-python">def func(posonly1, posonly2, /, positional_or_keyword): ...
-</code></pre>
-<h3>Important:</h3>
-<p>Identify which arguments are:<br />
-positional, keyword, optional, required,
-for the print() function.</p>
-<pre><code class="language-python">help(print)
-</code></pre>
+<h2 id="4-exercise-to-test-your-understanding">4. Exercise to test your understanding:</h2>
+<p>Identify which parameters and which arguments are:<br />
+<code>positional</code>, <code>keyword</code>, <code>optional</code>, <code>required</code>, in the print() function.</p>
+<p>Then ask an AI assistant to help you with the answer.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="bu">help</span>(<span class="bu">print</span>)</span></code></pre></div>
 <pre><code>Help on built-in function print in module builtins:
 
 print(...)
-    print(value, ..., sep=' ', end='\n', file=sys.stdout, flush=False)
+    print(value, ..., sep=&#39; &#39;, end=&#39;\n&#39;, file=sys.stdout, flush=False)
     
     Prints the values to a stream, or to sys.stdout by default.
     Optional keyword arguments:
     file:  a file-like object (stream); defaults to the current sys.stdout.
     sep:   string inserted between values, default a space.
     end:   string appended after the last value, default a newline.
-    flush: whether to forcibly flush the stream.
-</code></pre>
-<h3>More Reading:</h3>
+    flush: whether to forcibly flush the stream.</code></pre>
+<h2 id="5-more-advanced-reading">5. More advanced reading:</h2>
+<h3 id="positional-only-parameters">Positional only parameters</h3>
+<p><a href="https://docs.python.org/3.8/whatsnew/3.8.html#positional-only-parameters">Since python 3.8 we have positional only parameters</a>.<br />
+In my humble opinion, this is one great “new” feature of Python.</p>
+<p><strong>Positional-only:</strong><br />
+specifies an argument that can be supplied only by position.<br />
+Positional-only parameters can be defined by including a / character in the parameter list of the function definition after them.<br />
+for example <code>posonly1</code> and <code>posonly2</code> in the following:</p>
+<p><strong>Var-positional:</strong></p>
 <ul>
-<li>
-<p><a href="https://docs.python.org/3/glossary.html#term-parameter">var-positional</a></p>
+<li><p><a href="https://docs.python.org/3/glossary.html#term-parameter">var-positional</a></p>
 <blockquote>
-<p>an arbitrary sequence of positional arguments can be provided,
-(in addition to any positional arguments already accepted by other parameters.</p>
-</blockquote>
-</li>
-<li>
-<p><a href="https://docs.python.org/3/glossary.html#term-parameter">var-keyword</a></p>
-<blockquote>
-<p>arbitrarily many keyword arguments can be provided
-(in addition to any keyword arguments already accepted by other parameters).</p>
-</blockquote>
-</li>
+<p>an arbitrary sequence of positional arguments can be provided, (in addition to any positional arguments already accepted by other parameters.</p>
+</blockquote></li>
 </ul>
-</body></html>
+<p><strong>Var-keyword:</strong></p>
+<ul>
+<li><p><a href="https://docs.python.org/3/glossary.html#term-parameter">var-keyword</a></p>
+<blockquote>
+<p>arbitrarily many keyword arguments can be provided (in addition to any keyword arguments already accepted by other parameters).</p>
+</blockquote></li>
+</ul>
+</body>
+</html>
