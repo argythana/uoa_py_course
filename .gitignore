@@ -9,10 +9,12 @@
 
 practice_exercises/outdated_files
 students_work/
-dissertations
+ai_grades_feedback/
+dissertations/
 
 .envrc
 .idea/
+.vscode/
 
 # Ignore everywhere
 *.ipynb_checkpoints
@@ -20,3 +22,7 @@ dissertations
 practice_exercises/simple_cases/
 
 experimental/
+
+data/
+real_world_examples/
+to_read/

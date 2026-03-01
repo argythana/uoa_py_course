@@ -1,0 +1,72 @@
+# Grades & Feedback for Thanasis Argyriou — Classification Notebook
+
+---
+
+## argyriou_t_classification.ipynb
+
+### ✅ What was done well
+
+- **Notebook readability:**  
+  - Good markdown sectioning, clear explanations, and comments.
+- **Proper python imports:**  
+  - All imports are at the top, no unused imports.
+- **Appropriate dataset selection:**  
+  - The dataset is suitable for binary classification.
+- **Data Presentation:**  
+  - Features and target are described; summary statistics are provided.
+- **Proper Exploratory Data Analysis:**  
+  - Multiple appropriate visualizations (histograms, boxplots, countplot, correlation heatmap).
+  - No inappropriate or misleading plots.
+  - Comments on findings are present.
+- **Descriptive Statistics:**  
+  - Summary statistics and correlation matrix included and discussed.
+- **Data Preprocessing:**  
+  - Handles missing values, non-numeric entries, and encodes categorical variables.
+  - Feature scaling is performed for KNN.
+- **Model Implementation, Testing, Finetuning:**  
+  - Implements KNN (with hyperparameter tuning and distance weighting).
+  - Implements Naive Bayes (GaussianNB).
+  - Model fine-tuning by varying k and using distance weighting.
+- **Model evaluation with proper metrics:**  
+  - Accuracy, confusion matrix, and classification report are provided for both KNN and Naive Bayes.
+- **Model Validation:**  
+  - Predictions on new/hypothetical data are demonstrated.
+
+### ❌ What is missing or needs improvement
+
+- **Use working relative paths to read data file:**  
+  - ❌ The notebook uses an absolute path for data loading:  
+    `df = pd.read_csv("C:\\Users\\tharg\\uoa_py_course\\assignment\\data\\fake_data_name_placeholder.csv")`  
+    **Loss: -1.0 point** (violates both "Overall notebook executability" and "Use working relative paths to read data" criteria).
+- **Model's Comparison and model Selection:**  
+  - No explicit numerical/visual comparison and justification for the "winning" model.
+    **Loss: -0.5 point** (Model's Comparison and model Selection criterion).
+
+### 🟢 Awesome Section
+
+- Excellent EDA, clear structure, and thorough KNN analysis with hyperparameter tuning.
+- Good demonstration of model evaluation and prediction on new data.
+
+---
+
+## Explicit missing items
+
+- Must use a relative path for data loading (not absolute path - strict mandatory requirement).
+- Logistic Regression classifier is missing (not mandatory).
+- No explicit model comparison/selection section (mandatory).
+
+---
+
+## Notebook Grade
+
+**Grade:** 8.5/10
+
+---
+
+- The suggested assignment grade is AI generated, not final, and the instructor may increase or decrease it.
+- Each notebook is also examined by the tutor.
+- The total course grade is the sum of the final assignment grade plus submission of practice exercises and in-class participation.
+
+---
+
+**File saved as:** `argyriou_t_classification_feedback.md`
