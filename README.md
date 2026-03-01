@@ -19,7 +19,7 @@ Each lecture lives in its own folder under one of three parent directories:
 | --- | --- | --- |
 | `lectures_01_06_fundamentals_for_data_science/` | 01–06 | Python fundamentals |
 | `lectures_07_13_pandas_plots_scikit/` | 07–13 | Data science with pandas, plots, scikit-learn |
-| `lectures_14_16_nns_pytorch/` | 15–16 | Neural networks with PyTorch |
+| `lectures_14_16_nns_pytorch/` | 14–16 | Neural networks with PyTorch |
 
 ### Naming Conventions
 
@@ -138,5 +138,5 @@ A translation would be:
 
 Please visit:
 a) A mini [crash-course on develpment tools.](https://github.com/argythana/dev_boilerplate_course)  
-b) A demo repo to go to [intermediate and then to advanced material](https://github.com/argythana/r4m_public_demo)
+b) A demo repo to go to [intermediate and then to advanced material](https://github.com/argythana/r4m_public_demo)  
 c) A section with "real work" examples, Python in the workplace by UoA - BIS graduates. (under construction).
