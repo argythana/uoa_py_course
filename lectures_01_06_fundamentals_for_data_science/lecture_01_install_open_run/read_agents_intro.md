@@ -10,6 +10,18 @@ They can help you learn faster, but they can also mislead you if you trust them 
 
 **Key point:** An AI assistant is a *tool*, not a teacher, not a replacement for understanding.
 
+## AI Fluency
+
+Anthropic offers free courses on responsible and effective AI use, built around the **4D AI Fluency Framework** (Delegation, Description, Discernment, Diligence). All courses are open-access under a Creative Commons license.
+
+- [AI Fluency: Framework & Foundations](https://anthropic.skilljar.com/ai-fluency-framework-foundations) — Core course covering practical skills for effective, ethical AI interaction (~3–4 hours).
+- [AI Fluency for Educators](https://anthropic.skilljar.com/ai-fluency-for-educators) — Applying the 4D framework to teaching practice and course design (~3 hours).
+- [AI Fluency for Students](https://anthropic.skilljar.com/ai-fluency-for-students) — Developing AI skills for learning, career planning, and responsible collaboration (~3 hours).
+
+Start with the **Framework & Foundations** course if you have time for only one. The **Students** course is the most directly relevant to this class.
+
+See also: [AI Fluency: Key Terminology Cheat Sheet (PDF)](https://anthropic.skilljar.com/ai-fluency-for-educators/326779) - scroll to end of web page.
+
 ---
 
 ## GitHub Copilot in VS Code: Three Modes
