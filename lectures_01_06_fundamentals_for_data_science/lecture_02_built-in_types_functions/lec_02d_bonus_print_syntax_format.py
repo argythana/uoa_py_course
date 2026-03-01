@@ -1,8 +1,8 @@
 
 """
-BIS UOA class, February 2025
+BIS UOA class
 author: Argyriou Thanasis
-BONUS file! Because the 2025 class is AMAZING!  :-)
+BONUS file! Because this year's class is AMAZING!  :-)
 
 Notes for print formatting syntax.
 Since Python 3.6 we have: "formatted string literals" (f-strings)=>

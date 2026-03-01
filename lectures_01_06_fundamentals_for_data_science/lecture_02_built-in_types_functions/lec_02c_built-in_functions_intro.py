@@ -2,7 +2,7 @@
 """
 BIS UOA class
 author: Argyriou Thanasis
-Lecture 2, Part B: Intro to "built-in functions".
+Lecture 2, Part C: Intro to "built-in functions".
 """
 
 # Remember from the previous lecture:

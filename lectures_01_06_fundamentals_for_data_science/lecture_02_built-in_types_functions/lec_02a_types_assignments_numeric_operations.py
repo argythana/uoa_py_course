@@ -1,10 +1,17 @@
-
 """
 BIS UOA class
 author: Argyriou Thanasis
-Lecture 2, Part A: Intro to basic data types, assignments, operations.
+Lecture 2, Part A: Intro to numeric data types, assignments, operations.
+Goal: When you read a python file, you should understand which parts of the code are:
+- comments,
+- docstrings,
+- variable names,
+- values of a variable name,
+- which words have been created by the programmer that wrote the script,
+- which words are names of python language.
 """
 
+# Everything that has # before it, is a comment. It is not executed by python. It is for the programmer to read and understand the code.
 # assignment = assign **value** and also **attributes** to a "name".
 # an assignment "binds" a "name" to a "value";
 
@@ -16,15 +23,7 @@ Lecture 2, Part A: Intro to basic data types, assignments, operations.
 # [keywords](https://docs.python.org/3.9/reference/lexical_analysis.html#keywords)
 # [functions](https://docs.python.org/3.9/library/functions.html)
 
-"""
-Goal: After this lecture , when you read a python file, you should understand what part of the code is:
-- comment,
-- docstring,
-- variable name,
-- value of a variable name,
-- which words have been created by the programmer that wrote the script,
-- which words are names of python language.
-"""
+
 
 # More impotant: after this lecture you should be able to:
 # => Understand, the message that this very romantic poem conveys:
@@ -49,11 +48,11 @@ After this lecture, this poem should make sense to you! Yoohooo!
 
 
 # CONTENTS:
-# Lecture 2, Part A. "Built-in" "types", "assignments" and "operations".
+# Lecture 2, Part A. "Built-in" numeric "types", "assignments" and "operations".
 # [Official basic built-in types tutorial](https://docs.python.org/3/library/stdtypes.html)  
 # > Numeric types: Integer and float.  
 # > Basic Numeric types operations.  
-# > Strings and basic string operations.  
+# > In-class exercise: monthly wage calculation.  
 
 
 
@@ -127,63 +126,6 @@ division_result, remainder  # We "call" the "names" and get the "values".
 
 
 
-# Strings ("Ordered Text Sequence") and basic string operations.
-# [strings docs](https://docs.python.org/3.9/library/stdtypes.html#text-sequence-type-str)
-
-# A string is like representation of a text.
-text_type = "String types are ordered sequences of characters. Appear as text. Can contain numbers."
-
-# the \ sign denotes a "line break" in the code python. The code continues in the next line.
-# the \n denotes a "new line" in a string.
-# try it in the interpreter.
-
-# If you read and run the lecture files you will find extra material.
-print("\nThe difference between \ and \\n : The one slash character \
-is used to break a long line of code, \
-so that the code is more readable by the programmer.\n But: \
-\n \\n means a new line in a text, \
-so that:\n the printed output is more readable by the user.\n\n")  # This is one line of code.
-
-# Can you notice when \ or \n are printed? They disappear if we use then and if we don't "escape" them.
-# An extra \ is a special character that "escapes" (cancels) the next special character.
-# Black magic, don't worry about it for the moment.
-
-
-print(text_type)
-print(type(text_type))
-
-
-
-example_name = "John "  # "John" is a value of a variable here.
-
-type(example_name)
-
-John = "student"  # John is a variable name, with assigned value = "student".
-
-John = 4  # John is an object "name", with integer "value" = 4.
-
-type(John)  # Variable with name John stores the latest value assigned to it.
-
-example_name * 5  # Strings can be multiplied.
-
-added_string = example_name + " " + "Pappas"  # Strings can be added.
-print("Below is an added string:")
-print(added_string)
-
-print("\nBelow is the added string multiplied by 5:")
-print((added_string + " ") * 5)
-print()
-
-# Uncomment the 2 lines below to try the errors.
-# "john" ** "jack"
-# "john" / "jack"
-
-# Python FAQ: How can I find the methods or attributes of an object?
-# https://docs.python.org/3/faq/programming.html#how-can-i-find-the-methods-or-attributes-of-an-object
-dir(example_name)  # This will return the methods and attributes of the object.
-
-
-
 # A small example, in-class exercise.
 # Learning goal: assignment, naming, values, order of assignment.
 # Find the monthly wage of someone who:
@@ -204,7 +146,7 @@ monthly_income = daily_income * days_work  # Work 25 days
 print('The monthly income is: ')
 print(monthly_income)
 # Not the best way to print. Can you tell why?
-# Check the "bonus" file of the next lecture to learn about print formatting syntax.
+# Check the bonus file (lec_02d) to learn about print formatting syntax.
 
 
 # The script below does not work.
