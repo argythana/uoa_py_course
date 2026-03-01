@@ -5,6 +5,10 @@
 /old_staff_to_refactor
 
 /lectures_13_16_NNs_CV_AI_LLMs/data/
+/lectures_14_16_nns_pytorch/data/
+/lectures_14_16_nns_pytorch/lecture_16_params_optimization/data/
+/lectures_14_16_nns_pytorch/notebooks_2024/lecture_14_pytorch_locally/data/
+/lectures_14_16_nns_pytorch/notebooks_2024/lecture_15_YOLO_pytorch_cloud/data/
 
 
 practice_exercises/outdated_files
@@ -18,6 +22,7 @@ dissertations/
 
 # Ignore everywhere
 *.ipynb_checkpoints
+**/weights/
 
 practice_exercises/simple_cases/
 
