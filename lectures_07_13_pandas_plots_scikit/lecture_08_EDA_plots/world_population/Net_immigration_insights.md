@@ -1,4 +1,4 @@
-# How to misinform with official data and why Greece should pay closer attention to Net Migration. 
+# How to misinform with official data and why Greece should pay closer attention to Net Migration.
 
 5 minutes read  
 
@@ -21,18 +21,18 @@ The origin of all posts on the topic is, to the best of my knowledge, a [post](h
 But, there are several major issues with the way that information has been presented.  
 
 Since the data was valid, out of professional and academic interest, I decided to dive deeper into it.   
-Actually, this is a handy example of new content for this year's [Python Course](https://github.com/argythana/uoa_py_course) at the University of Athens, to demonstrate how to look for insights into complex multidimensional phenomena at the lecture on [Exploratory Data Analysis](https://github.com/argythana/uoa_py_course/tree/main/lectures_07_12_pandas_scikit/lecture_09_EDA_plots).
+Actually, this is a handy example of new content for this year's [Python Course](https://github.com/argythana/uoa_py_course) at the University of Athens, to demonstrate how to look for insights into complex multidimensional phenomena at the lecture on [Exploratory Data Analysis](https://github.com/argythana/uoa_py_course/tree/main/lectures_07_13_pandas_plots_scikit/lecture_08_EDA_plots).
 
 In short, the results are a bit more worrying.  
 The data show that *Greece ranks number one* in the whole world, in terms of Negative Net Migration, as a percentage of the population, excluding war-torn areas and small nation states.    
 
-![Top 20 countries in Negative Migration](https://github.com/argythana/uoa_py_course/blob/main/lectures_07_12_pandas_scikit/lecture_09_EDA_plots/top20_in_negative_migration_2023.png)  
+![Top 20 countries in Negative Migration](https://github.com/argythana/uoa_py_course/blob/main/lectures_07_13_pandas_plots_scikit/lecture_08_EDA_plots/top20_in_negative_migration_2023.png)  
 
 It is also useful to note that this is a longer-term issue that merits closer examination.
-![Net migration rare as a % of the population, Greece, 1950 to 2023](https://github.com/argythana/uoa_py_course/blob/main/lectures_07_12_pandas_scikit/lecture_09_EDA_plots/net_migration_since_1950_GR.png)
+![Net migration rare as a % of the population, Greece, 1950 to 2023](https://github.com/argythana/uoa_py_course/blob/main/lectures_07_13_pandas_plots_scikit/lecture_08_EDA_plots/net_migration_since_1950_GR.png)
 
 
-Please read below for a more detailed analysis on the methodology and the data. To "Do Your Own Research", please take a look at the [Notebook in GitHub](https://github.com/argythana/uoa_py_course/blob/main/lectures_07_12_pandas_scikit/lecture_09_EDA_plots/lecture_07f_wpp_eda.ipynb).
+Please read below for a more detailed analysis on the methodology and the data. To "Do Your Own Research", please take a look at the [Notebook in GitHub](https://github.com/argythana/uoa_py_course/blob/main/lectures_07_13_pandas_plots_scikit/lecture_08_EDA_plots/lecture_07f_wpp_eda.ipynb).
 
 ## Why it matters
 
@@ -57,18 +57,18 @@ To make valid comparisons, besides absolute numbers, one should also present the
 
 ## 2) Greece is not a war zone.
 The second major issue is that the data includes countries which currently are or have been in a state of war during the past years.
-Ukraine and Sudan are unfortunately under prolonged and severe war conditions that highly affect civilian life, infrastructure and the general political and economic conditions. 
+Ukraine and Sudan are unfortunately under prolonged and severe war conditions that highly affect civilian life, infrastructure and the general political and economic conditions.
 It makes little sense to compare the Net migration of a country in war conditions with the rest of the world.
 
 In fact, according to the official UN estimates, if we exclude war-torn areas and very small nation states, **Greece is number one** in terms of Negative Net Migration.
 It is estimated that 1.55% of the population left Greece in 2023.
-The top 20 countries, in conditions of peace, in terms of Negative Net Migration in 2023, as a percentage of the population, are presented in the table above. Feel free to download and reuse it from [GitHub](https://github.com/argythana/uoa_py_course/blob/main/lectures_07_12_pandas_scikit/lecture_09_EDA_plots/top20_in_negative_migration_2023.png).
+The top 20 countries, in conditions of peace, in terms of Negative Net Migration in 2023, as a percentage of the population, are presented in the table above. Feel free to download and reuse it from [GitHub](https://github.com/argythana/uoa_py_course/blob/main/lectures_07_13_pandas_plots_scikit/lecture_08_EDA_plots/top20_in_negative_migration_2023.png).
 
-### 3) Numbers do add up. 
+### 3) Numbers do add up.
 The third major issue is that the data refer just to a single point in time (2023) not providing any context or trend analysis.
-For example, the fact that 300 thousand people left Ukraine in 2023, misinforms the reader by missing the fact that 5.7 million people left Ukraine in 2022. 
+For example, the fact that 300 thousand people left Ukraine in 2023, misinforms the reader by missing the fact that 5.7 million people left Ukraine in 2022.
 Similarly, it is informative to examine whether this is a long-term trend.  
-In fact, after 35 years of steady growth, Greece has lost more than five percent of its population to migration since 2010. 
+In fact, after 35 years of steady growth, Greece has lost more than five percent of its population to migration since 2010.
 
 ### 4) Regulatory, historical and institutional context may matter the most.
 A similarly important issue is that the raw data do not provide context concerning the regulatory and institutional foundations that provide the basis for the development of the observed patterns.  
