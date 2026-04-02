@@ -7,10 +7,13 @@
 - Distinguish positional vs keyword arguments, required vs optional arguments.
 - Apply the DRY principle — recognize when to extract repeated code into functions.
 - Understand stand-alone scripts, `if __name__ == "__main__"`, and user-defined modules.
+- Create a user-defined module (`.py` file), import it, and use `importlib.reload()`.
 
 ## Files
 
 - `lec_06a_custom_functions_demo.ipynb` — Practical demo: user-defined functions with pandas dataset report.
 - `lec_06b_define_functions.ipynb` — Function definition syntax, decomposition, abstraction, DRY principle.
 - `lec_06c_stand_alone_scripts.ipynb` — Stand-alone scripts, `if __name__ == "__main__"`, `importlib.reload()`.
+- `lec_06d_user_modules_scripts.ipynb` — Extra/advanced: user-defined modules, import styles, `__name__`, `reload()`.
+- `hypot_module.py` — Example user-defined module used in lec_06c and lec_06d.
 - `function_parameters_arguments.ipynb` — Reference: parameters vs arguments, 5 parameter types.
