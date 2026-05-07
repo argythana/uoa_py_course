@@ -60,7 +60,7 @@ Every lecture folder contains a `goals_NN.md` file with:
 
 ### Even more good news! I'm here to help, not to judge you
 
-- My lectures are so effective that you don't have to study afterward. No, just kidding. You need to study and practice **only** at least three hours after each lecture.
+- My lectures are so effective that you don't have to study afterwards. No, just kidding. You need to study and practice **only** at least three hours after each lecture.
 - All material is available online, and all the lectures are "live". The tutor's attendance is mandatory, students' attendance too. This allows you to ask questions, get immediate feedback and learn as part of a team.
 - Each topic, if necessary, is explained three times. If you don't get it, it means I did not explain it well enough, and I am also accountable for it. Don't Repeat Yourself (DRY) is a good programming principle, but not a good teaching tenet. I can't think of a good example about it yet, just an [anecdotal Sun Tzu story](https://titusng.com/2013/03/04/the-test-of-sun-tzus-art-of-war-on-concubines/). The moral of the story above does not apply in education, so I would kindly ask you to ask questions.
 - The course is designed to be fun and engaging. If you are not having fun, please let me know. I will try to make it better. Nope, just kidding again.
