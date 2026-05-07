@@ -1,3 +1,5 @@
+.env
+
 /admin_docs
 /course_venv
 /lectures_memes
@@ -19,10 +21,12 @@ dissertations/
 .envrc
 .idea/
 .vscode/
+.gradio/
 
 # Ignore everywhere
 *.ipynb_checkpoints
 **/weights/
+**/__pycache__/
 
 practice_exercises/simple_cases/
 

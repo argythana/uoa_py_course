@@ -1,5 +1,5 @@
 
-# Course Material - Under extensive refactoring, given the feedback from last year's class and your feedback in each lecture
+# Course Material
 
 The following kind of material is provided:
 
@@ -8,77 +8,78 @@ The following kind of material is provided:
 3. "Guides" and "instructions" to install, set up, and/or use various tools that are necessary. Some tools are about Python, some about using the PC efficiently.
 4. Reading on AI assistants
 
-All kinds of materials that are presented during the lectures should be studied
+All kinds of materials that are presented during the lectures should be studied.
+
+Each refactored lecture folder is split into:
+
+- `reading_material/` — the lecture's notebooks, scripts, datasets, and reading.
+- `practice_exercises/` — hands-on exercises (and solutions, where provided).
 
 ## AI Assistants and Agents: A Thread Running Through the Course
 
-Starting from 2025–2026, each lecture includes a dedicated AI/agents component alongside the Python content.
+Starting from 2025–2026, the early lectures include a dedicated AI/agents component alongside the Python content.
 Using an AI coding assistant (GitHub Copilot or equivalent) is **mandatory** from Lecture 1.
 
 The goal is to learn to use AI tools effectively and critically — not as a shortcut, but as a learning amplifier.
-Each lecture's `goals_NN.md` file lists the specific agent learning goals for that lecture.
-Each lecture has a corresponding `read_agents_*.md` reading file.
+Each lecture below has an "Agents" subsection in its `goals_NN.md` file listing the specific learning goals.
 
 | Lecture | AI / Agents Topic | File |
 | --- | --- | --- |
-| 01 | Copilot setup, Ask/Edit/Agent modes, hallucinations, human–AI interaction | `read_agents_intro.md` |
-| 02 | Tokens, context windows, model selection, task examples per mode | `read_agents_tokens_model_selection.md` |
-| 03 | Agent mode: paths, working directories, CLI tasks via agents | `read_agents_cli_paths.md` *(planned)* |
-| 04 | Using AI to explore and understand data containers | `read_agents_containers.md` *(planned)* |
-| 05 | Using AI to debug logic errors, loops, and conditions | `read_agents_debugging.md` *(planned)* |
-| 06 | Using AI to design and refactor functions | `read_agents_functions.md` *(planned)* |
-| 07–09 | Using AI for data exploration, plotting, clustering | *(planned)* |
-| 10 | AI-assisted study of KNN and ML concepts | `lec_10b_study_knn_use_AI.ipynb` |
-| 11–13 | Using AI for regression, classification, pipelines | *(planned)* |
-| 14–16 | Using AI in neural network debugging and experimentation | *(planned)* |
+| 01 | Copilot setup, Ask/Plan/Edit/Agent modes, model selection, knowledge cut-off, non-determinism, hallucinations, AI slop, human–AI interaction | `reading_material/read_agents_intro.md` |
+| 02 | Tokens, token usage by model, model selection criteria, example tasks per agent | `reading_material/read_agents_tokens_model_selection.md` |
+| 03 | Context window and agent performance, agent slash-commands (`/clear`, `/savePrompt`), adding files as context | goals listed in `reading_material/goals_03.md` (separate reading file pending) |
 
-## Section 1: Basic python for Data Science
+Lectures 04 onwards currently focus on the Python and data-science topics. Dedicated AI/agents reading material for those lectures is pending and will be added during the ongoing refactoring.
 
-See lectures 1 to 6.  
-The goal of this section is to learn some of the very basics of python.
-Focus on how the basic concepts are used in data science, machine learning, and AI.
+## Section 1: Basic Python for Data Science (Lectures 1–6) — refactored
 
-## Section 2: Working with Data and Dataframes
+- **Lecture 01 — Install, Open, Run.** `print()` and its parameters (`sep`, `end`), variable assignments, basic arithmetic, syntax/comments/docstrings, common errors (`IndentationError`, `SyntaxError`, `NameError`), PEMDAS, PEP 8 style. Plus: Copilot setup and AI assistant modes.
+- **Lecture 02 — Built-in Types & Functions.** Numeric types and operations, strings and basic string operations, Python built-in functions (`print`, `type`, `int`, `float`, `str`, `len`, `abs`, `pow`, `range`, `input`), parameters vs arguments. Plus: tokens and model selection.
+- **Lecture 03 — CWD, Path, pip, venv, Imports.** CLI navigation (`cd`, `ls`/`dir`, `mkdir`, `pwd`), absolute vs relative paths and current working directory, virtual environments with `venv` and `pip`, JupyterLab, importing built-in modules (`math`, `random`, `statistics`) using dot notation, `from … import`, and aliases. Plus: agent context window and slash-commands.
+- **Lecture 04 — Index, Slice, Strings, Lists, Tuples, Sets, Dicts.** Indexing/slicing on ordered iterables, mutable vs immutable types, string methods, lists/tuples/sets, dictionaries and dict methods. Includes a Markdown / Colab / Kaggle setup guide.
+- **Lecture 05 — Boolean, Conditions, Control Statements.** `bool()` and truth-value testing, comparison operators and boolean operations, `while` loops with `break`/`continue`/`pass`, `if/elif/else` with pseudocoding, `for` loops with `range()` and iteration. Per-topic practice notebooks plus a guessing-game capstone.
+- **Lecture 06 — Define Functions.** `def`, docstrings, `return`, parameters vs arguments, positional/keyword/required/optional arguments, the DRY principle, stand-alone scripts and `if __name__ == "__main__"`, user-defined modules and `importlib.reload()`.
 
-See lecture 7.  
-Add in lecture 7, feedback from students:  
-Discuss more about "changes" in dataframes, drop columns, add columns, mutable, not mutable, best practices, etc.
+## Section 2: Working with Data and Dataframes (Lecture 7) — refactored
 
-Feedback from last year: Add extra lecture 7 here for data preprocessing (nan, encoding, scaling, convert incorrect types).
-Until now, such topics are covered:
-a) as complementary material, scattered and fragmented in small parts in each ML algo lecture.
-b) after teaching the algos within the material about "pipelines" and "Grid search", parameter tuning.
+- **Lecture 07 — Pandas.** Loading CSVs into `DataFrame`, basic attributes/methods (`info`, `head`, `columns`, `dtypes`), indexing and slicing with `.loc[]` and `.iloc[]`, common DataFrame operations (rename, replace, drop, conditional selection, `axis`), view vs modify. Awareness of Polars, PySpark, Dask, DuckDB. Datasets used in this and later lectures: `predict_heart_disease_train.csv`, `temp_to_coffee.csv`. Practice: join-DataFrames exercises (with solutions) and an advanced Polars pointer.
 
-**Reminder**: utilise the numpy 2.0 release changes to emphasize version control.
+Pending: an extra preprocessing lecture (NaNs, encoding, scaling, type conversion) once the ML thread is refactored. Until then, those topics are covered as complementary material scattered through the ML algo lectures and within the pipelines / grid-search material.
 
-### Topic 3: EDA, Static and Interactive Visualisations
+**Reminder**: utilise the NumPy 2.0 release changes to emphasise version control.
 
-See lecture 7. Todo: Refactor to lecture 8.
-Add network graphs plotting as part of lecture for plots.
+## Section 3: EDA, Static and Interactive Visualisations (Lecture 8) — refactored
 
-### Topic 4: Machine Learning Algos
+- **Lecture 08 — EDA & Plots.** Interactive plots with Plotly Express (`lec_08a`), static plots with seaborn / matplotlib and Anscombe's quartet (`lec_08b`), advanced Plotly — polar, parallel coordinates, treemaps, sunbursts (`lec_08c`), worked EDA on the iris dataset (`lec_08d`) and a comprehensive EDA on the heart-disease dataset (`lec_08e`), an Auto-EDA tour with ydata-profiling, Sweetviz, AutoViz, and PyGWalker (`lec_08f`), and an intro to web-app frameworks — Streamlit, Gradio (local), Dash, Taipy — with companion `app_*.py` scripts (`lec_08g`). Practice exercises with solutions included. Generated artefacts (sweetviz / ydata-profile reports, AutoViz plots, gapminder HTML) live alongside the notebooks in `reading_material/`.
 
-See lectures 8-12. To be refactored as 9 to 13.
-9: Regession: Linear, Logistic
-10: Clustering: K-means.
-11: Classification: All Algos in one lecture (Logistic, Kmeans, Naive Bayes, SVM)
-12 (Todo: add for 2025): Ensemble methods, Random Forest, Gradient Boosting, XGBoost, LightGBM, CatBoost.
+## Section 4: Machine Learning Algos (Lecture 9 refactored, 10–13 pending)
 
-### Section 5: Deep Learning and AI (NNs, Computer Vision, LLMs)
+- **Lecture 09 — Clustering with KMeans + Deploy a Gradio app on Hugging Face.** Unsupervised learning and the idea of clustering. The scikit-learn estimator API as it applies to clustering: `model.fit(X)`, `model.predict(X_new)`, `model.fit_predict(X)`, and trained attributes ending in `_` (`cluster_centers_`, `labels_`, `inertia_`). End-to-end KMeans on the mall customers dataset (EDA → fit → predict → 2D/3D visualisation). Choosing `K` with the **Elbow method** (`inertia_`) and the **Silhouette score**. Profiling and labelling clusters, predicting the cluster of new observations. KMeans **assumptions and failure modes** (spherical, similar-sized, similar-variance clusters; non-convex / anisotropic counter-examples). Tuning the **other KMeans parameters**: `init`, `n_init`, `random_state`, `max_iter`, `tol`, `algorithm`. **Step-by-step animations** of Lloyd's algorithm, the elbow filling in, and silhouette + 3D shape changing with `K`. Awareness of other algorithms (`DBSCAN`, hierarchical / agglomerative, Gaussian mixture models). **Deployment**: wrap the trained model in a **Gradio** interface, prepare `app.py` / `requirements.txt`, and ship to **Hugging Face Spaces**.
 
-Lectures 13-16. Requires a lot of refactoring and thought.
-Suggestions from last year's class:
-13: Neural Networks, Keras, TensorFlow, LSTMs
-14: Computer Vision, OpenCV, Image Processing
-15: Pytorch Locally
-16: Pytorch on the cloud, Google Colab, Kaggle, etc.
+**Pending refactor (update coming soon):**
 
-### Extra: Python in the workplace by UoA - BIS graduates
+- Lecture 10 — KNN classifier
+- Lecture 11 — Regression and train/test/validation split
+- Lecture 12 — Logistic regression, Naive Bayes, SVM
+- Lecture 13 — Model pipelines, hyper-parameter grids, model selection / stacking
 
-Add this as a distinct section "next to the lectures" and also in the README.
-"Experimental". Extra, optional presentations, started in 2024, not part of the repo.  
-Example A: Data management and reporting worklow in a betting company.  (Pending)
-Example B: Auditing Cybersecurity Documents with a fine-tuned LLM.  (DONE)
-Example C: Administrative work tasks at a University. (Generate mass word documents, pdfs, and emails).  (DONE)
-Example D: Automating excel files' data merge, reporting in a bank.
-(DONE)
+These will be split into `reading_material/` and `practice_exercises/` subfolders during the refactor, and the placement of ensemble methods (Random Forest, Gradient Boosting, XGBoost, LightGBM, CatBoost), decision trees, and feature engineering will be settled at the same time.
+
+## Section 5: Deep Learning and AI (Neural Nets, Computer Vision, LLMs) (Lectures 13–16) — pending
+
+Pending refactor. Suggestions from last year's class:
+
+- 13: Neural Networks, Keras, TensorFlow, LSTMs
+- 14: Computer Vision, OpenCV, Image Processing
+- 15: PyTorch locally
+- 16: PyTorch on the cloud (Google Colab, Kaggle, etc.)
+
+## Extra: Python in the Workplace by UoA – BIS Graduates
+
+To be added as a distinct section next to the lectures, and in the README.
+"Experimental". Extra, optional presentations, started in 2024, not part of the repo.
+
+- Example A: Data management and reporting workflow in a betting company. (Pending)
+- Example B: Auditing Cybersecurity Documents with a fine-tuned LLM. (DONE)
+- Example C: Administrative work tasks at a University — generate mass Word documents, PDFs, and emails. (DONE)
+- Example D: Automating Excel data merging and reporting in a bank. (DONE)
