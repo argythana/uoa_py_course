@@ -1,6 +1,6 @@
 # Function Parameters and Arguments: keyword, positional, optional, required, and combinations
 
-Remember: "variables" in Python are: a "name" which refers to an object and is always a "name = value" pair.
+Remember: "variables" in Python are: a "name" which refers to an object and is always a "name headers_list== value" pair.
 Remember: such a "name" is a "reference" to an object and has always a "type", which means that it has some special characteristics, attributes, "properties" and "methods".
 
 ## 1. The difference between `parameters` and `arguments`
