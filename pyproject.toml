@@ -1,0 +1,40 @@
+[project]
+name = "uoa-py-course"
+version = "0.1.0"
+description = "University of Athens BIS-Analytics MSc course: Python for Data Science, Machine Learning and AI — lecture material."
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [{ name = "Thanasis Argyriou" }]
+dependencies = [
+    # Data
+    "pandas",
+    "numpy",
+    "scipy",
+    "joblib",
+    # ML
+    "scikit-learn",
+    "statsmodels",
+    # Plots
+    "matplotlib",
+    "seaborn",
+    "plotly",
+    "vizro",
+    # Web apps & deploy (Lecture 08g + Lecture 09 HF Space)
+    "streamlit",
+    "dash",
+    "taipy",
+    "gradio",
+    # EDA / auto-EDA (Lecture 08f)
+    "sweetviz",
+    "autoviz",
+    "pygwalker",
+    # Notebooks
+    "jupyterlab",
+    "ipython",
+]
+
+# Pending lectures (10–13 ML, 14–16 PyTorch) will add their own deps here as
+# they're refactored. Examples to add when the time comes:
+#   uv add torch torchvision         # lectures 14–16
+#   uv add xgboost lightgbm          # ensemble methods
+#   uv add ydata-profiling pingouin imbalanced-learn  # extra EDA / preprocessing
