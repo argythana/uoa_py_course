@@ -1,37 +1,38 @@
+# Secrets and local environment
 .env
-
-/admin_docs
-/course_venv
-/lectures_memes
-/images
-/old_staff_to_refactor
-
-/lectures_13_16_NNs_CV_AI_LLMs/data/
-/lectures_14_16_nns_pytorch/data/
-/lectures_14_16_nns_pytorch/lecture_16_params_optimization/data/
-/lectures_14_16_nns_pytorch/notebooks_2024/lecture_14_pytorch_locally/data/
-/lectures_14_16_nns_pytorch/notebooks_2024/lecture_15_YOLO_pytorch_cloud/data/
-
-
-practice_exercises/outdated_files
-students_work/
-ai_grades_feedback/
-dissertations/
-
 .envrc
+
+# Editors / IDEs / tool caches
 .idea/
 .vscode/
+.claude/
 .gradio/
 
-# Ignore everywhere
-*.ipynb_checkpoints
-**/weights/
+# Python virtual environment
+/course_venv/
+
+# Python / Jupyter build artefacts (any depth)
 **/__pycache__/
+**/.ipynb_checkpoints/
+**/weights/
 
-practice_exercises/simple_cases/
+# Local datasets (any depth)
+**/data/
 
-experimental/
+# Per-lecture exercise drafts not for publication (any depth)
+**/practice_exercises/outdated_files/
+**/practice_exercises/simple_cases/
 
-data/
-real_world_examples/
-to_read/
+# Private course material — student PII, root-anchored
+/admin_docs/
+/ai_grades_feedback/
+/dissertations/
+/students_work/
+
+# Personal scratch and unsorted material — root-anchored
+/experimental/
+/images/
+/lectures_memes/
+/old_staff_to_refactor/
+/real_world_examples/
+/to_read/
