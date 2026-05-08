@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="el" xml:lang="el">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Απαντήσεις: scaling, CV, Naive Bayes &amp; KNN</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <style type="text/css">body {
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+line-height: 1.55;
+max-width: 900px;
+margin: 2.5em auto;
+padding: 0 1.2em;
+color: #1f2328;
+}
+h1, h2, h3 {
+line-height: 1.25;
+border-bottom: 1px solid #d0d7de;
+padding-bottom: 0.3em;
+margin-top: 1.6em;
+}
+h1 { font-size: 1.7em; }
+h2 { font-size: 1.4em; }
+h3 { font-size: 1.15em; border-bottom: none; }
+h4 { border-bottom: none; }
+code {
+background: #f6f8fa;
+padding: 0.15em 0.35em;
+border-radius: 4px;
+font-size: 0.93em;
+}
+pre {
+background: #f6f8fa;
+padding: 0.9em;
+border-radius: 6px;
+overflow-x: auto;
+}
+pre code { background: transparent; padding: 0; }
+blockquote {
+border-left: 4px solid #d0d7de;
+color: #57606a;
+padding: 0.1em 1em;
+margin-left: 0;
+}
+table {
+border-collapse: collapse;
+margin: 1em 0;
+width: 100%;
+}
+th, td {
+border: 1px solid #d0d7de;
+padding: 0.5em 0.7em;
+vertical-align: top;
+}
+th { background: #f6f8fa; }
+tr:nth-child(even) td { background: #fafbfc; }
+sup a { color: #0969da; text-decoration: none; }
+sup a:hover { text-decoration: underline; }
+a { color: #0969da; }
+hr {
+border: 0;
+border-top: 1px solid #d0d7de;
+margin: 2em 0;
+}
+:target {
+background: #fff8c5;
+padding: 0.1em 0.3em;
+border-radius: 4px;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Απαντήσεις: scaling, CV, Naive Bayes &amp; KNN</h1>
+</header>
+<h1 id="απαντήσεις-scaling-στο-traintest-split-scaling-μέσα-σε-cv-naive-bayes--knn">Απαντήσεις: scaling στο train/test split, scaling μέσα σε CV, Naive Bayes &amp; KNN</h1>
+<blockquote>
+<p>Όλες οι παρακάτω απαντήσεις είναι επαληθευμένες έναντι των επίσημων scikit-learn docs και άλλων πηγών. Οι παραπομπές βρίσκονται στο τέλος του εγγράφου (<a href="#πηγές--references">§ Πηγές</a>).</p>
+</blockquote>
+<hr />
+<h2 id="1-scaling-στο-απλό-traintest-split">1. Scaling στο απλό train/test split</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>X_train_scaled <span class="op">=</span> scaler.fit_transform(X_train)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>X_test_scaled  <span class="op">=</span> scaler.transform(X_test)</span></code></pre></div>
+<p><strong>Ναι, ο κώδικας είναι απολύτως σωστός.</strong> Είναι ακριβώς το pattern που τα ίδια τα scikit-learn docs συστήνουν για να αποφεύγεται το data leakage <a href="#ref-pitfalls"><sup>[pitfalls]</sup></a> <a href="#ref-scaler"><sup>[scaler]</sup></a>.</p>
+<ul>
+<li><code>fit_transform(X_train)</code> → ο scaler «μαθαίνει» τη μέση τιμή <code>μ</code> και την τυπική απόκλιση <code>σ</code> <strong>μόνο από τα training data</strong>, και ταυτόχρονα τα μετασχηματίζει.</li>
+<li><code>transform(X_test)</code> → εφαρμόζει τις <strong>ίδιες</strong> <code>μ</code>, <code>σ</code> (αυτές που έμαθε από το train) στο test set. <strong>Δεν</strong> τις ξανα-υπολογίζει.</li>
+</ul>
+<p>Από την επίσημη σελίδα <em>Common pitfalls and recommended practices</em> του sklearn <a href="#ref-pitfalls"><sup>[pitfalls]</sup></a>:</p>
+<blockquote>
+<p>«<a href="https://scikit-learn.org/stable/common_pitfalls.html#how-to-avoid-data-leakage"><em>Never include test data when using the fit and fit_transform methods. […] This can be achieved by using fit_transform on the train subset and transform on the test subset.</em></a>»</p>
+</blockquote>
+<p>Τα λάθη που η μορφή <code>fit_transform</code> / <code>transform</code> σε αποτρέπει να κάνεις:</p>
+<ul>
+<li>❌ <code>scaler.fit_transform(X_test)</code> → data leakage· το test «κοιτά τον εαυτό του» και τα μέτρα αξιολόγησης γίνονται αισιόδοξα.</li>
+<li>❌ <code>scaler.fit(X)</code> πριν το split → data leakage· το train «είδε» στατιστικά του test.</li>
+</ul>
+<hr />
+<h2 id="2-scaling-μέσα-σε-cross-validation-με-pipeline">2. Scaling μέσα σε cross-validation με Pipeline</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>pipeline <span class="op">=</span> Pipeline([</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>    (<span class="st">&#39;scaler&#39;</span>, StandardScaler()),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>    (<span class="st">&#39;classifier&#39;</span>, LogisticRegression(max_iter<span class="op">=</span><span class="dv">1000</span>, random_state<span class="op">=</span><span class="dv">42</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>])</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a><span class="cf">for</span> k <span class="kw">in</span> k_values:</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>    skf <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span>k, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>    scores <span class="op">=</span> cross_val_score(pipeline, X, y, cv<span class="op">=</span>skf, scoring<span class="op">=</span><span class="st">&#39;f1&#39;</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>    k_scores.append(scores.mean())</span></code></pre></div>
+<p><strong>Ναι, ο κώδικας είναι σωστός — το scaling γίνεται με τον σωστό τρόπο σε ΚΑΘΕ fold, χωρίς data leakage.</strong> Τα ίδια τα scikit-learn docs χαρακτηρίζουν αυτό ακριβώς το pattern ως «<em>the great way to prevent data leakage</em>» <a href="#ref-pitfalls"><sup>[pitfalls]</sup></a>:</p>
+<blockquote>
+<p>«<em>The scikit-learn pipeline is a great way to prevent data leakage as it ensures that the appropriate method is performed on the correct data subset. The pipeline is ideal for use in cross-validation and hyper-parameter tuning functions.</em>»</p>
+</blockquote>
+<p>Τι συμβαίνει «κάτω από το καπό» σε κάθε fold <a href="#ref-pipeline"><sup>[pipeline]</sup></a>:</p>
+<ol>
+<li>Ο <code>cross_val_score</code> διαχωρίζει τα δεδομένα σε <strong>train fold</strong> και <strong>validation fold</strong>.</li>
+<li>Καλεί <code>pipeline.fit(X_train_fold, y_train_fold)</code>. Αυτό τρέχει διαδοχικά:
+<ul>
+<li><code>StandardScaler.fit_transform(X_train_fold)</code> — μαθαίνει <code>μ</code>, <code>σ</code> μόνο από τα δεδομένα εκπαίδευσης του fold.</li>
+<li><code>LogisticRegression.fit(X_train_fold_scaled, y_train_fold)</code>.</li>
+</ul></li>
+<li>Καλεί <code>pipeline.predict(X_val_fold)</code>. Αυτό τρέχει διαδοχικά:
+<ul>
+<li><code>StandardScaler.transform(X_val_fold)</code> — εφαρμόζει τα <code>μ</code>, <code>σ</code> του <strong>train fold</strong> στο validation fold.</li>
+<li><code>LogisticRegression.predict(...)</code>.</li>
+</ul></li>
+</ol>
+<p><strong>Άρα στην ερώτησή σου: ναι, το test/validation fold <em>όντως</em> scale-άρεται — απλά με τα στατιστικά του train fold, όχι του validation fold.</strong> Είναι ακριβώς ισοδύναμο με τη διπολική <code>fit_transform</code> / <code>transform</code> της ενότητας 1, εφαρμοσμένη αυτόματα <code>k</code> φορές (μία ανά fold). Καμία διαρροή.</p>
+<h3 id="γιατί-δεν-αρκεί-ένα-προ-scaled-x">Γιατί δεν αρκεί ένα προ-scaled <code>X</code></h3>
+<p>Αν έκανες:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>X_scaled <span class="op">=</span> scaler.fit_transform(X)        <span class="co"># ❌ ΛΑΘΟΣ</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>scores <span class="op">=</span> cross_val_score(model, X_scaled, y, cv<span class="op">=</span>skf, scoring<span class="op">=</span><span class="st">&#39;f1&#39;</span>)</span></code></pre></div>
+<p>ο scaler θα είχε δει <strong>όλο</strong> το dataset, άρα τα <code>μ</code>, <code>σ</code> που εφαρμόζονται στο train fold θα είχαν «μυριστεί» πληροφορία και από το validation fold. Είναι data leakage — διακριτικό, αλλά υπαρκτό. Το ίδιο pattern (Pipeline μέσα στη CV) είναι ο σωστός τρόπος και με <code>GridSearchCV</code> / <code>RandomizedSearchCV</code> <a href="#ref-pipeline"><sup>[pipeline]</sup></a>.</p>
+<hr />
+<h2 id="3-naive-bayes--knn--scaling-πολυσυγγραμμικότητα-one-hot">3. Naive Bayes &amp; KNN — scaling, πολυσυγγραμμικότητα, one-hot</h2>
+<p>Εδώ χρειάζεται λεπτή διάκριση γιατί οι δύο αλγόριθμοι <strong>δεν συμπεριφέρονται το ίδιο</strong>. Η αντίληψη ότι «και οι δύο χρειάζονται scaling, και οι δύο επηρεάζονται από πολυσυγγραμμικότητα, και στους δύο πρέπει να αφαιρέσεις μία στήλη» είναι <strong>μερικώς λάθος</strong>.</p>
+<h3 id="31-knn-kneighborsclassifier--kneighborsregressor">3.1 KNN (<code>KNeighborsClassifier</code> / <code>KNeighborsRegressor</code>)</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Θέμα</th>
+<th>Απάντηση</th>
+<th>Γιατί</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Scaling</strong></td>
+<td><strong>Ναι, υποχρεωτικά</strong> <a href="#ref-preprocessing"><sup>[preprocessing]</sup></a></td>
+<td>Ο KNN μετράει αποστάσεις (Euclidean by default). Στήλη με τιμές 0–100.000 (π.χ. εισόδημα) θα κυριαρχήσει εντελώς πάνω σε στήλη 0–1. Η σελίδα <em>Preprocessing data</em> του sklearn αναφέρει ρητά: <em>«if a feature has a variance that is orders of magnitude larger than others, it might dominate the objective function»</em>.</td>
+</tr>
+<tr class="even">
+<td><strong>Πολυσυγγραμμικότητα</strong></td>
+<td><strong>Όχι</strong> με την αυστηρή έννοια — αλλά οι συσχετισμένες στήλες <strong>διαστρεβλώνουν τη γεωμετρία της απόστασης</strong>.</td>
+<td>Ο KNN δεν έχει συντελεστές που να γίνουν ασταθείς (όπως στη γραμμική παλινδρόμηση), οπότε η κλασική «πολυσυγγραμμικότητα» δεν εφαρμόζεται. Όμως στην Ευκλείδεια απόσταση κάθε στήλη συνεισφέρει αθροιστικά: αν δύο στήλες είναι ουσιαστικά «ίδιο σήμα», αυτό το σήμα μετράει διπλά στην απόσταση και υπερ-σταθμίζεται. Η Hastie &amp; Tibshirani <a href="#ref-hastie-tibshirani"><sup>[hastie-tibshirani]</sup></a> δείχνουν ότι ο standard 1-NN κανόνας <em>«suffers from bias in high dimensions»</em> και προτείνουν locally adaptive Mahalanobis-style μετρική (sphering των δεδομένων). Η συνηθισμένη αντιμετώπιση στη βιβλιογραφία είναι <strong>PCA πριν το KNN</strong> ή χρήση <strong>Mahalanobis distance</strong> που «λευκαίνει» τις συσχετίσεις <a href="#ref-knn-wiki"><sup>[knn-wiki]</sup></a>.</td>
+</tr>
+<tr class="odd">
+<td><strong>One-hot: αφαίρεση μιας στήλης (<code>drop_first</code>);</strong></td>
+<td>Όχι αυστηρά απαραίτητη</td>
+<td>Δεν υπάρχει dummy variable trap (ο KNN δεν λύνει γραμμικό σύστημα με intercept).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-naive-bayes">3.2 Naive Bayes</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Θέμα</th>
+<th>Απάντηση</th>
+<th>Γιατί</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Scaling</strong></td>
+<td><strong>Όχι</strong> <a href="#ref-naive-bayes"><sup>[naive-bayes]</sup></a></td>
+<td>• <code>GaussianNB</code>: η likelihood <code>P(x_i | y) = (1/√(2πσ²_y)) · exp(-(x_i - μ_y)²/(2σ²_y))</code> υπολογίζεται <strong>ανά feature και ανά κλάση</strong> <a href="#ref-naive-bayes"><sup>[naive-bayes]</sup></a>. Κάθε <code>μ_y, σ_y</code> εξάγεται από τη στήλη της και εφαρμόζεται μόνο σ&#39; αυτήν, οπότε οποιαδήποτε αναβάθμιση κλίμακας απορροφάται στο fit.<br>• <code>MultinomialNB</code> / <code>BernoulliNB</code>: δουλεύουν σε counts ή binary· <code>StandardScaler</code> παράγει αρνητικές τιμές που η <code>MultinomialNB</code> δεν δέχεται καν (raise <code>ValueError: Negative values in data passed to MultinomialNB</code>) <a href="#ref-multinomial"><sup>[multinomial]</sup></a>. Αν χρειαστείς scaling εδώ, χρησιμοποίησε <code>MinMaxScaler</code> ή απλώς μη scale-άρεις.</td>
+</tr>
+<tr class="even">
+<td><strong>Πολυσυγγραμμικότητα</strong></td>
+<td>Παραβιάζει την υπόθεση ανεξαρτησίας — <strong>αλλά</strong> στην πράξη ο NB είναι αξιοσημείωτα ανθεκτικός</td>
+<td>Το «naive» στην ονομασία αναφέρεται στην υπόθεση ότι όλα τα features είναι <strong>υπό συνθήκη ανεξάρτητα δοθείσας της κλάσης</strong> <a href="#ref-naive-bayes"><sup>[naive-bayes]</sup></a>. Όταν αυτή παραβιάζεται, οι <strong>πιθανότητες</strong> που επιστρέφει ο NB γίνονται κακώς βαθμονομημένες (overconfident) — τα ίδια τα sklearn docs το αναφέρουν: <em>«[NB] is known to be a bad estimator, so the probability outputs from <code>predict_proba</code> are not to be taken too seriously»</em> <a href="#ref-naive-bayes"><sup>[naive-bayes]</sup></a>. Οι <strong>κατατάξεις</strong> όμως μένουν συχνά σωστές. Το θεωρητικό υπόβαθρο για αυτή τη «έκπληξη» οφείλεται στους Domingos &amp; Pazzani (1997), που έδειξαν ότι η περιοχή βελτιστότητας του NB υπό zero-one loss είναι πολύ μεγαλύτερη από αυτήν υπό squared loss <a href="#ref-domingos"><sup>[domingos]</sup></a>.</td>
+</tr>
+<tr class="odd">
+<td><strong>One-hot: αφαίρεση μιας στήλης;</strong></td>
+<td>Όχι απαραίτητη</td>
+<td>Δεν υπάρχει dummy variable trap.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="33-drop-one-column-στο-one-hot--όχι-μονόλιθος-κανόνας">3.3 «Drop one column» στο one-hot — όχι μονόλιθος κανόνας</h3>
+<p>Η σχέση μεταξύ <code>OneHotEncoder(drop=&#39;first&#39;)</code> και του μοντέλου είναι λεπτή. Παραθέτω αυτούσιο τι λένε τα sklearn docs <a href="#ref-onehot"><sup>[onehot]</sup></a>:</p>
+<blockquote>
+<p>«<em>This is useful in situations where perfectly collinear features cause problems, such as when feeding the resulting data into an <strong>unregularized</strong> linear regression model. <strong>However, dropping one category breaks the symmetry of the original representation and can therefore induce a bias</strong> in downstream models, for instance for <strong>penalized linear classification or regression models</strong>.</em>»</p>
+</blockquote>
+<p>Η ίδια παρατήρηση είναι παλιά στη στατιστική βιβλιογραφία. Οι Gertheiss &amp; Tutz, <em>Annals of Applied Statistics</em> 2010 <a href="#ref-gertheiss-tutz"><sup>[gertheiss-tutz]</sup></a> γράφουν ρητά: <em>«the shrinkage effect depends on the coding scheme that is used and the choice of the reference category. […] the estimated model is not invariant against irrelevant permutations of class labels»</em> (p. 2152). Δηλαδή για κάθε regularized γραμμικό μοντέλο (Ridge / Lasso / regularized logistic), το ποια κατηγορία θα αφαιρέσεις <em>αλλάζει</em> το αποτέλεσμα — και η επιλογή είναι αυθαίρετη.</p>
+<p>Αυτό δίνει έναν πιο ακριβή πρακτικό κανόνα από το παραδοσιακό «πάντα αφαίρεσε μία στήλη»:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Μοντέλο</th>
+<th>Drop one column;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Unregularized linear/logistic regression (με intercept)</td>
+<td><strong>Ναι</strong> — αλλιώς dummy variable trap (perfect collinearity)</td>
+</tr>
+<tr class="even">
+<td><strong>Regularized</strong> linear/logistic (Ridge, Lasso, ElasticNet, regularized LogReg)</td>
+<td><strong>Όχι</strong> — η drop εισάγει bias γιατί η implicit baseline κατηγορία τιμωρείται ασύμμετρα από τη regularization <a href="#ref-onehot"><sup>[onehot]</sup></a></td>
+</tr>
+<tr class="odd">
+<td>KNN, Naive Bayes, SVM, Decision Trees, Random Forest, XGBoost</td>
+<td>Δεν είναι απαραίτητο. Σπαταλά μια διάσταση χωρίς να βλάπτει· κάποιοι το κρατούν για consistency.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="34-συγκριτικός-πίνακας-με-τα-γνωστά-μοντέλα-του-μαθήματος">3.4 Συγκριτικός πίνακας με τα γνωστά μοντέλα του μαθήματος</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Μοντέλο</th>
+<th>Scaling;</th>
+<th>Πολυσυγγραμμικότητα;</th>
+<th>Drop one column σε one-hot;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Linear / Logistic Regression (unregularized)</td>
+<td>Όχι αυστηρά</td>
+<td><strong>Ναι</strong> (αστάθεια συντελεστών)</td>
+<td><strong>Ναι</strong></td>
+</tr>
+<tr class="even">
+<td>Linear / Logistic Regression (Ridge/Lasso/ElasticNet)</td>
+<td><strong>Ναι</strong> (απαραίτητο, αλλιώς η ποινή είναι άνιση)</td>
+<td>Λιγότερο σοβαρή (η regularization σταθεροποιεί)</td>
+<td><strong>Όχι</strong> <a href="#ref-onehot"><sup>[onehot]</sup></a> <a href="#ref-gertheiss-tutz"><sup>[gertheiss-tutz]</sup></a></td>
+</tr>
+<tr class="odd">
+<td><strong>KNN</strong></td>
+<td><strong>Ναι, υποχρεωτικά</strong> <a href="#ref-preprocessing"><sup>[preprocessing]</sup></a></td>
+<td>Όχι αλγοριθμικά — αλλά συσχέτιση φουσκώνει τη συνεισφορά στην απόσταση <a href="#ref-hastie-tibshirani"><sup>[hastie-tibshirani]</sup></a></td>
+<td>Όχι</td>
+</tr>
+<tr class="even">
+<td><strong>Naive Bayes</strong> (Gaussian / Multinomial / Bernoulli)</td>
+<td><strong>Όχι</strong> <a href="#ref-naive-bayes"><sup>[naive-bayes]</sup></a></td>
+<td>Παραβιάζει την υπόθεση ανεξαρτησίας· τα scores είναι κακώς calibrated αλλά οι κατατάξεις συχνά σωστές <a href="#ref-domingos"><sup>[domingos]</sup></a></td>
+<td>Όχι</td>
+</tr>
+<tr class="odd">
+<td>SVM (RBF, polynomial)</td>
+<td><strong>Ναι, υποχρεωτικά</strong> <a href="#ref-svm"><sup>[svm]</sup></a></td>
+<td>Λιγότερο ευαίσθητο</td>
+<td>Όχι</td>
+</tr>
+<tr class="even">
+<td>Decision Tree / Random Forest / XGBoost</td>
+<td>Όχι <a href="#ref-trees"><sup>[trees]</sup></a></td>
+<td>Όχι (splits, όχι γραμμικό σύστημα)</td>
+<td>Όχι</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="tldr">TL;DR</h2>
+<ol>
+<li>✅ <code>fit_transform</code> στο train + <code>transform</code> στο test → <strong>σωστό</strong> <a href="#ref-pitfalls"><sup>[pitfalls]</sup></a>.</li>
+<li>✅ <code>Pipeline([scaler, model])</code> μέσα στο <code>cross_val_score</code> → <strong>σωστό</strong> <a href="#ref-pitfalls"><sup>[pitfalls]</sup></a>. Το validation fold scale-άρεται κανονικά, αλλά με τα <code>μ</code>, <code>σ</code> του train fold του ίδιου fold — οπότε δεν υπάρχει data leakage.</li>
+<li>⚠️ <strong>KNN</strong>: ναι σε scaling <a href="#ref-preprocessing"><sup>[preprocessing]</sup></a>· για πολυσυγγραμμικότητα ισχύει η πιο ακριβής διατύπωση «η συσχέτιση διαστρεβλώνει την Ευκλείδεια απόσταση» αντί για «πολυσυγγραμμικότητα»· drop column <strong>όχι αναγκαίο</strong>. <strong>Naive Bayes</strong>: <strong>δεν</strong> χρειάζεται scaling <a href="#ref-naive-bayes"><sup>[naive-bayes]</sup></a>· η πολυσυγγραμμικότητα παραβιάζει την υπόθεση ανεξαρτησίας, αλλά οι κατατάξεις μένουν συχνά σωστές <a href="#ref-domingos"><sup>[domingos]</sup></a>· drop column <strong>όχι αναγκαίο</strong>.</li>
+<li>⚠️ Το «drop one column» σε one-hot είναι αναγκαίο <strong>μόνο για Non -regularized γραμμικά μοντέλα με intercept</strong>. Για Ridge / Lasso / regularized logistic regression είναι <strong>κακή ιδέα</strong> — εισάγει bias <a href="#ref-onehot"><sup>[onehot]</sup></a>.</li>
+</ol>
+<hr />
+<h2 id="πηγές--references">Πηγές / References</h2>
+<p><a id="ref-pitfalls"></a><strong>[pitfalls]</strong> scikit-learn — <em>Common pitfalls and recommended practices</em> (data leakage, scaler fit on train only, Pipeline inside cross-validation). <a href="https://scikit-learn.org/stable/common_pitfalls.html">https://scikit-learn.org/stable/common_pitfalls.html</a></p>
+<p><a id="ref-scaler"></a><strong>[scaler]</strong> scikit-learn — <code>sklearn.preprocessing.StandardScaler</code>. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html">https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html</a></p>
+<p><a id="ref-pipeline"></a><strong>[pipeline]</strong> scikit-learn — <code>sklearn.pipeline.Pipeline</code>. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html</a>· βλ. και τη συνοδευτική παράγραφο για χρήση μέσα σε <code>cross_val_score</code> / <code>GridSearchCV</code> στο <a href="#ref-pitfalls"><sup>[pitfalls]</sup></a>.</p>
+<p><a id="ref-preprocessing"></a><strong>[preprocessing]</strong> scikit-learn — <em>Preprocessing data</em> user guide. <a href="https://scikit-learn.org/stable/modules/preprocessing.html">https://scikit-learn.org/stable/modules/preprocessing.html</a></p>
+<p><a id="ref-knn-wiki"></a><strong>[knn-wiki]</strong> <em>k-nearest neighbors algorithm</em> — Wikipedia (ενότητα για διανυσματικές αποστάσεις &amp; Mahalanobis). <a href="https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm">https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm</a>· βλ. επίσης Hastie, Tibshirani &amp; Friedman, <em>The Elements of Statistical Learning</em> (2nd ed., 2009), Chapter 13 — Prototype Methods and Nearest-Neighbors.</p>
+<p><a id="ref-naive-bayes"></a><strong>[naive-bayes]</strong> scikit-learn — <em>1.9 Naive Bayes</em> user guide (περιλαμβάνει τους τύπους για <code>GaussianNB</code>, την ανεξαρτησία, και το σχόλιο ότι ο NB είναι «<em>decent classifier, but bad estimator</em>»). <a href="https://scikit-learn.org/stable/modules/naive_bayes.html">https://scikit-learn.org/stable/modules/naive_bayes.html</a></p>
+<p><a id="ref-multinomial"></a><strong>[multinomial]</strong> scikit-learn — <code>sklearn.naive_bayes.MultinomialNB</code>. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.MultinomialNB.html">https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.MultinomialNB.html</a></p>
+<p><a id="ref-domingos"></a><strong>[domingos]</strong> Domingos, P. &amp; Pazzani, M. (1997). <em>On the Optimality of the Simple Bayesian Classifier under Zero-One Loss</em>. <strong>Machine Learning</strong> 29(2-3): 103–130. DOI: <a href="https://doi.org/10.1023/A:1007413511361">10.1023/A:1007413511361</a>. Ηλεκτρονική έκδοση: <a href="https://link.springer.com/article/10.1023/A:1007413511361">https://link.springer.com/article/10.1023/A:1007413511361</a>.</p>
+<p><a id="ref-onehot"></a><strong>[onehot]</strong> scikit-learn — <code>sklearn.preprocessing.OneHotEncoder</code> (παράμετρος <code>drop</code>, με ρητή προειδοποίηση για bias σε penalized linear models). <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html">https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html</a></p>
+<p><a id="ref-svm"></a><strong>[svm]</strong> scikit-learn — <em>1.4 Support Vector Machines</em> user guide (<em>«SVM algorithms are not scale invariant, so it is highly recommended to scale your data»</em>). <a href="https://scikit-learn.org/stable/modules/svm.html">https://scikit-learn.org/stable/modules/svm.html</a></p>
+<p><a id="ref-trees"></a><strong>[trees]</strong> scikit-learn — <em>1.10 Decision Trees</em> user guide (<em>«Requires little data preparation. Other techniques often require data normalization»</em>). <a href="https://scikit-learn.org/stable/modules/tree.html">https://scikit-learn.org/stable/modules/tree.html</a></p>
+<p><a id="ref-hastie-tibshirani"></a><strong>[hastie-tibshirani]</strong> Hastie, T. &amp; Tibshirani, R. (1996). <em>Discriminant Adaptive Nearest Neighbor Classification</em>. <strong>IEEE Transactions on Pattern Analysis and Machine Intelligence</strong> 18(6): 607–616. DOI: <a href="https://doi.org/10.1109/34.506411">10.1109/34.506411</a>. Open PDF: <a href="https://hastie.su.domains/Papers/dann_IEEE.pdf">https://hastie.su.domains/Papers/dann_IEEE.pdf</a>.</p>
+<p><a id="ref-gertheiss-tutz"></a><strong>[gertheiss-tutz]</strong> Gertheiss, J. &amp; Tutz, G. (2010). <em>Sparse Modeling of Categorial Explanatory Variables</em>. <strong>The Annals of Applied Statistics</strong> 4(4): 2150–2180. DOI: <a href="https://doi.org/10.1214/10-AOAS355">10.1214/10-AOAS355</a>. Open PDF (Project Euclid): <a href="https://projecteuclid.org/journals/annals-of-applied-statistics/volume-4/issue-4/Sparse-modeling-of-categorial-explanatory-variables/10.1214/10-AOAS355.full">https://projecteuclid.org/journals/annals-of-applied-statistics/volume-4/issue-4/Sparse-modeling-of-categorial-explanatory-variables/10.1214/10-AOAS355.full</a>.</p>
+<hr />
+</body>
+</html>
