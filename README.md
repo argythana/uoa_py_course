@@ -77,7 +77,7 @@ Every lecture folder contains a `goals_NN.md` file with:
 - The course starts slowly and accelerates. Each lecture covers a bit more material than the previous one.
 - If you skip a lecture, you miss important insights, and you should definitely catch up before the next one. Good understanding of each lecture is a necessary prerequisite for the next one.
 - We cover the basics in each topic during class and there is some necessary reading before the next lecture. Reading the material before the next lecture is absolutely necessary.
-- Besides the mandatory reading material, there is some extra "optional, advanced" material for those who want to read more on a topic.
+- Besides the mandatory reading material, there is some extra "optional, advanced" material for those who want to read more on a topic, and for those that want to pursue a career in Data Science and AI.
 - Hands-on learning: Learn by coding a lot, in class and at home.
 - The course focuses on applied Data Science and Machine Learning with Python. Theoretical background is provided, but the focus is on implementation.
 
