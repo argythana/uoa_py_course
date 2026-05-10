@@ -36,3 +36,12 @@
 /old_staff_to_refactor/
 /real_world_examples/
 /to_read/
+
+# Brainstorming and notes — root-anchored
+Brainstorm_TODOs.md
+
+# .gifs created in lecture notebooks
+**/*.gif
+
+# Zip bundles (e.g. e-class uploads — regenerated from source folders)
+**/*.zip
