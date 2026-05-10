@@ -46,10 +46,10 @@ uv lock --upgrade                    # bump everything
 `uv add` mutates `pyproject.toml`, refreshes `uv.lock`, and installs into `course_venv/` in one step. After any of the above, regenerate the student-facing `requirements.txt`:
 
 ```bash
-uv export --format requirements-txt --no-hashes --no-emit-project -o requirements.txt
+uv export --format requirements-txt --no-hashes --no-emit-project --no-dev -o requirements.txt
 ```
 
-`--no-emit-project` keeps the local `uoa-py-course` package out of the export (otherwise `pip install -r requirements.txt` would try to resolve it from PyPI and fail). Commit `pyproject.toml`, `uv.lock`, and `requirements.txt` together — they have to stay in sync.
+`--no-emit-project` keeps the local `uoa-py-course` package out of the export (otherwise `pip install -r requirements.txt` would try to resolve it from PyPI and fail). `--no-dev` excludes the `dev` dependency group (linters, admin tooling) — students don't need those, and on uv ≥ 0.10 the dev group is included in `uv export` by default. Commit `pyproject.toml`, `uv.lock`, and `requirements.txt` together — they have to stay in sync.
 
 If `course_venv/` ever drifts from the lockfile (e.g. someone ran a stray `pip install`), run `uv sync` to bring it back in line. Use `uv sync --inexact` if you want to keep extra ad-hoc packages that aren't in `pyproject.toml`.
 
