@@ -1,0 +1,4 @@
+Algorithm,Hyperparameter,Accuracy,F1,Fit time (s)
+Logistic Regression,C=1.0,0.881,0.8646,0.005
+K-Nearest Neighbors,n_neighbors=5,0.874,0.8568,0.005
+Decision Tree,max_depth=5,0.844,0.8297,0.005
