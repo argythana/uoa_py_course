@@ -6,6 +6,7 @@
 .idea/
 .vscode/
 .claude/
+.codex/
 .gradio/
 
 # Python virtual environment
