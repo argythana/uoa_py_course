@@ -1,4 +1,4 @@
-# Lecture 11: Regression & Train/Test Split
+# Lecture 11: Regression & Train/Test/Validation Split
 
 ## Learning Goals
 
@@ -6,7 +6,7 @@
 - Implement multiple linear regression with statsmodels and pingouin.
 - Understand model fitting, overfitting vs underfitting, bias-variance tradeoff.
 - Interpret linear model coefficients and their pitfalls (conditional vs marginal dependence).
-- Split data into train/test sets for model evaluation.
+- Deepen the three-way train / validation / test split introduced in Lecture 10 (the validation set used for hyperparameter selection; the test set used for one final unbiased evaluation). *Note: the basic two-way split is now taught in Lecture 10 (§B1.3 of `lec_10a_knn_classification.ipynb`).*
 
 ## Files
 
