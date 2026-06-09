@@ -1,0 +1,17 @@
+# MLflow stores generated when running the lecture-13 tracking notebooks.
+# Students regenerate these locally; they are not committed.
+mlflow*.db
+mlruns/
+mlartifacts/
+**/mlflow*.db
+**/mlruns/
+**/mlartifacts/
+
+# AutoGluon trained-model folders + scratch outputs from the optional lec_13g notebook.
+# Heavy (hundreds of MB); students regenerate them locally.
+ag_models/
+AutogluonModels/
+ag_leaderboard.csv
+
+# Build scaffolding (deleted at end of the create-excellent-lecture run)
+_BUILD_CONTRACT.md
