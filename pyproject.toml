@@ -26,12 +26,12 @@ dependencies = [
     "gradio",
     # EDA / auto-EDA (Lecture 08f)
     "sweetviz",
-    "autoviz",
     "pygwalker",
     # Notebooks
     "jupyterlab",
     "ipython",
     "pingouin>=0.6.1",
+    "mlflow>=3.13.0",
 ]
 
 [dependency-groups]
