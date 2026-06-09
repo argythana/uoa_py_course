@@ -38,8 +38,11 @@
 /real_world_examples/
 /to_read/
 
+# MLflow lecture logs and artefacts — root-anchored
+mlartifacts/
+mlflow.db
 # Brainstorming and notes — root-anchored
-Brainstorm_TODOs.md
+roadmap_brainstorm.md
 
 # .gifs created in lecture notebooks
 **/*.gif
