@@ -27,7 +27,7 @@ from bs4 import BeautifulSoup
 
 BASE = "https://eclass.uoa.gr"
 SSO_HOST = "sso.uoa.gr"
-DEFAULT_UA = "Mozilla/5.0 (eclass mirror; argythana@gmail.com)"
+DEFAULT_UA = "Mozilla/5.0 (uoa-py-course eclass mirror)"
 
 
 class LoginError(RuntimeError):
