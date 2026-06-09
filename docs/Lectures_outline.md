@@ -29,6 +29,7 @@ Each lecture below has an "Agents" subsection in its `goals_NN.md` file listing 
 | 02 | Tokens, token usage by model, model selection criteria, example tasks per agent | `reading_material/read_agents_tokens_model_selection.md` |
 | 03 | Context window and agent performance, agent slash-commands (`/clear`, `/savePrompt`), adding files as context | goals listed in `reading_material/goals_03.md` (separate reading file pending) |
 | 09 | Picking K with elbow + silhouette using an assistant, scaffolding a Gradio `app.py`, spotting clustering recommendations decoupled from the data — structured by the 4Ds (Delegation / Description / Discernment / Diligence) | `reading_material/read_agents_clustering_workflows.md` |
+| 13 | 4Ds on an automation workflow: delegating grid construction, describing CV/data shape, discerning pipeline leakage and malformed `step__param` keys, verifying search results and MLflow runs by hand | `reading_material/read_agents_automation_mlops.md` |
 
 Lectures 04–08 and 10–16 currently focus on the Python and data-science topics. Dedicated AI/agents reading material for those lectures is pending and will be added during the ongoing refactoring; Lecture 09 has its own reading file (linked above).
 
@@ -51,29 +52,29 @@ Pending: an extra preprocessing lecture (NaNs, encoding, scaling, type conversio
 
 ## Section 3: EDA, Static and Interactive Visualisations (Lecture 8) — refactored
 
-- **Lecture 08 — EDA & Plots.** Interactive plots with Plotly Express (`lec_08a`), static plots with seaborn / matplotlib and Anscombe's quartet (`lec_08b`), advanced Plotly — polar, parallel coordinates, treemaps, sunbursts (`lec_08c`), worked EDA on the iris dataset (`lec_08d`) and a comprehensive EDA on the heart-disease dataset (`lec_08e`), an Auto-EDA tour with ydata-profiling, Sweetviz, AutoViz, and PyGWalker (`lec_08f`), and an intro to web-app frameworks — Streamlit, Gradio (local), Dash, Taipy — with companion `app_*.py` scripts (`lec_08g`). Practice exercises with solutions included. Generated artefacts (sweetviz / ydata-profile reports, AutoViz plots, gapminder HTML) live alongside the notebooks in `reading_material/`.
+- **Lecture 08 — EDA & Plots.** Interactive plots with Plotly Express (`lec_08a`), static plots with seaborn / matplotlib and Anscombe's quartet (`lec_08b`), advanced Plotly — polar, parallel coordinates, treemaps, sunbursts (`lec_08c`), worked EDA on the iris dataset (`lec_08d`) and a comprehensive EDA on the heart-disease dataset (`lec_08e`), an Auto-EDA tour with Sweetviz, PyGWalker, and Vizro (`lec_08f`), and an intro to web-app frameworks — Streamlit, Gradio (local), Dash, Taipy — with companion `app_*.py` scripts (`lec_08g`). Practice exercises with solutions included. Generated artefacts (sweetviz reports, gapminder HTML) live alongside the notebooks in `reading_material/`.
 
 ## Section 4: Machine Learning Algos (Lecture 9 refactored, 10–13 pending)
 
 - **Lecture 09 — Clustering with KMeans + Deploy a Gradio app on Hugging Face.** Unsupervised learning and the idea of clustering. *Mandatory core:* `lec_09a_kmeans_clustering` (end-to-end on the mall customers dataset — EDA → fit/predict/fit_predict → choosing `K` with elbow + silhouette → profiling and labelling clusters → predicting the cluster of new observations), `lec_09b_kmeans_assumptions_caveats` (spherical / similar-size / similar-variance assumptions; non-convex and anisotropic counter-examples on iris and synthetic data), `lec_09c_gradio_app_huggingface_deploy` (wrap the trained model in a Gradio interface, prepare `app.py` / `requirements.txt` / `README.md`, ship to a Hugging Face Space). *Optional / career track:* `lec_09d_kmeans_other_parameters` (`init`, `n_init`, `random_state`, `max_iter`, `tol`, `algorithm`), `lec_09e_kmeans_step_by_step_animations` (Lloyd's convergence, the elbow filling in, silhouette + 3D shape changing with `K`), and a closing `lec_09f_other_clustering_algos` reference notebook (pointers to DBSCAN, hierarchical / agglomerative, and Gaussian mixture models — when each is preferred over KMeans, no worked code). *AI Fluency:* `read_agents_clustering_workflows.md`.
+- **Lecture 13 — Automation & MLOps: Pipelines, Hyperparameter Search & MLflow.** (folder: `lecture_13_pipelines_gridsearch_mlflow`.) The capstone of the ML-algos section: turning the hand-tuned classifiers of lectures 10–12 into automated, tracked, governed workflows. *Mandatory core (4 notebooks):* `lec_13a_gridsearchcv_hyperparameter_tuning` (`GridSearchCV`/`RandomizedSearchCV` with cross-validation, choosing the scoring metric, `cv_results_`/`best_params_`, grid sizing, `class_weight`, held-out evaluation), `lec_13b_pipelines_preprocessing_models` (`Pipeline` + `ColumnTransformer` for leakage-free scaling/encoding/imputation, `GridSearchCV` over a pipeline across ≥2 classifier families with `step__param` syntax, predicting on raw new rows), `lec_13c_mlflow_tracking_basics` (stand up a local `mlflow server`, log params/metrics/model manually and with `autolog`, log artifacts, compare runs, reload a logged model, the three storage layers), `lec_13d_mlflow_evaluation_registry` (`mlflow.evaluate` + a custom-metric validation gate, the model registry, champion/challenger aliases, promotion and rollback — the MLOps "decide and manage" step). *Optional / career track (MLOps depth):* `lec_13e_mlflow_logging_sweeps` (parent/child runs + `log_figure`, Optuna pointer), `lec_13f_mlflow_model_serving` (REST serving via `mlflow models serve`, `/invocations`, signature enforcement). *AI Fluency:* `read_agents_automation_mlops.md`.
 
 **Pending refactor (update coming soon):**
 
 - Lecture 10 — KNN classifier
 - Lecture 11 — Regression and train/test/validation split
 - Lecture 12 — Logistic regression, Naive Bayes, SVM
-- Lecture 13 — Model pipelines, hyper-parameter grids, model selection / stacking
 
 These will be split into `reading_material/` and `practice_exercises/` subfolders during the refactor, and the placement of ensemble methods (Random Forest, Gradient Boosting, XGBoost, LightGBM, CatBoost), decision trees, and feature engineering will be settled at the same time.
 
-## Section 5: Deep Learning and AI (Neural Nets, Computer Vision, LLMs) (Lectures 13–16) — pending
+## Section 5: Deep Learning and AI (Neural Nets, Computer Vision, LLMs) (Lectures 14–16) — pending
 
 Pending refactor. Suggestions from last year's class:
 
-- 13: Neural Networks, Keras, TensorFlow, LSTMs
-- 14: Computer Vision, OpenCV, Image Processing
-- 15: PyTorch locally
-- 16: PyTorch on the cloud (Google Colab, Kaggle, etc.)
+- 14: Neural Networks, Keras, TensorFlow, LSTMs
+- 15: Computer Vision, OpenCV, Image Processing
+- 16: PyTorch locally
+- <!-- MAINTAINER: 4 proposed DL topics, only 3 slots (14–16) — decide how to map/merge --> PyTorch on the cloud (Google Colab, Kaggle, etc.)
 
 ## Extra: Python in the Workplace by UoA – BIS Graduates
 
