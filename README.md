@@ -54,7 +54,7 @@ Every lecture folder contains a `goals_NN.md` file with:
 
 - Mid-course assignments and practice exercises are optional and are graded only positively (extra points if you submit).
 - Grades are secondary. Don't worry about it. I mean it. The goal is to learn and enjoy it.
-- Use of AI assistants and GitHub co-pilot is "mandatory". Learn to use them effectively and avoid common pitfalls. AI Fluency material is provided as a part of all the lectures on Python fundamentals.
+- Use of AI assistants and GitHub co-pilot is "mandatory". Learn to use them effectively and avoid common pitfalls. AI Fluency material is provided as a part of all the lectures on Python fundamentals. **Worth a read:** [this study](https://ai-project-website.github.io/AI-assistance-reduces-persistence/) reports that always-on AI assistance can reduce student persistence on hard problems. The 4Ds framework (Delegate, Describe, Discern, Diligence) in the AI Fluency readings is the course's response — assistants as a *learning amplifier*, not as a way to outsource thinking.
 - No exams, a [final assignment](https://github.com/argythana/uoa_py_course/tree/main/final_assignment), on a different domain for each student.
 - The final assignment topic is generic, the dataset and the domain to work on is chosen by you.
 
