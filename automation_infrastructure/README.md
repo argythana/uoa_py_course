@@ -13,6 +13,7 @@ script in this tree, it's misplaced — move it to `admin_docs/`.
 | Subsystem | What it does | Status |
 |-----------|--------------|--------|
 | `eclass/` | CAS-authenticated mirror of one or more eClass courses into SQLite | v1 — roster only; 5 module scrapers stubbed |
+| `scaffold_student_dirs.sh` + `roster_slugs.py` | Create per-student work folders for a class year from the eClass roster | v1 |
 
 Future subsystems (e.g. Hugging Face Space management, weekly digest emails)
 should follow the same convention: code here, data under `admin_docs/`.
@@ -167,3 +168,70 @@ so each module is a focused change of ~50–150 lines.
   redacting.
 - **No MFA today.** If UoA enables MFA on your account, the CAS POST flow
   breaks; you'd need a headless browser to handle the second factor.
+
+---
+
+# `scaffold_student_dirs.sh` — per-student work folders
+
+Creates the `students_work/class_<YY>/<slug>/` folders for a class year, each
+with the two subfolders `practice_exercises/` and `final_assignment/`. The
+roster is read from the eClass mirror (`eclass/` subsystem above), so populate
+`admin_docs/eclass_data/eclass.db` first.
+
+`students_work/` is **gitignored** (student PII). These two scripts are
+committed; the folders they create are not.
+
+## Quick start
+
+```bash
+# Create folders for this year's class (defaults: current year, ECON537).
+automation_infrastructure/scaffold_student_dirs.sh
+
+# Pin the year / course explicitly, or preview without writing.
+automation_infrastructure/scaffold_student_dirs.sh --year 2026 --course ECON537
+automation_infrastructure/scaffold_student_dirs.sh --year 2026 --dry-run
+```
+
+The script is **idempotent** — existing folders are left untouched, only
+missing ones are created — and exits non-zero if any expected subfolder is
+still missing afterwards. Folders already on disk that don't match this year's
+roster are reported as "orphans" and left alone (never deleted).
+
+## The slug convention
+
+`students_work/` folders are named `<surname>_<first-initial>[_<initial>...]`
+in lowercase ASCII, transliterated from the Greek roster name:
+
+| eClass `full_name`               | folder slug             |
+|----------------------------------|-------------------------|
+| `ΠΑΠΑΔΟΠΟΥΛΟΥ ΜΑΡΙΑ`               | `papadopoulou_m`          |
+| `ΓΕΩΡΓΙΟΥ ΑΝΝΑ-ΜΑΡΙΑ`  | `georgiou_a_m`   |
+
+`roster_slugs.py` is the single source of truth for that mapping. The first
+whitespace token is the surname; each remaining given-name part (also split on
+hyphens) contributes one initial. "This year's students" = course members with
+the student role (`Εκπαιδευόμενος`) whose eClass registration date falls in the
+calendar year.
+
+Run it standalone to inspect the mapping:
+
+```bash
+python -m automation_infrastructure.roster_slugs --year 2026
+python -m automation_infrastructure.roster_slugs --year 2026 --with-email
+```
+
+## Transliteration overrides
+
+Transliteration is deterministic (handles the `ου` / `αυ` / `ευ` digraphs) but
+can't always match how a name's owner spells it — e.g. word-initial `ΜΠ`
+(`mpampi` vs `babi`) or a hyphenated surname (`aravantinoslothras`). To pin a
+specific slug, add a tab-separated override file:
+
+```
+admin_docs/student_lists_grades/year=<YEAR>/slug_overrides.tsv
+```
+
+with `<email><TAB><desired_slug>` lines (`#` comments allowed). Overrides win
+over the computed slug; re-run the scaffold script to apply. Because the script
+is non-destructive, renaming via an override creates the new folder but leaves
+the old one as an orphan — move any existing work across by hand.
