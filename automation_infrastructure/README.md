@@ -130,11 +130,55 @@ sqlite3 admin_docs/eclass_data/eclass.db \
 |-------------------------------|----------------------------------------------------------|
 | `eclass/session.py`           | Reusable CAS login helper (`login`, `logout`)            |
 | `eclass/scrapers/users.py`    | Roster scraper (DataTables AJAX → list of dicts)         |
+| `eclass/scrapers/work.py`     | Assignment list + submission download helpers (`work` module) |
+| `eclass/download_submissions.py` | CLI: download a final assignment's submissions into `students_work/` |
 | `eclass/refresh_db.py`        | Orchestrator: bootstrap → scrape → upsert                |
 | `eclass/schema.sql`           | The 6-table SQLite schema                                |
 | `eclass/FINDINGS.md`          | Recon notes, design choices, next-step menu              |
 | `admin_docs/eclass_data/eclass.db` | The local DB (gitignored)                           |
 | `admin_docs/eclass_recon/`    | Historical recon artefacts: probe scripts, HTML/JSON dumps |
+
+## Downloading final-assignment submissions
+
+`eclass/download_submissions.py` logs in, finds the current year's assignment in
+the `work` (Εργασίες) module, and downloads each student's submission **into the
+folder `scaffold_student_dirs.sh` already created** — under a date-stamped
+subfolder, so each run is a snapshot sitting next to the rest of that student's
+work:
+
+```
+students_work/class_26/<slug>/final_assignment/downloaded_<YYYY-MM-DD>/<submitted file>
+```
+
+The per-student `<slug>` is derived with the same `roster_slugs.slugify`, so
+submissions land in the matching folder. `students_work/` is gitignored.
+
+```bash
+# Current year's final assignment (auto-discovered by title, e.g. "… 2026").
+python -m automation_infrastructure.eclass.download_submissions
+
+# Pin a year, or target a specific work-module assignment id.
+python -m automation_infrastructure.eclass.download_submissions --year 2026
+python -m automation_infrastructure.eclass.download_submissions --assignment-id 78801
+```
+
+Two download endpoints exist on the `work` module:
+
+- `?course=<C>&get=<submission_id>` — **one** submission. The default mode loops
+  over these: streaming starts immediately, each file is resumable, progress is
+  per student. Re-running **skips any submission already downloaded**: each
+  download leaves a `.submission_meta.json` sidecar, and a submission is skipped
+  when its `submission_id` + `submitted_at` is already on disk (older downloads
+  with no sidecar are matched by filename and backfilled). A genuine
+  **resubmission** — a newer `submitted_at` than the file we already hold — is
+  re-downloaded automatically; `--force` re-fetches regardless.
+- `?course=<C>&download=<assignment_id>` — **all** submissions as one ZIP. Use
+  `--combined` for this; the server builds the whole archive before sending a
+  byte, so it stalls upfront when submissions are large. The combined ZIP lands
+  in one dated folder at the class root instead of per-student.
+
+Submissions can be large because students sometimes bundle a venv / dataset /
+`.git` into their upload — the size is whatever they submitted, not a bug.
 
 ## Adding a new module scraper
 

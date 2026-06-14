@@ -38,6 +38,7 @@ Polite logout: `GET /index.php?logout=yes`.
   each login; don't cache.
 - The `TGC` cookie is the CAS ticket-granting cookie. Treat it as a credential:
   do not log it, do not commit it.
+- No real students names should be pushed to the GitHub repo.
 
 ## 2. Account portfolio
 
@@ -134,6 +135,7 @@ Historical recon artefacts (gitignored, kept under `admin_docs/eclass_recon/`):
 | `ECON537_home.html`        | Authenticated ECON537 course home                      |
 | `ECON537_users.html`       | Empty-shell roster page (DataTables before AJAX)       |
 | `ECON537_users.json`       | DataTables AJAX response — 57 raw user rows            |
+| `ECON537_work_78801.html`  | Authenticated `work` assignment page — basis for `scrapers/work.py` |
 
 The DB itself lives at `admin_docs/eclass_data/eclass.db` (gitignored)
 because it contains student PII. Schema definition lives next to the code
@@ -165,11 +167,47 @@ clean sanity signal).
 | Module        | Status | Notes                                                |
 |---------------|--------|------------------------------------------------------|
 | `users`       | ✅     | `scrape_users.fetch_users(session, course_code)`     |
-| `assignments` | TODO   | `/modules/work/index.php?course=…`                   |
-| `submissions` | TODO   | Per-assignment sub-page; also need file downloads    |
+| `assignments` | ✅ (files) | `scrapers/work.list_assignments` / `find_assignment_for_year` — list + discovery, not yet upserted into the DB |
+| `submissions` | ✅ (files) | `scrapers/work.{list_submissions,download_submission}` + `download_submissions.py` CLI — downloads files, not yet upserted |
 | `grades`      | TODO   | `/modules/gradebook/index.php?course=…`              |
 | `attendance`  | TODO   | `/modules/attendance/index.php?course=…`             |
 | `announcements`| TODO  | `/modules/announcements/index.php?course=…`          |
+
+## 7. Pilot v2 — work submissions downloader (status: shipped)
+
+Recommended next-step #1 above (download all student submissions for one
+assignment) is done — see `scrapers/work.py` + `download_submissions.py`.
+
+`work` module download endpoints (teacher account, ECON537, June 2026):
+
+- `index.php?course=<C>&download=<assignment_id>` — **all** submissions as one
+  ZIP (`Content-Type: application/zip`, `filename <C>_work_<id>.zip`). The server
+  builds the entire archive before streaming, so it stalls upfront on large
+  assignments.
+- `index.php?course=<C>&get=<submission_id>` — **one** submission, streamed
+  directly. The real filename is in the response's `Content-Disposition` header;
+  the page's own table text is often truncated.
+
+Design decisions:
+
+- **Per-submission by default** (loop over `get=`), not the combined ZIP — it
+  starts instantly, is resumable per file, and shows per-student progress.
+  `--combined` keeps the one-ZIP path available.
+- **Lands in `students_work/`, not `admin_docs/`** — each submission goes to
+  `class_<YY>/<slug>/final_assignment/downloaded_<date>/`, the per-student folder
+  `scaffold_student_dirs.sh` already creates, keyed by the same slug convention.
+  (This is the one deliberate exception to "data under `admin_docs/`": the
+  submission *is* the student's work, and `students_work/` is equally gitignored.)
+- **Date-stamped snapshots + per-submission dedup** — re-running on a new day
+  makes a new dated folder, but each submission is downloaded **once**. A
+  `.submission_meta.json` sidecar records `submission_id` + `submitted_at`, and a
+  submission already on disk (matched by its sidecar, or by filename + backfilled
+  for pre-dedup downloads) is skipped. A **resubmission** is detected by a newer
+  `submitted_at` than the file we hold (`scrapers/work.list_submissions` scrapes
+  that timestamp from the work page) and is re-downloaded; `--force` overrides.
+
+Submissions can be hundreds of MB when a student bundles a venv / dataset /
+`.git` — that's upload size, not a fault in the downloader.
 
 Each TODO is a self-contained piece of work: write `scrape_<module>.py`
 following the `scrape_users.py` pattern, write a matching `upsert_<module>`
