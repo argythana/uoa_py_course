@@ -36,8 +36,10 @@ For the recon notes and design rationale, see
 - Upserts into `admin_docs/eclass_data/eclass.db`.
 - Bootstraps the DB on first run; idempotent thereafter.
 
-Five more module scrapers (assignments, submissions, grades, attendance,
-announcements) are stubbed and ready to be filled in.
+The `assignments` and `submissions` tables are populated by
+`download_submissions.py` as it fetches files (it doubles as the submissions
+ledger — see below). Three more module scrapers (grades, attendance,
+announcements) are stubbed in `refresh_db.py` and ready to be filled in.
 
 ## Prerequisites
 
@@ -131,8 +133,9 @@ sqlite3 admin_docs/eclass_data/eclass.db \
 | `eclass/session.py`           | Reusable CAS login helper (`login`, `logout`)            |
 | `eclass/scrapers/users.py`    | Roster scraper (DataTables AJAX → list of dicts)         |
 | `eclass/scrapers/work.py`     | Assignment list + submission download helpers (`work` module) |
-| `eclass/download_submissions.py` | CLI: download a final assignment's submissions into `students_work/` |
-| `eclass/refresh_db.py`        | Orchestrator: bootstrap → scrape → upsert                |
+| `eclass/download_submissions.py` | CLI: download a final assignment's submissions into `students_work/`; writes the `assignments`/`submissions` ledger |
+| `eclass/refresh_db.py`        | Orchestrator: bootstrap → scrape roster → upsert         |
+| `eclass/db.py`                | Shared DB access: bootstrap, migration, assignment/submission upserts + dedup queries |
 | `eclass/schema.sql`           | The 6-table SQLite schema                                |
 | `eclass/FINDINGS.md`          | Recon notes, design choices, next-step menu              |
 | `admin_docs/eclass_data/eclass.db` | The local DB (gitignored)                           |
@@ -166,12 +169,18 @@ Two download endpoints exist on the `work` module:
 
 - `?course=<C>&get=<submission_id>` — **one** submission. The default mode loops
   over these: streaming starts immediately, each file is resumable, progress is
-  per student. Re-running **skips any submission already downloaded**: each
-  download leaves a `.submission_meta.json` sidecar, and a submission is skipped
-  when its `submission_id` + `submitted_at` is already on disk (older downloads
-  with no sidecar are matched by filename and backfilled). A genuine
-  **resubmission** — a newer `submitted_at` than the file we already hold — is
-  re-downloaded automatically; `--force` re-fetches regardless.
+  per student. Re-running **skips any submission already downloaded**, and the
+  skip decision is driven by the **mirror DB** (`eclass.db`), not a folder walk:
+  each download records a row in the `submissions` table (`submission_id`,
+  `submitted_at`, local `file_path`), and a later run skips a submission whose
+  `submission_id` + `submitted_at` is already on record — one indexed lookup per
+  submission. A genuine **resubmission** — a newer `submitted_at` for the same
+  `submission_id` — re-downloads and updates the row; `--force` re-fetches
+  regardless. A `.submission_meta.json` sidecar is still written next to each
+  file; on the first run under this scheme, downloads made before the ledger
+  existed are matched on disk (by sidecar, or by filename for pre-sidecar
+  downloads) and **backfilled** into the DB so they aren't re-fetched. If the DB
+  can't be opened, dedup degrades to the on-disk check.
 - `?course=<C>&download=<assignment_id>` — **all** submissions as one ZIP. Use
   `--combined` for this; the server builds the whole archive before sending a
   byte, so it stalls upfront when submissions are large. The combined ZIP lands

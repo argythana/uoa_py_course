@@ -32,6 +32,18 @@ alternative ``--combined`` mode pulls eClass's single all-in-one ZIP
 (``?download=<id>``) into one dated folder at the class root — simpler, but it
 stalls upfront while the server builds the whole archive.
 
+**Dedup is driven by the eClass mirror DB** (``admin_docs/eclass_data/eclass.db``,
+gitignored). Each downloaded submission is recorded in its ``submissions`` table
+(submission_id, submitted_at, local file_path); a later run skips any submission
+whose submission_id + submitted_at is already on record — one indexed lookup,
+not a walk over every student's folder. A **resubmission** (a newer
+``submitted_at`` for the same submission_id) re-downloads and updates the row;
+``--force`` re-fetches regardless. Submissions downloaded before this ledger
+existed are matched on disk once (via their ``.submission_meta.json`` sidecar,
+still written alongside each file) and **backfilled** into the DB, so the first
+run under this scheme indexes them instead of re-fetching. If the DB can't be
+opened the run degrades to the on-disk dedup.
+
 The assignment is discovered by year (the work entry whose title contains the
 year, e.g. "Final Assignment Python 2026"); pass ``--assignment-id`` to override.
 
@@ -52,12 +64,20 @@ import argparse
 import json
 import re
 import shutil
+import sqlite3
 import sys
 import unicodedata
 from datetime import date, datetime
 from pathlib import Path
 
 from ..roster_slugs import slugify as student_slug
+from .db import (
+    get_submission,
+    known_user_ids,
+    open_db,
+    upsert_assignment,
+    upsert_submission,
+)
 from .extract import ExtractResult, extract_archive
 from .scrapers.work import (
     Assignment,
@@ -259,9 +279,63 @@ def _find_existing_download(student_dir: Path, sub: Submission,
     return None
 
 
+def _repo_relative(path: Path) -> str:
+    """``path`` as a repo-root-relative string, or absolute if it lies outside."""
+    try:
+        return str(path.resolve().relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path)
+
+
+def _file_in_prior_folder(folder: Path) -> Path | None:
+    """The submitted file inside a prior dated folder, per its sidecar.
+
+    ``_find_existing_download`` guarantees a sidecar in ``folder`` (it backfills
+    one when matching by filename), so the ``filename`` it records points at the
+    submitted file we want to register in the DB ledger.
+    """
+    try:
+        meta = json.loads((folder / SUBMISSION_META).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    name = meta.get("filename")
+    return folder / name if name else None
+
+
+def _record_submission(conn, sub: Submission, user_id: int | None,
+                       assignment_id: int, file_path: Path | None,
+                       warnings: list[str], slug: str) -> None:
+    """Upsert one submission into the mirror DB ledger; never abort on failure.
+
+    A failed ledger write is non-fatal — the file is already on disk, and the
+    next run's on-disk fallback will re-index it — so it degrades to a warning.
+    """
+    try:
+        upsert_submission(
+            conn,
+            submission_id=sub.submission_id,
+            user_id=user_id,
+            assignment_id=assignment_id,
+            submitted_at=sub.submitted_at,
+            file_path=_repo_relative(file_path) if file_path else None,
+        )
+        conn.commit()
+    except sqlite3.Error as exc:
+        warnings.append(f"{slug}: could not record submission in db ({exc})")
+
+
 def _download_per_submission(session, course, asg, class_dir, date_str, force,
-                             extract=True, keep_zip=True):
+                             conn=None, extract=True, keep_zip=True):
     """Download each submission into <class_dir>/<slug>/final_assignment/downloaded_<date>/.
+
+    Dedup is driven by the eClass mirror DB (``conn``): every downloaded
+    submission is recorded in the ``submissions`` table, and a later run skips
+    any submission whose ``submission_id`` + ``submitted_at`` is already on
+    record — one indexed lookup, no walking each student's folder. A submission
+    not yet in the DB falls back to the on-disk check once and is **backfilled**
+    into the ledger, so the first run under this scheme indexes pre-existing
+    downloads instead of re-fetching them. With ``conn=None`` (DB unavailable)
+    the behaviour degrades to the on-disk-only dedup.
 
     Each downloaded ``.zip`` is then extracted in place (unless ``extract`` is
     false); the raw ``.zip`` is kept alongside the extracted tree unless
@@ -274,6 +348,7 @@ def _download_per_submission(session, course, asg, class_dir, date_str, force,
     downloaded = skipped = total_bytes = 0
     new_folders: list[str] = []
     warnings: list[str] = []
+    known = known_user_ids(conn) if conn is not None else set()
 
     for sub in subs:
         slug = student_slug(sub.student_name) if sub.student_name else f"submission_{sub.submission_id}"
@@ -281,12 +356,30 @@ def _download_per_submission(session, course, asg, class_dir, date_str, force,
         if not student_dir.exists():
             new_folders.append(slug)  # submitter not in the scaffolded roster
 
-        # Skip if we already downloaded this exact submission on any prior day;
-        # a resubmission (changed submitted_at) is not matched and re-downloads.
+        # The submission's eClass user_id (== profile_id) — stored only when it
+        # resolves to a roster row, else NULL (a submitter outside the snapshot).
+        user_id = sub.profile_id if sub.profile_id in known else None
+
+        # 1) DB fast path: do we already hold this exact submission? A matching
+        #    submitted_at means "downloaded"; a changed one means "resubmitted".
+        if conn is not None and not force:
+            row = get_submission(conn, sub.submission_id)
+            if row is not None and row["submitted_at"] == sub.submitted_at:
+                print(f"  {slug:24} already downloaded (db) — skipping")
+                skipped += 1
+                continue
+
+        # 2) On-disk fallback / one-time backfill: a copy already on disk for
+        #    this exact submission (downloaded before the ledger existed, or a
+        #    rebuilt DB)? Index it so the DB fast path catches it next time.
         if not force:
             prior = _find_existing_download(student_dir, sub, course, asg.assignment_id)
             if prior is not None:
-                print(f"  {slug:24} already downloaded ({prior.name}) — skipping")
+                if conn is not None:
+                    _record_submission(conn, sub, user_id, asg.assignment_id,
+                                       _file_in_prior_folder(prior), warnings, slug)
+                tag = "indexed" if conn is not None else "on disk"
+                print(f"  {slug:24} already downloaded ({prior.name}) — {tag}, skipping")
                 skipped += 1
                 continue
 
@@ -297,15 +390,26 @@ def _download_per_submission(session, course, asg, class_dir, date_str, force,
             skipped += 1
             continue
 
-        saved = download_submission(
-            session, course, sub.submission_id, dest, progress=_make_progress(slug),
-        )
+        try:
+            saved = download_submission(
+                session, course, sub.submission_id, dest, progress=_make_progress(slug),
+            )
+        except Exception as exc:
+            # A single stalled/oversized upload (e.g. a multi-hundred-MB file that
+            # times out mid-stream) must not abort the whole batch; record it and
+            # move on so the remaining submitters still get fetched.
+            print(f"\r  {slug:24} ⚠ download failed: {exc}", file=sys.stderr)
+            warnings.append(f"{slug}: download failed ({exc}) — re-run to retry")
+            skipped += 1
+            continue
         size = saved.stat().st_size
         total_bytes += size
         downloaded += 1
         _write_submission_meta(
             dest / SUBMISSION_META, course, asg.assignment_id, sub, saved.name,
         )
+        if conn is not None:
+            _record_submission(conn, sub, user_id, asg.assignment_id, saved, warnings, slug)
 
         extract_note = ""
         if extract:
@@ -385,6 +489,16 @@ def main(argv: list[str] | None = None) -> int:
         print(f"login failed: {exc}", file=sys.stderr)
         return 1
 
+    # The mirror DB is the dedup ledger: which submissions we already hold and at
+    # what submitted_at. It's a convenience index, not a hard dependency — if it
+    # can't be opened we fall back to the on-disk dedup (conn=None) rather than fail.
+    conn = None
+    try:
+        conn = open_db()
+    except Exception as exc:
+        print(f"warning: mirror db unavailable ({exc}); using on-disk dedup only",
+              file=sys.stderr)
+
     new_folders: list[str] = []
     try:
         try:
@@ -399,6 +513,17 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(f"target: {class_dir}/<slug>/{FINAL_ASSIGNMENT_SUBDIR}/downloaded_{date_str}/\n")
 
+        # Record the assignment we're targeting (both modes) so submissions have
+        # a parent row to FK against and the mirror knows this assignment exists.
+        if conn is not None:
+            try:
+                upsert_assignment(conn, assignment_id=asg.assignment_id,
+                                  course_code=args.course, title=asg.title,
+                                  deadline=asg.deadline_text)
+                conn.commit()
+            except sqlite3.Error as exc:
+                print(f"warning: could not record assignment in db ({exc})", file=sys.stderr)
+
         if args.combined:
             _download_combined(
                 session, args.course, asg, class_dir, date_str,
@@ -407,13 +532,15 @@ def main(argv: list[str] | None = None) -> int:
         else:
             downloaded, skipped, total, new_folders, warnings = _download_per_submission(
                 session, args.course, asg, class_dir, date_str, args.force,
-                extract=not args.no_extract, keep_zip=not args.no_keep_zip,
+                conn=conn, extract=not args.no_extract, keep_zip=not args.no_keep_zip,
             )
             print(f"\ndownloaded {downloaded} file(s), skipped {skipped} "
                   f"({_human_bytes(total)}) → {class_dir}")
             for warning in warnings:
                 print(f"  ⚠ {warning}", file=sys.stderr)
     finally:
+        if conn is not None:
+            conn.close()
         logout(session)
 
     if new_folders:

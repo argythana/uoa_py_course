@@ -11,10 +11,14 @@ Behaviour
 * Runs each implemented scraper, upserts rows in a single transaction.
 * Closes the session politely.
 
-In v1 only the `users` scraper is wired up; the other 5 modules
-(assignments, submissions, grades, attendance, announcements) are TODO
-stubs that print "not implemented" and skip. Adding one of them is a
-local change: write the scraper, then add it to `SCRAPERS` below.
+This orchestrator wires up the `users` (roster) scraper. `assignments` and
+`submissions` are written on demand by `download_submissions.py` (it has to
+pick an assignment and fetch files), so they are skipped here. `grades`,
+`attendance`, and `announcements` are still TODO stubs. Adding one is a local
+change: write the scraper, then add it to `SCRAPERS` below.
+
+DB bootstrap, migration, and the assignments/submissions upsert helpers live
+in the shared `db.py` module.
 
 Code lives in automation_infrastructure/ (committed). The DB lives under
 admin_docs/eclass_data/ (gitignored) because it contains student PII.
@@ -24,33 +28,16 @@ from __future__ import annotations
 
 import sqlite3
 import sys
-from pathlib import Path
 
 from dotenv import load_dotenv
 
+from .db import DB_PATH, REPO_ROOT, open_db
 from .session import LoginError, login, logout
 from .scrapers.users import fetch_users
 
-# Paths — code in automation_infrastructure/, data in admin_docs/ (gitignored).
-HERE = Path(__file__).resolve().parent
-REPO_ROOT = HERE.parents[1]
-DATA_DIR = REPO_ROOT / "admin_docs" / "eclass_data"
-DB_PATH = DATA_DIR / "eclass.db"
-SCHEMA_PATH = HERE / "schema.sql"
-
-# -- DB bootstrap ----------------------------------------------------------
-
-def open_db() -> sqlite3.Connection:
-    """Open eclass.db, running schema.sql if the file is new."""
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    db_existed = DB_PATH.exists()
-    conn = sqlite3.connect(DB_PATH)
-    conn.execute("PRAGMA foreign_keys = ON")
-    if not db_existed:
-        print(f"bootstrapping {DB_PATH} from {SCHEMA_PATH.name}")
-        conn.executescript(SCHEMA_PATH.read_text(encoding="utf-8"))
-        conn.commit()
-    return conn
+# DB bootstrap, migration, and the assignments/submissions upserts live in
+# `db.py`, shared with `download_submissions.py`. This orchestrator only adds
+# the roster (`users`) scraper + upsert below.
 
 
 # -- Per-module upserts ----------------------------------------------------
@@ -83,18 +70,21 @@ def _scrape_users(session, course):
     return ("users", fetch_users(session, course), upsert_users)
 
 
-def _todo(name: str):
+def _todo(name: str, note: str = "scraper not implemented yet"):
     def _stub(session, course):
-        print(f"  [TODO] {name}: scraper not implemented yet, skipping")
+        print(f"  [skip] {name}: {note}")
         return (name, [], lambda conn, rows: None)
     return _stub
 
 
 # Order matters: users first (other tables FK to it).
+# `assignments` + `submissions` are populated on demand by
+# `download_submissions.py` (it must pick an assignment and fetch files), so
+# this passive refresh leaves them to that CLI rather than re-scraping here.
 SCRAPERS = [
     _scrape_users,
-    _todo("assignments"),
-    _todo("submissions"),
+    _todo("assignments", "populated by download_submissions.py"),
+    _todo("submissions", "populated by download_submissions.py"),
     _todo("grades"),
     _todo("attendance"),
     _todo("announcements"),

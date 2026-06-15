@@ -1,5 +1,5 @@
 -- UoA eClass mirror database — current-state mirror, course-events scope.
--- Populated by admin_docs/eclass_recon/refresh_db.py.
+-- Populated by automation_infrastructure/eclass/{refresh_db,download_submissions}.py.
 -- All rows are upserted on natural keys; a partially-failed scrape never
 -- wipes out previously-good data.
 
@@ -31,16 +31,21 @@ CREATE TABLE IF NOT EXISTS assignments (
     UNIQUE (course_code, assignment_id)
 );
 
--- One submission per (user, assignment). file_path points at a local copy under
--- admin_docs/eclass_data/submissions/<course>/<assignment_id>/<user_id>/...
+-- One row per downloaded submission, written by download_submissions.py as it
+-- fetches each file. A later download run reads this table to decide what to
+-- skip: a submission whose submission_id + submitted_at is already on record is
+-- not re-fetched; a *changed* submitted_at for the same submission_id is a
+-- resubmission and re-downloads. user_id is nullable so a submitter missing
+-- from the roster snapshot (or whose profile id didn't parse) is still recorded,
+-- just without the user link.
 CREATE TABLE IF NOT EXISTS submissions (
-    submission_id      INTEGER PRIMARY KEY,  -- eClass-internal id
-    user_id            INTEGER NOT NULL REFERENCES users(user_id),
+    submission_id      INTEGER PRIMARY KEY,  -- eClass-internal id (the ?get= id)
+    user_id            INTEGER          REFERENCES users(user_id),  -- nullable; FK when set
     assignment_id      INTEGER NOT NULL REFERENCES assignments(assignment_id),
-    submitted_at       TEXT,
-    file_path          TEXT,
+    submitted_at       TEXT,                 -- raw eClass time string; the resubmission signal
+    file_path          TEXT,                 -- repo-relative path to the local copy
     file_sha256        TEXT,
-    last_scraped_at    TEXT    NOT NULL,
+    last_scraped_at    TEXT    NOT NULL,     -- ISO-8601 UTC of the last download/index
     UNIQUE (user_id, assignment_id)
 );
 

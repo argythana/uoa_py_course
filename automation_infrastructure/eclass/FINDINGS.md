@@ -167,8 +167,8 @@ clean sanity signal).
 | Module        | Status | Notes                                                |
 |---------------|--------|------------------------------------------------------|
 | `users`       | ✅     | `scrape_users.fetch_users(session, course_code)`     |
-| `assignments` | ✅ (files) | `scrapers/work.list_assignments` / `find_assignment_for_year` — list + discovery, not yet upserted into the DB |
-| `submissions` | ✅ (files) | `scrapers/work.{list_submissions,download_submission}` + `download_submissions.py` CLI — downloads files, not yet upserted |
+| `assignments` | ✅     | upserted by `download_submissions.py` (the targeted assignment), via `db.upsert_assignment` |
+| `submissions` | ✅     | `download_submissions.py` records one row per downloaded file (`db.upsert_submission`); the table is the dedup ledger — see §7 |
 | `grades`      | TODO   | `/modules/gradebook/index.php?course=…`              |
 | `attendance`  | TODO   | `/modules/attendance/index.php?course=…`             |
 | `announcements`| TODO  | `/modules/announcements/index.php?course=…`          |
@@ -198,13 +198,22 @@ Design decisions:
   `scaffold_student_dirs.sh` already creates, keyed by the same slug convention.
   (This is the one deliberate exception to "data under `admin_docs/`": the
   submission *is* the student's work, and `students_work/` is equally gitignored.)
-- **Date-stamped snapshots + per-submission dedup** — re-running on a new day
-  makes a new dated folder, but each submission is downloaded **once**. A
-  `.submission_meta.json` sidecar records `submission_id` + `submitted_at`, and a
-  submission already on disk (matched by its sidecar, or by filename + backfilled
-  for pre-dedup downloads) is skipped. A **resubmission** is detected by a newer
-  `submitted_at` than the file we hold (`scrapers/work.list_submissions` scrapes
-  that timestamp from the work page) and is re-downloaded; `--force` overrides.
+- **Date-stamped snapshots + DB-driven dedup** — re-running on a new day makes a
+  new dated folder, but each submission is downloaded **once**. The skip decision
+  reads the mirror DB, not the filesystem: each download writes a `submissions`
+  row (`submission_id`, `submitted_at`, repo-relative `file_path`), and a later
+  run skips a submission whose `submission_id` + `submitted_at` is already on
+  record — one indexed lookup instead of walking every student's folder. A
+  **resubmission** is detected by a newer `submitted_at` for the same
+  `submission_id` (scraped from the work page by `scrapers/work.list_submissions`)
+  and re-downloads, updating the row; `--force` overrides. A
+  `.submission_meta.json` sidecar is still written next to each file; on the
+  first run under this scheme, pre-ledger downloads are matched on disk (sidecar,
+  or filename for pre-sidecar ones) and **backfilled** into the DB so they aren't
+  re-fetched. The DB layer lives in `db.py` (shared with `refresh_db.py`); a
+  one-time migration relaxes `submissions.user_id` to nullable so a submitter
+  outside the roster snapshot is still recorded. If the DB can't be opened, dedup
+  degrades to the on-disk check.
 
 Submissions can be hundreds of MB when a student bundles a venv / dataset /
 `.git` — that's upload size, not a fault in the downloader.
