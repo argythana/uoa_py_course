@@ -72,6 +72,10 @@ Every lecture folder contains a `goals_NN.md` file with:
 - Negative feedback on the course material and the lectures delivery.
 - Good programming memes.
 
+### One more bit of good news: you'll learn MLOps, not just ML
+
+Most introductory courses stop once a model is trained. This one goes further — [Lecture 13](https://github.com/argythana/uoa_py_course/tree/main/lectures_07_13_pandas_plots_scikit/lecture_13_pipelines_gridsearch_mlflow) brings in **MLflow**, the industry-standard tool for experiment tracking, model management, and reproducible pipelines that sits at the heart of modern **MLOps**. Learning it here is a real, marketable advantage: you leave the course knowing not just how to build a model, but how to track, compare, and ship it like a professional.
+
 ### Course structure and pace
 
 - The course starts slowly and accelerates. Each lecture covers a bit more material than the previous one.
@@ -117,6 +121,7 @@ Every lecture folder contains a `goals_NN.md` file with:
 ### What next
 
 Please visit:
-a) A mini [crash-course on develpment tools.](https://github.com/argythana/dev_boilerplate_course)  
-b) A demo repo to go to [intermediate and then to advanced material](https://github.com/argythana/r4m_public_demo)  
-c) A section with "real work" examples, Python in the workplace by UoA - BIS graduates. (Soon).
+a) A dedicated [teaching repo on MLflow, from beginner to advanced.](https://github.com/argythana/teach-mlflow)  
+b) A mini [crash-course on development tools.](https://github.com/argythana/dev_boilerplate_course)  
+c) A demo repo to go to [intermediate and then to advanced material](https://github.com/argythana/r4m_public_demo)  
+d) A section with "real work" examples, Python in the workplace by UoA - BIS graduates. (Soon).
