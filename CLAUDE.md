@@ -53,6 +53,8 @@ uv export --format requirements-txt --no-hashes --no-emit-project --no-dev -o re
 
 If `course_venv/` ever drifts from the lockfile (e.g. someone ran a stray `pip install`), run `uv sync` to bring it back in line. Use `uv sync --inexact` if you want to keep extra ad-hoc packages that aren't in `pyproject.toml`.
 
+**Assignment-grading packages — the `grading` dependency group.** When executing a student's final-assignment notebook fails on a missing import (a package the student used that is not a course dep, e.g. `xgboost`), install it with `uv add --group grading <pkg>` — never plain `pip install`, and only after the grading skill has prompted the maintainer. The group is non-default, so it never reaches the student-facing `uv export` (`requirements.txt`), and a plain `uv sync` uninstalls the grading packages again once the grading session is over. Re-install them for a later session with `uv sync --group grading`. Commit the `pyproject.toml` + `uv.lock` change like any other dep change; `requirements.txt` is unaffected.
+
 ### Per-app requirements (deploy artefacts)
 
 Per-deployable artefacts keep their own minimal `requirements.txt` alongside the code (e.g. `lectures_07_13_pandas_plots_scikit/lecture_09_clustering_deploy_hf_app/reading_material/requirements.txt` for the Gradio/HF Space). Those are deliberately tiny — they ship to Hugging Face Spaces, where small requirements files mean fast cold starts. Do **not** replace them with the top-level uv-exported `requirements.txt`.

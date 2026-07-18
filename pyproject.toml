@@ -41,9 +41,18 @@ dev = [
     "google-auth-oauthlib>=1.4.0",
     "langdetect>=1.0.9",
     "odfpy>=1.4.1",
+    "prek>=0.4.10",
     "pymupdf>=1.27.2.3",
     "python-docx>=1.2.0",
     "ruff>=0.15.12",
+]
+# Assignment-grading only: packages a student's submission needs that are not
+# course deps (e.g. xgboost). Add via `uv add --group grading <pkg>` when a
+# notebook fails on a missing import during grading. Non-default group, so it
+# never reaches the student-facing `uv export` (requirements.txt) and a plain
+# `uv sync` removes the packages again after the grading session.
+grading = [
+    "xgboost>=3.3.0",
 ]
 
 # Pending lectures (10–13 ML, 14–16 PyTorch) will add their own deps here as
