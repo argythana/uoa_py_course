@@ -14,6 +14,11 @@ repos:
     hooks:
       - id: bandit
         files: ^(automation_infrastructure|\.claude/skills)/.*\.py$
+        # B112 (try/except/continue) is a legitimate "try each parse strategy,
+        # move on" pattern in the dataset-inspection heuristics; gitleaks above
+        # covers secret detection, so bandit here is for injection/unsafe-call
+        # classes (medium/high). Everything except B112 stays enabled.
+        args: ["--skip", "B112"]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
