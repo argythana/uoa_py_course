@@ -5,7 +5,12 @@
 # Editors / IDEs / tool caches
 .idea/
 .vscode/
-.claude/
+# .claude/: only skills/ is public (open-sourced course toolchain); settings,
+# prompts, scripts, and eval reports stay local. The dissertation skill is
+# secretariat process, not course toolchain — keep it private.
+.claude/*
+!.claude/skills/
+.claude/skills/assess_postgrad_dissertation
 .codex/
 .gradio/
 
