@@ -70,7 +70,7 @@ relative imports, so direct `python path/to/file.py` won't work).
 python -m automation_infrastructure.eclass.refresh_db
 
 # Mirror a different course on the same account.
-python -m automation_infrastructure.eclass.refresh_db ECON608
+python -m automation_infrastructure.eclass.refresh_db ECONxxx
 
 # Per-module smoke tests (optional):
 python -m automation_infrastructure.eclass.session                 # auth only
@@ -139,7 +139,7 @@ sqlite3 admin_docs/eclass_data/eclass.db \
 | `eclass/schema.sql`           | The 6-table SQLite schema                                |
 | `eclass/FINDINGS.md`          | Recon notes, design choices, next-step menu              |
 | `admin_docs/eclass_data/eclass.db` | The local DB (gitignored)                           |
-| `admin_docs/eclass_recon/`    | Historical recon artefacts: probe scripts, HTML/JSON dumps |
+| `eclass/recon/`               | Historical recon probe scripts (read-only, one login attempt each) — how the subsystem was reverse-engineered |
 
 ## Downloading final-assignment submissions
 
@@ -219,8 +219,9 @@ so each module is a focused change of ~50–150 lines.
   submissions once more scrapers land. The file must stay under `admin_docs/`
   (gitignored). Don't paste query results into chats or commits without
   redacting.
-- **No MFA today.** If UoA enables MFA on your account, the CAS POST flow
-  breaks; you'd need a headless browser to handle the second factor.
+- **Single-factor assumption.** The CAS POST flow assumes a single-factor
+  login; if a second factor is ever required, it breaks and you'd need a
+  headless browser to handle it.
 
 ---
 

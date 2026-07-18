@@ -2,7 +2,7 @@
 
 Run with:
     python -m automation_infrastructure.eclass.refresh_db            # default: ECON537
-    python -m automation_infrastructure.eclass.refresh_db ECON608    # other course
+    python -m automation_infrastructure.eclass.refresh_db ECONxxx    # any other course code
 
 Behaviour
 ---------

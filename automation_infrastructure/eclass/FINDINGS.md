@@ -23,31 +23,28 @@ Working programmatic flow (≈30 lines of `requests` + `BeautifulSoup`):
    sets `PHPSESSID` on `eclass.uoa.gr`. From here, normal cookie-based session
    access works.
 
-Reference script: `02_cas_login.py`. **No MFA** is required for this account —
-if MFA is enabled later (e.g. for admin promotion), the scripted flow breaks
-and we'd need a headless browser or a long-lived API token instead.
+Reference script: `02_cas_login.py`. The flow assumes a single-factor login; if
+the account later requires a second factor, the scripted flow breaks and we'd
+need a headless browser or a long-lived API token instead.
 
 Polite logout: `GET /index.php?logout=yes`.
 
-### Risks worth flagging
+### Safety rules for any automation built on this
 
-- A repeated bad-password POST against `sso.uoa.gr/login` can lock the
-  university account. The scripts here run **one** attempt and exit on
-  failure — keep that property in any future automation.
+- **One login attempt, then stop.** Failed logins against the university SSO
+  must not be retried in a loop; the scripts here run a single attempt and exit
+  on failure, and any future automation must keep that property.
 - The `execution` token is single-use and short-lived (~minutes). Re-scrape it
   each login; don't cache.
 - The `TGC` cookie is the CAS ticket-granting cookie. Treat it as a credential:
   do not log it, do not commit it.
-- No real students names should be pushed to the GitHub repo.
+- No real student names should be pushed to the GitHub repo.
 
 ## 2. Account portfolio
 
-`portfolio.php` lists 5 courses for this account (course code → title):
+`portfolio.php` lists the account's enrolled courses. The only one this repo
+automates:
 
-- `ECON409` — Διπλωματική Εργασία (Master's Thesis) — Γ΄ Εξάμηνο
-- `ECON608` — Επιστήμη Αναλυτικής Δεδομένων (Business Analytics): Μηχανική Μάθηση
-- `ECON875` — Μέθοδοι έρευνας σε εργαλεία Ανάπτυξης Λογισμικού
-- `ECON320` — Ποσοτικές Μέθοδοι και Επιχειρησιακή Στατιστική
 - **`ECON537`** — Προγραμματισμός Υπολογιστών — Python — Β΄ Εξάμηνο  ← this repo's course
 
 Course home URL pattern: `https://eclass.uoa.gr/courses/<CODE>/`.
@@ -90,7 +87,7 @@ typically does.
   workflow.
 - File-upload flows (`document`, `work`). These usually need
   `multipart/form-data` and a per-form CSRF token — non-trivial.
-- The other 4 courses on this account (recon only touched ECON537).
+- Any other courses on this account (recon only touched ECON537).
 
 ## 5. Recommended next step (pick one)
 
@@ -123,19 +120,20 @@ Working code (committed, lives in `automation_infrastructure/eclass/`):
 | `schema.sql`                 | The 6-table SQLite schema                              |
 | `FINDINGS.md`                | This file                                              |
 
-Historical recon artefacts (gitignored, kept under `admin_docs/eclass_recon/`):
+Historical recon probe scripts, kept for reference under `recon/` (each does one
+read-only login attempt; superseded by `session.py` + `scrapers/`):
 
-| File                       | Purpose                                                |
-|----------------------------|--------------------------------------------------------|
-| `01_login_probe.py`        | First (failed) attempt against the eClass-local form   |
-| `02_cas_login.py`          | One-shot CAS SSO login + portfolio snapshot (kept as a reference) |
-| `03_course_modules.py`     | Enumerates enabled modules on a given course           |
-| `portfolio.html`           | Unauthed login-form snapshot                           |
-| `portfolio_authed.html`    | Authenticated portfolio.php snapshot                   |
-| `ECON537_home.html`        | Authenticated ECON537 course home                      |
-| `ECON537_users.html`       | Empty-shell roster page (DataTables before AJAX)       |
-| `ECON537_users.json`       | DataTables AJAX response — 57 raw user rows            |
-| `ECON537_work_78801.html`  | Authenticated `work` assignment page — basis for `scrapers/work.py` |
+| File                         | Purpose                                                |
+|------------------------------|--------------------------------------------------------|
+| `recon/01_login_probe.py`    | First (failed) attempt against the eClass-local form   |
+| `recon/02_cas_login.py`      | One-shot CAS SSO login + portfolio snapshot            |
+| `recon/03_course_modules.py` | Enumerates enabled modules on a given course           |
+
+The scripts write their HTML snapshots to `admin_docs/eclass_recon/` (gitignored —
+authenticated pages contain student PII). The original 2026-05 recon captures
+(portfolio/course-home HTML, DataTables roster JSON, the `work` assignment page
+that `scrapers/work.py` was built from) were deleted on 2026-07-18; everything
+they established is recorded in this file.
 
 The DB itself lives at `admin_docs/eclass_data/eclass.db` (gitignored)
 because it contains student PII. Schema definition lives next to the code
@@ -153,7 +151,7 @@ Decisions taken:
   No usage/analytics page-view scraping.
 - **ECON537 only for v1** — schema already keys everything by `course_code`,
   so adding more courses is just running the orchestrator with a new code.
-- **On-demand CLI** — `python admin_docs/eclass_recon/refresh_db.py [COURSE]`.
+- **On-demand CLI** — `python -m automation_infrastructure.eclass.refresh_db [COURSE]`.
   No cron until v1 is rock-solid.
 - **Two-table grades model** — `grades.assignment_id` is nullable so the
   gradebook can hold items that aren't `/work` uploads (midterm, oral).
