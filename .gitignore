@@ -35,6 +35,11 @@
 /dissertations/
 /students_work/
 
+# Transient grading/feedback run artefacts — dumps of a student's executed
+# notebooks (student PII). Written to the repo root by the grading skill; never
+# publishable. gitleaks won't catch these (they're PII, not secrets).
+/exec_*.txt
+
 # Personal scratch and unsorted material — root-anchored
 /experimental/
 /images/
