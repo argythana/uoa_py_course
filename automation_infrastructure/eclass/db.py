@@ -139,9 +139,17 @@ def upsert_submission(
 
     A resubmission reuses the same ``submission_id`` with a newer
     ``submitted_at``; this upsert overwrites the row so the ledger tracks the
-    current submission. ``user_id`` may be None for a submitter absent from the
-    roster snapshot.
+    current submission. A student who deletes and re-uploads instead gets a
+    **new** ``submission_id`` for the same (user, assignment) — the stale row is
+    dropped first, or the insert would trip ``UNIQUE (user_id, assignment_id)``.
+    ``user_id`` may be None for a submitter absent from the roster snapshot.
     """
+    if user_id is not None:
+        conn.execute(
+            "DELETE FROM submissions WHERE user_id = ? AND assignment_id = ? "
+            "AND submission_id <> ?",
+            (user_id, assignment_id, submission_id),
+        )
     conn.execute(
         """
         INSERT INTO submissions
@@ -158,4 +166,40 @@ def upsert_submission(
         """,
         (submission_id, user_id, assignment_id, submitted_at,
          file_path, file_sha256, utc_now()),
+    )
+
+
+def upsert_grade(
+    conn: sqlite3.Connection,
+    *,
+    user_id: int,
+    grade_item: str,
+    score: float,
+    max_score: float | None = None,
+    assignment_id: int | None = None,
+    graded_at: str | None = None,
+) -> None:
+    """Insert or refresh one ``grades`` row (keyed on ``user_id`` + ``grade_item``).
+
+    Used both for scraped gradebook items and for locally-produced items such as
+    the AI-suggested final-assignment grade (``grade_item`` =
+    ``final_assignment_<year>_ai_suggested``) — the distinct label keeps
+    suggested grades from ever masquerading as official ones. Re-recording a
+    student's item overwrites the score, so the table holds the latest value.
+    """
+    conn.execute(
+        """
+        INSERT INTO grades
+            (user_id, assignment_id, grade_item, score, max_score,
+             graded_at, last_scraped_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(user_id, grade_item) DO UPDATE SET
+            assignment_id   = excluded.assignment_id,
+            score           = excluded.score,
+            max_score       = excluded.max_score,
+            graded_at       = excluded.graded_at,
+            last_scraped_at = excluded.last_scraped_at
+        """,
+        (user_id, assignment_id, grade_item, score, max_score,
+         graded_at or utc_now(), utc_now()),
     )
