@@ -7,6 +7,10 @@ This module turns a downloaded archive into an extracted folder, safely:
 - it **refuses path-traversal members** (a ``../`` or absolute entry cannot
   escape the destination),
 - it **skips macOS resource forks** (``__MACOSX/``, ``._*``) and other OS junk,
+- it **skips bundled virtual-environment / dependency trees** (``venv/``,
+  ``site-packages/``, ``__pycache__/``, ...) — a student sometimes zips their
+  whole venv, which is hundreds of MB, machine-specific, and never part of the
+  submission,
 - it **leaves non-zip archives** (``.rar`` / ``.7z`` / ``.tar`` / ...) untouched
   with a clear warning, because the standard library can't open them, and
 - it **never raises on a corrupt zip or a single bad entry** — it collects
@@ -45,6 +49,25 @@ def _is_os_junk(name: str) -> bool:
     return base.startswith("._") or base in {".DS_Store", "Thumbs.db"}
 
 
+# Directory names that mark a bundled venv / dependency / IDE / VCS tree.
+# Kept in sync with the grading pipeline's inventory_submission.py.
+_ENV_DIR_NAMES = frozenset({
+    "venv", ".venv", "env", ".env", "site-packages", "node_modules",
+    "__pycache__", ".ipynb_checkpoints", ".git", ".hg", ".svn",
+    ".mypy_cache", ".pytest_cache", ".tox", ".eggs", ".idea", ".vscode",
+})
+
+
+def _is_env_junk(name: str) -> bool:
+    """True for members inside a bundled venv / dependency / tooling tree."""
+    for seg in Path(name).parts:
+        s = seg.lower()
+        if (s in _ENV_DIR_NAMES or s.endswith("venv")
+                or s.endswith(".dist-info") or s.endswith(".egg-info")):
+            return True
+    return False
+
+
 @dataclass
 class ExtractResult:
     """Outcome of attempting to extract one archive.
@@ -60,6 +83,7 @@ class ExtractResult:
     extracted_to: Path | None = None
     member_count: int = 0
     skipped_members: list[str] = field(default_factory=list)
+    skipped_env_member_count: int = 0
     removed_archive: bool = False
     warnings: list[str] = field(default_factory=list)
 
@@ -74,13 +98,17 @@ def safe_extract_zip(
     dest: Path,
     *,
     drop_os_junk: bool = True,
+    drop_env_junk: bool = True,
 ) -> ExtractResult:
     """Extract ``zip_path`` into ``dest``, refusing path-traversal members.
 
     Every member's resolved target must stay within ``dest``; an entry that tries
     to escape (``../`` or an absolute path) is skipped and recorded in
     :attr:`ExtractResult.skipped_members`. Directories are created on demand and
-    macOS junk is dropped when ``drop_os_junk`` is set. ``dest`` is created if it
+    macOS junk is dropped when ``drop_os_junk`` is set. When ``drop_env_junk``
+    is set (the default), members inside a bundled venv / dependency / tooling
+    tree are not extracted; only their count is recorded in
+    :attr:`ExtractResult.skipped_env_member_count`. ``dest`` is created if it
     does not exist.
 
     Raises :class:`zipfile.BadZipFile` if ``zip_path`` is not a readable zip —
@@ -95,6 +123,10 @@ def safe_extract_zip(
         for member in zf.infolist():
             name = member.filename
             if drop_os_junk and _is_os_junk(name):
+                continue
+            if drop_env_junk and _is_env_junk(name):
+                if not member.is_dir():
+                    result.skipped_env_member_count += 1
                 continue
             target = (dest / name).resolve()
             try:
@@ -120,6 +152,7 @@ def extract_archive(
     *,
     keep_archive: bool = True,
     drop_os_junk: bool = True,
+    drop_env_junk: bool = True,
 ) -> ExtractResult:
     """Extract a downloaded ``archive`` into ``dest`` (default: its own folder).
 
@@ -152,7 +185,8 @@ def extract_archive(
 
     dest = dest if dest is not None else archive.parent
     try:
-        result = safe_extract_zip(archive, dest, drop_os_junk=drop_os_junk)
+        result = safe_extract_zip(archive, dest, drop_os_junk=drop_os_junk,
+                                  drop_env_junk=drop_env_junk)
     except zipfile.BadZipFile as exc:
         return ExtractResult(
             archive=archive,

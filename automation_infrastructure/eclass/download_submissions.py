@@ -151,6 +151,8 @@ def _describe_extract(result: ExtractResult) -> str:
     if not result.extracted:
         return "  (⚠ extract failed)"
     suffix = f"  → extracted {result.member_count} file(s)"
+    if result.skipped_env_member_count:
+        suffix += f", {result.skipped_env_member_count} bundled venv file(s) skipped"
     if result.removed_archive:
         suffix += ", zip removed"
     return suffix
