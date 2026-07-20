@@ -323,8 +323,19 @@ def main(argv: list[str]) -> int:
     section_coverage["6_model_fit"]["fit_calls"] = n_fit
     section_coverage["6_model_fit"]["finetuning_signal"] = bool(finetune_signal)
 
-    classification_algos = {name: any(s in all_code for s in sigs)
+    # Detect algorithms by their presence OUTSIDE import lines — an algorithm
+    # that is merely imported but never instantiated/fitted must not read as
+    # implemented (validated failure mode: KNN/GaussianNB imported, never used).
+    code_no_imports = "\n".join(
+        ln for ln in all_code.splitlines()
+        if not re.match(r"\s*(import\s|from\s)", ln)
+    )
+    classification_algos = {name: any(s in code_no_imports for s in sigs)
                             for name, sigs in CLASSIFICATION_ALGOS.items()}
+    classification_algos_imported_only = {
+        name: (not classification_algos[name]) and any(s in all_code for s in sigs)
+        for name, sigs in CLASSIFICATION_ALGOS.items()
+    }
 
     result = {
         "notebook": str(args.notebook),
@@ -346,6 +357,7 @@ def main(argv: list[str]) -> int:
         },
         "section_coverage": section_coverage,
         "classification_algos": classification_algos,
+        "classification_algos_imported_only": classification_algos_imported_only,
         "_note": ("section_coverage and finetuning_signal are heuristic hints; the "
                   "editorial pass must confirm against the real notebook content."),
     }

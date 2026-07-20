@@ -124,3 +124,95 @@ makes the *next* cycle's grades more accurate and its feedback notes sharper.
   (3) "conclusions written without running" may recur — consider whether a standard feedback
   paragraph for it belongs in `grade_output_template.md`.
 - **Status:** absorbed
+
+### Cycle 2026-07-19_1644 (fourth class-26 cycle)
+- **Run shape:** ambitious self-built multi-source project; naming gate violated on all three
+  files; backup duplicates + lock files shipped; 2 of 3 notebooks zero-markdown; clustering
+  failed run-all (cells executed out of order); first live `uv add --group grading` install
+  (xgboost) — flow worked end-to-end, prompted, no student penalty, lockfile committed-ready.
+- **What worked:** the new `saved_outputs` + `verification_required` signals fed the panel from
+  Phase 1 with no mid-run corrections; heuristic "section absent" flags were refuted by all
+  three graders where wrong (regression selection/validation existed); arbiter produced one
+  full-spread ruling (clustering evaluation 0.5/0.75/1.0 → 0.75) from cell evidence; a
+  G2-only factual catch (declared-vs-deployed winner) was verified on fresh outputs and folded
+  into prose without double-pricing.
+- **What mis-fired:** nothing new in the pipeline. Recurring student patterns, third cycle in a
+  row: metrics printed but never interpreted; conclusions/markdown contradicting or missing.
+- **Instructor corrections:** none — grade accepted (implicitly, by advancing to next student).
+- **Fixes landed:** none needed this cycle (previous cycles' fixes carried the run).
+- **Watch next cycle:** (1) rounding direction balanced out this cycle (one up, one down) —
+  keep reporting direction, drop the standing concern unless a skew re-emerges; (2) the
+  "winner computed dynamically but deployed hard-coded" fragility is now a known pattern —
+  graders should check that the evaluated/deployed model matches the computed winner;
+  (3) catboost submission still ahead.
+- **Status:** absorbed
+
+### Incident 2026-07-19 — PII hazard: execution dumps written to the repo root
+- **What happened (caught by the maintainer, different session):** a grading run wrote
+  `exec_classification.txt` / `exec_clustering.txt` / `exec_regression.txt` — full execution
+  dumps of a student's notebooks — to the **repo root**. On a public repo, one `git add -A`
+  would leak student work, and gitleaks would NOT catch it (it scans for secrets, not PII).
+- **Stopgap (maintainer):** `/exec_*.txt` added to `.gitignore` and verified ignored.
+- **Fix landed (real fix):** both SKILL.md files (grade + feedback) now carry a **PII guard**
+  block at the workdir definition: student-derived transient files go to `$WORK` in `/tmp`,
+  never to the repo root or any tracked path; writers that cannot use `/tmp` (some subagent
+  sandboxes) must use the student's own gitignored folder (`<feedback_dir>/.grade_work/` /
+  `.fb_work/` pattern); prefer self-cleanup.
+- **Why it matters more now:** `.claude/skills/` is being un-gitignored for open-sourcing —
+  every rule that keeps PII out of tracked paths (including this log's own
+  no-names/timestamps-only rule) is now load-bearing.
+- **Status:** absorbed
+
+### Cycle 2026-07-19_2141 (fifth class-26 cycle)
+- **Run shape:** 3 notebooks, mild naming deviation (shortened surname + `_final` suffix);
+  NEW situation: case-only path mismatch (`data/` in code vs `Data/` on disk) — instructor
+  ruled **no penalty** BEFORE the panel ran (option set: full letter / half / none), ruling
+  codified in `grading_rubric.md`; executability judged on a case-bridged diagnostic run;
+  clustering still broke independently (stale-kernel NameError — the class's 4th
+  out-of-order/stale-kernel case).
+- **What worked:** baking the instructor ruling into the blind-panel framing from the start
+  produced ZERO mid-panel corrections (the cycle-3 lesson, validated); the arbiter caught a
+  **grader-fabricated citation** — G1 "quoted" a K=2 acknowledgment that does not exist in
+  the cell — by re-reading the actual cell text before ruling (the evidence-first protocol
+  working against grader hallucination); all three graders independently caught a stale
+  markdown metrics table contradicting computed output.
+- **What mis-fired:** a grader citing non-existent cell content is the sharpest failure mode
+  seen yet — averaging or majority-voting would still have survived it here, but only the
+  re-open-the-cell rule makes it structurally safe.
+- **Instructor corrections:** the case-mismatch calibration (chose most lenient option);
+  grade sign-off pending at entry time.
+- **Fixes landed:** `grading_rubric.md` → case-only-mismatch rule under relative_paths.
+- **Watch next cycle:** (1) first live use of the **draft-feedback fourth voice** coming
+  (next student has two June draft-feedback files); (2) keep verifying grader citations
+  against cells — consider telling graders explicitly that fabricated citations are the
+  known failure mode; (3) catboost submission still ahead.
+- **Status:** absorbed (process); grade sign-off pending
+
+### Cycle 2026-07-19_2308 (sixth class-26 cycle — first fourth-voice run)
+- **Run shape:** clean, conventional submission; all three notebooks ran clean with every
+  saved output reproducing exactly (first cycle with zero stale numbers); TWO June
+  draft-feedback files existed — latest used as the arbiter's fourth voice, withheld from
+  all blind passes.
+- **What worked:** the **fourth-voice mechanism validated end-to-end** — it corroborated
+  nearly every panel deduction (it had flagged the import-only KNN/NB as "the most important
+  fix" back in June), caught ONE still-present issue all three live graders missed (scaler
+  re-fit on the sweep sample), had its stale flags correctly discounted (numbers since
+  fixed; packaging fixed), and tie-broke the sole contested criterion 3-to-1 (clustering
+  EDA deferral → 1.0) — all with zero improvement-grading leakage. Panel convergence was the
+  best yet: 38/39 unanimous, graders 1+2 criterion-identical. The new grader-prompt
+  instructions (quote-only-what-is-there; four known failure patterns) coincided with zero
+  fabricated citations.
+- **What mis-fired:** `classification_algos` in `check_notebook_static.py` keyed on the
+  whole code text INCLUDING import lines — KNN/NB read as present when they were only
+  imported, never fitted. All three graders caught it, but the pipeline hint was wrong.
+- **Instructor corrections:** none at entry time (sign-off pending).
+- **Fixes landed:** `check_notebook_static.py` → algorithm detection now excludes import
+  lines, plus a new `classification_algos_imported_only` field (validated against cycle-6
+  false-positive and cycle-5 true-positive cases). Teachable finding worth reusing in class
+  material: target leakage by construction (label = threshold on a product of two retained
+  features) misdiagnosed as "overfitting" — a near-perfect TEST score cannot be overfitting.
+- **Watch next cycle:** (1) grader prompts still describe the detector flags as "verify" —
+  they now also carry `imported_only`; mention it in the facts bundle; (2) catboost
+  submission still ahead; (3) three of six graded submissions missed required classification
+  algorithms — an emerging cohort pattern worth a class-wide note when grading concludes.
+- **Status:** absorbed (process); grade sign-off pending

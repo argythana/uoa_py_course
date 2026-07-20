@@ -79,6 +79,11 @@ absent or broken. Keys in `code` are the exact keys `compute_grade.py` expects.
   the −1). Do not also subtract elsewhere — that would double-count.
 - Trust `resolves_on_disk: null` (a join/f-string/`os.path.join` the checker couldn't trace)
   to the **run-all** result: if it ran clean, the path worked.
+- **Case-only mismatch** (`data/` in code vs `Data/` on disk, or similar): instructor ruling
+  (2026-07-19) — treat as **resolving, no penalty** on either criterion; judge executability
+  on a bridged diagnostic run (symlink the correct case in the workdir). Coach it in the
+  feedback ("match folder and path case exactly — case-sensitive systems will fail"), never
+  deduct. Any *other* break found by the bridged run is still priced normally.
 
 ### `data_presentation` — Data Presentation · cap 0.5
 - **0.5** — loads the data **and** verbally describes data types (quantitative/categorical),
