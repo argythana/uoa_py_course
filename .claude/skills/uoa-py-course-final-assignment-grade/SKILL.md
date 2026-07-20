@@ -66,6 +66,16 @@ FBSKILL=$REPO/.claude/skills/uoa-py-course-final-assignment-feedback
 WORK=$(mktemp -d)   # scratch for extraction + per-notebook JSON; NOT the output location
 ```
 
+> **PII guard — scratch locations (incident-derived, 2026-07-19).** Student-derived transient
+> files (execution dumps, executed notebook copies, diagnostic logs, per-notebook JSON) go to
+> `$WORK` in `/tmp` — **never to the repo root or any tracked path**. A dump like
+> `exec_classification.txt` at the repo root is one `git add -A` away from leaking student
+> work on a public repo, and secret scanners (gitleaks) do NOT catch PII. If a writer cannot
+> use `/tmp` (some subagent sandboxes can't), it must write inside the student's own
+> **gitignored** folder instead: `$FEEDBACK_DIR/.grade_work/` (create it; `students_work/` is
+> gitignored end-to-end — the `.fb_work` pattern from the feedback batch workflow). Prefer
+> self-cleanup at the end of the run either way.
+
 > **Portability note:** when copying this skill to `argythana/python-ml-skills`, copy the four
 > pipeline scripts (`locate_student_submission.py`, `inventory_submission.py`,
 > `check_notebook_static.py`, `inspect_datasets.py`) and `dataset_rules.md` alongside it (or

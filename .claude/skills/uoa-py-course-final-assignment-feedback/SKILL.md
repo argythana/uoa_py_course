@@ -129,6 +129,14 @@ SKILL=$REPO/.claude/skills/uoa-py-course-final-assignment-feedback
 WORK=$(mktemp -d)   # scratch for extraction + per-notebook JSON; not the output location
 ```
 
+> **PII guard — scratch locations (incident-derived, 2026-07-19).** Student-derived transient
+> files (execution dumps, executed notebook copies, diagnostic logs, per-notebook JSON) go to
+> `$WORK` in `/tmp` — **never to the repo root or any tracked path** (a stray `exec_*.txt` at
+> the root is one `git add -A` from leaking student work on a public repo; gitleaks scans for
+> secrets, not PII). Writers that cannot use `/tmp` (some subagent sandboxes) must write
+> inside the student's own **gitignored** folder: `<feedback_dir>/.fb_work/` — never the repo
+> root. Prefer self-cleanup at the end of the run.
+
 ### Phase 0a — Locate the student's submission
 
 **If the user gave an explicit path** (an emailed `.zip`/folder/`.ipynb`), skip to Phase 0b with
