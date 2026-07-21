@@ -216,3 +216,83 @@ makes the *next* cycle's grades more accurate and its feedback notes sharper.
   submission still ahead; (3) three of six graded submissions missed required classification
   algorithms — an emerging cohort pattern worth a class-wide note when grading concludes.
 - **Status:** absorbed (process); grade sign-off pending
+
+### Cycle 2026-07-20_1630 (eighth class-26 cycle — recording invariant + 2nd fourth-voice run)
+- **Run shape:** clean, conventional submission — 3 well-named notebooks, single zip + `data/`,
+  two distinct legitimate datasets (King County housing → regression; UCI Steel Plates Faults →
+  clustering + classification, legitimate reuse); all three ran clean with saved outputs
+  reproducing exactly; no grading-group installs, no bundled venv; ONE June draft-feedback file
+  used as the arbiter's fourth voice. **This student had grade/feedback files on disk from a June
+  (feedback-validation-era) run but had NEVER been recorded to the DB/ODS** — the trigger for the
+  recording-invariant fix below.
+- **What worked:** (1) fourth-voice mechanism validated again — the June draft was of the SAME
+  June-9 submission, so it matched the final state exactly (zero stale flags), corroborated every
+  panel deduction, and shaped TWO contested rulings (independently judged the clustering
+  scaler-on-full-`X` harmless → preprocessing held 1.0; confirmed regression fine-tuning
+  "comfortably satisfies" → model_implementation moved UP to 2.0). (2) NO wrong-winner this cycle
+  — all three winners verified correct (Ridge / KMeans k=2 / SVM-linear), breaking the
+  wrong-winner streak. (3) All three required classification algos present and genuinely fitted
+  (KNN/NB/LogReg) — the import-excluding detector reported them right first try; breaks the
+  4-of-7 missing-algorithm cohort pattern.
+- **What mis-fired:** the arbiter's own independent pass docked regression model_implementation to
+  1.75 demanding a within-algorithm hyperparameter sweep the rubric does NOT require (its
+  fine-tuning definition is disjunctive: hyperparameters OR feature sets OR GridSearchCV). Both
+  live graders and the draft read it correctly; reconciliation moved it back to 2.0 on rubric
+  text. Calibration reminder for the arbiter prompt, not a rubric change — the rubric text is
+  already correct.
+- **New systematic student pattern:** `model_validation` = 0.0 in ALL THREE notebooks — each
+  notebook's markdown promises a prediction on "one hypothetical new observation" but the code
+  only ever calls `.predict(X_test)`; no `X_new` row is constructed. Unanimous, verified. Reads
+  like "predict on a new row you build by hand" being misread as "predict on the test set".
+- **Fixes landed:** the **recording invariant**. kaika_t exposed a silent gap — a student can
+  carry grade-summary/feedback files on disk yet never have gone through `record_grade.py`
+  (graded before recording existed), so they look done but are absent from the instructor's
+  ledger. New `scripts/audit_grades_recorded.py` (deterministic; cross-references grade-summary
+  files on disk against DB grade rows and ODS ledger rows via `slugify`; reports
+  RECORDED / MISSING / db_ods_drift / ORPHANS; exit 3 on any gap). SKILL.md Phase F step 4 now
+  states the invariant ("graded ⟺ in DB AND ODS; feedback files do not count") and runs the
+  audit right after every `record_grade`. Validated: audit found kaika_t MISSING (7/8), then
+  8/8 `all_graded_recorded: true` after recording.
+- **Watch next cycle:** (1) run `audit_grades_recorded.py` at the START of a future grading
+  session too, to catch pre-existing gaps before adding more; (2) the
+  validate-on-test-set-instead-of-a-new-row misreading may recur — if a 2nd student does it,
+  add a standard feedback paragraph to `grade_output_template.md`; (3) catboost submission STILL
+  ahead (grading-group flow last exercised cycle 4).
+- **Status:** absorbed (recording-invariant fix); grade sign-off pending
+
+### Cycle 2026-07-21_2108 (ninth class-26 cycle — non-existent-wrapper relative path)
+- **Run shape:** clean 3-notebook submission (already-extracted folder), single zip preserved,
+  `data/` + two distinct legitimate datasets (Customer Personality `marketing_campaign`, tab-sep
+  → regression; UCI `online_shoppers_intention` → clustering + classification, legit reuse); no
+  grading-group installs, no bundled venv, no draft feedback (plain 3-voice). Naming flag: the
+  clustering file is misspelled `clusterring`. **All three notebooks broke run-all** on a NEW
+  path variant.
+- **What worked:** the diagnostic-run protocol handled a new mechanical-break variant cleanly;
+  the panel graded content on the patched run with zero mid-panel corrections; the arbiter
+  **self-corrected a double-count** (its independent pass priced the regression MAE omission in
+  BOTH imports and model_evaluation, then at reconciliation moved model_evaluation UP 0.5→0.75
+  once the interaction was surfaced — MAE priced once, in imports); no wrong-winner or fabricated
+  numbers; the NB-absent detector was right first try.
+- **What mis-fired:** (1) NEW path pattern — all three read `../ek_assignment_folder/data/<file>`,
+  a RELATIVE path hard-coding a wrapping folder (`ek_assignment_folder`) that doesn't exist even
+  in the student's own zip (notebooks at root + `data/` beside them). The rubric already covers it
+  ("a relative path that doesn't resolve" → relative_paths 0; run-all break → executability 0 =
+  combined −1/notebook), so no rule change — but this is the first NON-absolute path to trigger the
+  combined −1, and it is NOT a case-mismatch (leniency rule does not apply). (2) nbconvert-CWD
+  gotcha: patching the read to a bare `data/…` failed because `nbconvert --execute` runs with the
+  kernel CWD = the executed notebook's own dir (`$WORK`), not the shell cwd — cost an extra
+  diagnostic iteration until data was symlinked into `$WORK`.
+- **Recurring student patterns:** (a) missing required classification algorithm — Naive Bayes
+  absent = **5th of 9 graded submissions** missing a required algo (cohort pattern now firmly
+  worth a class-wide note when grading concludes); (b) "new observation" validation that just
+  reuses a test row with a few fields overridden (2 of 3 notebooks) — kin to kaika_t's
+  promised-but-never-built miss; both cap `model_validation` at 0.25.
+- **Fixes landed:** SKILL.md Phase 3 diagnostic-run rule now says to patch the read to an
+  **absolute** path to the submitted data (or symlink data into `$WORK`), with the
+  nbconvert-kernel-CWD reason spelled out — prevents the wasted iteration next time.
+- **Watch next cycle:** (1) the reused-test-row / promised-but-absent new-observation pattern now
+  spans 3 students — if it recurs, add a standard `model_validation` paragraph to
+  `grade_output_template.md`; (2) catboost submission STILL ahead (grading-group flow last used
+  cycle 4); (3) the `../wrong_folder/` path variant may recur across the batch (students who
+  developed inside a differently-named folder) — the diagnostic protocol now handles it routinely.
+- **Status:** absorbed (diagnostic-run fix); grade sign-off pending

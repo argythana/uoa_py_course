@@ -53,8 +53,9 @@ If (1) or (2) change, this skill stays correct because it reads them live.
 
 The deterministic mechanical pipeline is **shared with the feedback skill** and lives there.
 This skill calls those four scripts in place and owns only the *grading* layer
-(`scripts/compute_grade.py` + the references above + this orchestration). This keeps the
-six debugged pipeline scripts in **one** place — fix a bug once, both skills get it.
+(`scripts/compute_grade.py`, `scripts/record_grade.py`, `scripts/audit_grades_recorded.py` +
+the references above + this orchestration). This keeps the six debugged pipeline scripts in
+**one** place — fix a bug once, both skills get it.
 
 ```bash
 REPO=$(git rev-parse --show-toplevel)
@@ -265,11 +266,15 @@ one *mechanical* blocker — typically an absolute path (`FileNotFoundError`) �
 penalty is already settled (`relative_paths=0` + `executability=0`), but the graders still
 need runtime evidence for the *content* criteria (a script/notebook with no saved outputs
 otherwise leaves nothing to verify). Make **patched scratch copies** in `$WORK` (fix only the
-read path to the submitted `data/…`; the submission itself is never touched), run those, and
-hand the outputs to all graders labelled explicitly as a **diagnostic run — content evidence
-only; does NOT change the executability/relative-paths zeros**. Without this, graders
-under-score model criteria they cannot verify; with it, the panel grades what the code
-actually does.
+read path; the submission itself is never touched) — point the read at an **absolute** path to
+the submitted data file (`<SUBMISSION_DIR>/data/<file>`), because `nbconvert --execute` sets the
+kernel's working directory to the *executed notebook's own directory* (`$WORK`), **not** your
+shell's `cwd`, so a bare relative `data/…` will not resolve from `$WORK` (a symlink
+`$WORK/data → <SUBMISSION_DIR>/data` works too, but the absolute path is simpler and
+layout-independent). Run those, and hand the outputs to all graders labelled explicitly as a
+**diagnostic run — content evidence only; does NOT change the executability/relative-paths
+zeros**. Without this, graders under-score model criteria they cannot verify; with it, the panel
+grades what the code actually does.
 
 ### Phase G1 — Three independent graders (parallel)
 
@@ -419,6 +424,22 @@ plus the per-notebook feedback prose and the reconciliation note (as text).
    (sheet `final_assignment_<YYYY>`, columns Ονοματεπώνυμο | Αριθμός Μητρώου | Βαθμός) from
    the DB — creating it if missing. The ODS is a view of the DB; never hand-edit it. A student
    missing from the mirror exits 2 → refresh with `automation_infrastructure/eclass/refresh_db.py`.
+
+   **Recording invariant (instructor rule, 2026-07-20): a student is _graded_ only when the
+   suggested grade is present in BOTH the DB and the ODS — written feedback/grade-summary files
+   on disk do NOT count as graded.** `record_grade.py` guarantees both stores in one call (the
+   ODS is regenerated from the DB every time, so they cannot drift). Immediately after recording,
+   verify the invariant across the whole class:
+
+   ```bash
+   $PY "$GSKILL/scripts/audit_grades_recorded.py" --year <YYYY>
+   ```
+
+   Exit `0` = every student with grade-summary files on disk is also in both stores
+   (`missing`/`db_ods_drift` empty). Exit `3` = at least one student is graded-on-disk but NOT
+   recorded (or the ODS has drifted from the DB) — `record_grade.py` them (or re-grade) before
+   treating the batch as complete. This is exactly how a student graded by an **earlier skill
+   version** (before recording existed) stays invisible to the ledger; the audit surfaces it.
 
 5. **Report to the user, only:** the output file paths, the suggested **total** grade, each
    notebook's suggested grade + run-all status, any rejection flags, and the ledger action
