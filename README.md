@@ -1,3 +1,5 @@
+
+
 # Welcome to the *"Python for Data Science, Machine Learning and Artificial Intelligence"* Course  
 
 This repo contains the lectures' material for the [Business Information Systems](https://bis-analytics.econ.uoa.gr/) Postgraduate Program.  
@@ -96,6 +98,7 @@ Most introductory courses stop once a model is trained. This one goes further â€
 - Integrated development environment: Interactive Python Notebooks are great, but we need a modern editor too.
 - Working with Python requires working knowledge of the Command Line. We use it extensively.
 - Using Git and GitHub is recommended, and all material is uploaded on e-class too.
+- **Python 3.12+** is required to run the course material and notebooks.
 
 ### Course Philosophy: Continuous Learning
 
