@@ -1,6 +1,6 @@
 ---
 name: uoa-py-course-final-assignment-grade
-description: Use this skill to GRADE a student's COMPLETE Python-course final assignment and produce a suggested numeric grade with per-notebook, per-criterion justification. Trigger on requests like "grade <student>'s final assignment", "score this submission", "what grade should this assignment get", "grade the eClass submission for <student>", "run the grading panel on <student>", or when the user supplies a .zip / folder / .ipynb of a final-assignment submission and asks for a grade / score / points rather than formative coaching. It reads the authoritative specs (final_assignment/submission_requirements.prompt.md for the 13 weighted criteria and notebook weights, final_assignment/grade_feedback.prompt.md for the grading orientation and output rules), REUSES the feedback skill's deterministic pipeline (locate → inventory → static checks → dataset inspection → run-all execution in course_venv), then runs a THREE-grader panel: two independent graders plus a third arbiter that grades independently FIRST and only then receives the other two graders' scores+feedback to produce the final reconciled verdict. If an earlier formative draft-feedback file exists for the student (from uoa-py-course-final-assignment-feedback), the arbiter also folds it in as a FOURTH equal-weight voice — validated cell-by-cell against the final submission and never graded on improvement. Grades are computed deterministically by scripts/compute_grade.py (criterion sums → nearest-0.5 notebook grades → weighted total → nearest-0.5 final grade; regression 0.25 / clustering 0.25 / classification 0.50). It writes timestamped per-notebook `<prefix>_<category>_feedback_<TS>.md` files plus an instructor-facing `<prefix>_assignment_grade_summary_<TS>.md` (with the panel reconciliation) into the student's gitignored final_assignment/ folder — never overwriting a prior grade run or the formative feedback skill's drafts — with the mandatory "AI-suggested, not final" disclaimers. Do NOT use this skill to give FORMATIVE no-grade coaching on a draft (use uoa-py-course-final-assignment-feedback); to assess an MSc dissertation (use assess_postgrad_dissertation); to evaluate lecture material (use uoa-py-course-lecture-eval); to download submissions from eClass (use automation_infrastructure/eclass/download_submissions.py); or to edit/fix the student's notebooks. One submission per invocation. If the input is ambiguous (multiple students match, no notebooks, a .rar that can't be extracted), ask which submission to grade before proceeding.
+description: Use this skill to GRADE a student's COMPLETE Python-course final assignment and produce a suggested numeric grade with per-notebook, per-criterion justification. Trigger on requests like "grade <student>'s final assignment", "score this submission", "what grade should this assignment get", "grade the eClass submission for <student>", "run the grading panel on <student>", or when the user supplies a .zip / folder / .ipynb of a final-assignment submission and asks for a grade / score / points rather than formative coaching. It reads the authoritative specs (final_assignment/submission_requirements.prompt.md for the 13 weighted criteria and notebook weights, final_assignment/grade_feedback.prompt.md for the grading orientation and output rules), REUSES the feedback skill's deterministic pipeline (locate → inventory → static checks → dataset inspection → run-all execution in course_venv), then runs a THREE-grader panel: two independent graders plus a third arbiter that grades independently FIRST and only then receives the other two graders' scores+feedback to produce the final reconciled verdict. Every deduction is gated by a UNANIMITY RULE — unanimity on the ISSUE causing the penalty (the anchored factual premise), not on the number: contested issues go back to extra blind examiners for up to 3 deliberation rounds, and anything not unanimously affirmed by then is struck (points refunded, remark deleted), because a false positive that wrongly lowers a real student's grade is unacceptable while a miss is not; enforced mechanically by scripts/apply_unanimity_gate.py, never by hand. If an earlier formative draft-feedback file exists for the student (from uoa-py-course-final-assignment-feedback), the arbiter also folds it in as a FOURTH equal-weight voice — validated cell-by-cell against the final submission and never graded on improvement. Grades are computed deterministically by scripts/compute_grade.py (criterion sums → nearest-0.5 notebook grades → weighted total → nearest-0.5 final grade; regression 0.25 / clustering 0.25 / classification 0.50). It writes timestamped per-notebook `<prefix>_<category>_feedback_<TS>.md` files plus an instructor-facing `<prefix>_assignment_grade_summary_<TS>.md` (with the panel reconciliation) into the student's gitignored final_assignment/ folder — never overwriting a prior grade run or the formative feedback skill's drafts — with the mandatory "AI-suggested, not final" disclaimers. Do NOT use this skill to give FORMATIVE no-grade coaching on a draft (use uoa-py-course-final-assignment-feedback); to assess an MSc dissertation (use assess_postgrad_dissertation); to evaluate lecture material (use uoa-py-course-lecture-eval); to download submissions from eClass (use automation_infrastructure/eclass/download_submissions.py); or to edit/fix the student's notebooks. One submission per invocation. If the input is ambiguous (multiple students match, no notebooks, a .rar that can't be extracted), ask which submission to grade before proceeding.
 ---
 
 # Final-assignment grading panel
@@ -24,6 +24,37 @@ There is no room for mistakes, misjudgments or unfavourable treatment."* So:
   genuine fine-tuning).
 - **Three independent eyes, then reconciliation.** Two graders score blind; a third grades
   blind *and then* arbitrates the three. This is the audit trail against misjudgement.
+- **No penalty without a unanimously affirmed issue** (instructor mandate, 2026-07-29 — see
+  *The unanimity rule* below). A false positive is unacceptable at this level; a miss is not.
+
+## The unanimity rule (load-bearing — read before every panel)
+
+**Unanimity is required on the ISSUE that causes the penalty, never on the number.**
+
+Graders may legitimately land on 0.25 vs 0.5 for the *same* confirmed weakness — that is
+rubric calibration, and the arbiter settles it against the ladder in `grading_rubric.md`. They
+may **not** disagree about whether the weakness *is there*. Every point deducted, and every
+critical remark written, rests on a **finding**: a concrete factual claim about the submission,
+anchored to a cell ("Naive Bayes is imported at cell 3 but never fitted").
+
+    A finding may cost points or enter the feedback prose only if EVERY voter in a single
+    quorate deliberation round — at least 2 fresh blind examiners plus the arbiter —
+    independently AFFIRMED it after re-opening the cells.
+
+When the panel splits on a finding, the arbiter does **not** average, split the difference, or
+rule by majority. It sends the specific issue back for re-examination with **additional blind
+examiners**, up to **3 rounds**. A finding that has not reached unanimity by the end of round 3
+is **STRUCK**: the penalty is refunded in full and the remark is *deleted*, not softened.
+
+Why the asymmetry: missing a real weakness costs a student nothing. Inventing one lowers a real
+person's grade and tells them their work has a fault it does not have. **Never harm a student on
+a premise that is not unanimously established.** Where the evidence is ambiguous, the student
+wins — every examiner is told this explicitly.
+
+This is enforced mechanically by `scripts/apply_unanimity_gate.py`, not by prose discipline.
+**Never hand-assemble the surviving-findings set** — the sibling dissertation skill lost 43
+claims to two silent breach shapes that only a script catches (a re-worded finding never
+re-voted; a finding born during arbitration that never faced the panel at all).
 - **Reuse a prior draft read if one exists.** If the formative feedback skill already produced a
   draft-feedback file from an earlier submission, the arbiter folds it in as a fourth
   equal-weight voice — validated against the final notebooks, never graded on improvement (see
@@ -53,8 +84,9 @@ If (1) or (2) change, this skill stays correct because it reads them live.
 
 The deterministic mechanical pipeline is **shared with the feedback skill** and lives there.
 This skill calls those four scripts in place and owns only the *grading* layer
-(`scripts/compute_grade.py`, `scripts/record_grade.py`, `scripts/audit_grades_recorded.py` +
-the references above + this orchestration). This keeps the six debugged pipeline scripts in
+(`scripts/extract_divergences.py`, `scripts/apply_unanimity_gate.py`,
+`scripts/compute_grade.py`, `scripts/record_grade.py`, `scripts/audit_grades_recorded.py` +
+the references above + this orchestration). This keeps the debugged pipeline scripts in
 **one** place — fix a bug once, both skills get it.
 
 ```bash
@@ -108,7 +140,9 @@ WORK=$(mktemp -d)   # scratch for extraction + per-notebook JSON; NOT the output
 ## Procedure
 
 Phases 0–3 are the **shared deterministic pipeline** (cheap, zero-token, run once on the main
-thread). Phases G1–G2 are the **grading panel** (subagents). Phase F computes + writes.
+thread). Phases G1–G3 are the **grading panel** (subagents): G1 blind grading, G1½ the
+deterministic divergence census, G2 the unanimity deliberation rounds, G3 arbiter
+reconciliation. Phase F computes + writes.
 Phase I is the **instructor iteration loop** — grading is one-by-one so the instructor
 controls, reviews, and improves each result before the next student.
 
@@ -221,10 +255,15 @@ mid-panel costs an arbitration round.
 
 ### Phase 3 — Execute each notebook once (deterministic, shared with all graders)
 
-For each notebook, **secret-gate first** (grep for `os.environ`, `getenv`, `HF_TOKEN`,
-`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `load_dotenv`, hard-coded `hf_*`/`sk-*`); if it needs
-secrets, skip execution and record `skipped (needs secret: …)`. Otherwise run from the
-notebook's own directory:
+For each notebook, **secret-gate first** — scan for `os.environ`, `getenv`, `HF_TOKEN`,
+`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `load_dotenv`, hard-coded `hf_*`/`sk-*`; if it needs
+secrets, skip execution and record `skipped (needs secret: …)`. **Scan CODE CELLS only, never a
+raw `grep` over the `.ipynb` file** — a whole-file grep false-positives on base64 image data in
+saved `png` outputs (which routinely contains `sk-`/`hf_` substrings) and on prose in markdown
+cells, and would make you wrongly skip a runnable notebook (a real cycle hit this: two notebooks
+flagged, zero actual secret usage). Extract the code sources first (e.g. load the JSON and
+concatenate `cells[*].source` where `cell_type == "code"`), then match — and confirm any hit is a
+genuine secret dependency in code before skipping. Otherwise run from the notebook's own directory:
 
 ```bash
 cd "<notebook dir>" && $JUP nbconvert --to notebook --execute "<notebook>" \
@@ -298,13 +337,28 @@ Instruct each grader to:
 2. Score the **13 criteria per notebook** on the 0.25 grid within each cap, applying the
    penalty rules in the rubric (encode the absolute-path −1 as `relative_paths=0` **and**
    `executability=0`; do not double-count).
-3. Return **only** a structured result — **no files, no chat** — in this exact shape:
+3. **State a `findings` entry for every criterion they score below its cap.** This is
+   mandatory and mechanically checked: a score below cap with no stated finding is a penalty
+   with no premise on record, and `extract_divergences.py` flags it. Each finding is one
+   concrete, checkable factual claim, anchored to a cell, quoting or describing **only what is
+   actually there** — never a paraphrase of what the grader expected. One issue per finding
+   (do not bundle three weaknesses into one statement; they may not stand or fall together).
+4. Return **only** a structured result — **no files, no chat** — in this exact shape:
 
 ```json
 {
   "grader": "1",
   "notebooks": {
-    "regression":     {"filename":"...", "criteria":{"executability":0.5, "...":0.0}, "strongest":"...", "notes":{"eda":"why this score", "...":"..."}},
+    "regression": {
+      "filename": "...",
+      "criteria": {"executability": 0.5, "...": 0.0},
+      "findings": [
+        {"criterion": "eda", "statement": "Only histograms of 4 numeric features; no feature-vs-target plot exists.",
+         "anchor": "cells 7-11", "evidence": "cells 7,9,11 each call df[col].hist(); no scatter/box against the target"}
+      ],
+      "strongest": "...",
+      "notes": {"eda": "why this score", "...": "..."}
+    },
     "clustering":     {"...": "..."},
     "classification": {"...": "..."}
   },
@@ -317,7 +371,84 @@ Label the third grader the **arbiter** but give it the *identical* blind task in
 independent grade must exist **before** it ever sees graders 1 and 2. **Capture the third
 agent's ID/name** so you can continue its context in G2.
 
-### Phase G2 — Arbiter reconciliation (continue the third agent)
+Save the three returns as `$WORK/panel/g1.json`, `g2.json`, `g3.json`.
+
+### Phase G1½ — Divergence census (deterministic — do not eyeball this)
+
+```bash
+mkdir -p "$WORK/panel"
+$PY "$GSKILL/scripts/extract_divergences.py" \
+    "$WORK/panel/g1.json" "$WORK/panel/g2.json" "$WORK/panel/g3.json" --out "$WORK/panel"
+```
+
+This computes, by arithmetic, **every (notebook, criterion) that any grader scored below its
+cap** — i.e. every proposed penalty — plus the findings each grader stated, and a
+`problems` list naming any grader who docked a criterion while stating no finding for it.
+Read `keys_needing_findings`: that is the work list for the deliberation. `score_spread` is a
+**diagnostic only** — divergent numbers are a *symptom* that the underlying premises differ,
+not the thing to be reconciled.
+
+Then build `$WORK/panel/findings.json`: the **canonical, de-duplicated** list of every
+penalty-bearing issue proposed by any voice, each with a stable `id` (`F1`, `F2`, …). Merging
+two graders' wordings of the same issue is judgement, so you (or the arbiter) do it — but
+merge only when the claims are genuinely the *same fact*. Two findings that could stand or
+fall independently stay separate, or a single dissent will strike both. Every key in
+`keys_needing_findings` must be covered by ≥1 canonical finding; if a grader docked a
+criterion silently, either ask them (SendMessage) for the premise or drop that penalty now.
+
+### Phase G2 — Deliberation rounds (max 3, unanimity on the issue)
+
+**Which findings go to a vote (instructor policy, 2026-07-29).** A finding that **all three
+blind graders raised independently and none contradicted** is marked `"blind_unanimous": true`
+in `findings.json` and settles without a round — the gate records it as
+`unanimous_blind_affirm_no_round`. **Everything else goes to the ballot**: contested criteria,
+single-voice findings, two-of-three findings, and every narrowed re-issue.
+
+> The instructor weighed and accepted the residual risk here. It is real: in the first gated
+> panel, a claim raised by **all three** graders was still unanimously REFUTED once examined,
+> because agreeing that something is wrong is not the same as having verified the exact
+> wording. **The mitigation is at the merge step, and it is mandatory:** a `blind_unanimous`
+> finding must carry **the most conservative grader's wording verbatim** — never a
+> coordinator-written paraphrase. Coordinator-introduced quantifiers ("only", "never",
+> "no…at all") defeated *every* struck claim in that panel. If the three graders' wordings
+> differ in strength, either take the weakest or send it to the ballot.
+
+For round `r` in 1, 2, 3 — stop as soon as no finding is left unsettled:
+
+1. Spawn **fresh blind examiners** in one message: **2 in round 1, then 3 in each of rounds 2
+   and 3** (an unsettled issue earns more eyes, exactly as the instructor mandated). They are
+   `general-purpose` agents that have never seen this submission.
+2. Give each examiner: the notebook path(s), the relevant rubric text, and the **finding
+   statements alone** — never the scores, never who raised what, never the tally so far, never
+   the previous round's votes. Anchoring an examiner on the count converts unanimity into
+   bandwagon.
+3. Instruct each examiner to **open the anchored cells and verify the claim as stated**, then
+   return `AFFIRM` / `REFUTE` / `UNSURE` per finding with a one-line reason quoting what is
+   actually in the cell. Tell them verbatim: *"If the evidence does not clearly and
+   unambiguously establish the claim as worded, vote REFUTE or UNSURE. A missed weakness costs
+   the student nothing; a wrongly affirmed one lowers a real person's grade on a false premise.
+   Ambiguity resolves in the student's favour."*
+4. **The arbiter votes in every round too** (SendMessage its captured ID), re-opening the cells
+   rather than restating its G1 position. A round without the arbiter's vote is not quorate.
+5. Write each vote to `$WORK/panel/round<r>_<voter>.json` (`{"voter":"e1","round":1,"votes":
+   [{"finding_id":"F1","vote":"AFFIRM","reason":"..."}]}`). The arbiter's file must be named
+   `round<r>_arbiter.json` — the gate detects quorum by that name.
+6. Run the gate to see what is still open:
+
+   ```bash
+   $PY "$GSKILL/scripts/apply_unanimity_gate.py" "$WORK/panel"
+   ```
+
+**Re-wording rule:** if a round shows the finding is *nearly* right but overstated, the arbiter
+may narrow it — but a narrowed finding is a **NEW finding with a new id**, and it starts at the
+next round with a full vote. A narrowed claim that only the arbiter re-affirms is exactly
+breach shape #2 and the gate will strike it.
+
+Findings that reach unanimous AFFIRM in a quorate round are settled and need no further rounds.
+Findings unanimously REFUTED are struck immediately. After round 3, **anything still contested
+is struck** — refund the points, delete the remark.
+
+### Phase G3 — Arbiter reconciliation (continue the third agent)
 
 Continue the arbiter so its **own** independent G1 grade is the anchor, then give it graders 1's
 and 2's full structured returns. Two ways, depending on what the runtime exposes:
@@ -344,38 +475,70 @@ contested criterion. **Two hard rules for using it:**
   not a delta — do not reward or penalise change-since-draft. A student who nailed it on the
   first try and one who fixed everything since the draft get the same grade for the same final work.
 
-Ask it to:
+A draft-feedback catch that no live grader raised is a **single-voice finding like any other**:
+it enters `findings.json` at Phase G1½ as a candidate and must survive a deliberation round
+before it can cost a point or appear as a criticism. Examiners never learn a finding came from
+the draft — they vote on the statement alone.
+
+Ask the arbiter to:
 1. Compare all three independent grades **criterion by criterion** (and, if present, the draft
    feedback as a 4th equal-weight voice).
-2. Resolve every divergence by **re-checking the notebook evidence** (not by averaging) — the
-   correct score is the one the cell-level evidence supports. Use the draft feedback's
-   corroborations/catches as equal-weight input, each validated against the current cells.
-   **Explicitly check every contested criterion for double-counting**: one root cause is
-   priced in exactly one criterion (e.g. a missing required algorithm lives in
-   `model_implementation`, not again in `model_selection`; an encoding blow-up whose only
-   symptom is an unremarked weak metric lives in `model_evaluation`, not also in
-   `preprocessing`). Real cycles show this is where graders diverge most — and the arbiter
-   must be as willing to move a score **up** as down when the evidence says so.
-3. Produce the **final reconciled** `criteria` for every notebook (same schema as G1), the
-   `rejection_flags`, the final per-notebook feedback prose, and a **panel reconciliation
-   note** (a per-notebook G1/G2/arbiter/final table + the notable criterion-level divergences
-   and how each was resolved). **If a draft was used, add a short "draft-feedback cross-reference"
-   line** naming what it corroborated, what it caught that the live graders missed, and which of
-   its flags were stale (already fixed in the final).
-4. Return the final scores as a single JSON payload shaped for `compute_grade.py`:
+2. **Take the gate's verdicts as binding.** `surviving_findings.json` is the complete set of
+   premises available to it; `struck_findings.json` is off-limits — a struck finding may not
+   cost a point, may not be mentioned in the prose, and may not be recycled as "a minor
+   concern". Deleted means deleted. For each criterion, set the score from the **surviving**
+   findings only, calibrated against the rubric ladder; a criterion whose findings were all
+   struck returns to its **cap**.
+3. Resolve remaining *numeric* divergences (same issue, different magnitude) by **re-checking
+   the notebook evidence** against the rubric ladder — not by averaging. **Explicitly check
+   for double-counting**: one root cause is priced in exactly one criterion (a missing required
+   algorithm lives in `model_implementation`, not again in `model_selection`; an encoding
+   blow-up whose only symptom is an unremarked weak metric lives in `model_evaluation`, not
+   also in `preprocessing`). The arbiter must be as willing to move a score **up** as down.
+4. Produce the **final reconciled** `criteria` for every notebook, the `rejection_flags`, the
+   final per-notebook feedback prose, and a **panel reconciliation note** (a per-notebook
+   G1/G2/arbiter/final table + the notable divergences and how each resolved). **The note must
+   include a unanimity-gate section**: how many findings were put to a vote, how many settled
+   in each round, and every struck finding with the reason it was struck (this is the audit
+   trail proving no penalty rests on a contested premise). **If a draft was used, add a short
+   "draft-feedback cross-reference"** naming what it corroborated, what it caught that the live
+   graders missed, and which of its flags were stale (already fixed in the final).
+5. Return the final scores as a single JSON payload shaped for `compute_grade.py`, **with a
+   `justified_by` map naming the surviving finding ids behind every criterion below its cap**
+   (the gate re-checks this; a below-cap criterion citing nothing, or citing only struck
+   findings, is a breach):
 
 ```json
 {"prefix":"<prefix>", "rejection_flags":[...],
- "notebooks":{"regression":{"filename":"...","criteria":{...}},
+ "notebooks":{"regression":{"filename":"...","criteria":{...},
+                            "justified_by":{"eda":["F1"],"model_validation":["F2"]}},
               "clustering":{"...":"..."},
               "classification":{"submitted":false}}}
 ```
 
 plus the per-notebook feedback prose and the reconciliation note (as text).
 
+**Prose rule:** every critical sentence in the feedback must trace to a surviving finding id.
+Praise, coaching, and "to reach full marks, do X" guidance are free — they cost nothing and
+harm no one. Assertions of fault are not.
+
 ### Phase F — Compute the grade and write the files
 
-1. Save the arbiter's final-scores JSON to `$WORK/final_scores.json` and run:
+1. Save the arbiter's final-scores JSON to `$WORK/final_scores.json`. **Run the unanimity gate
+   first — it is a hard precondition, not a report:**
+
+   ```bash
+   $PY "$GSKILL/scripts/apply_unanimity_gate.py" "$WORK/panel" \
+       --check-final "$WORK/final_scores.json" --write
+   ```
+
+   Exit `0` → every penalty rests on a unanimously affirmed issue; proceed. Exit `3` → at least
+   one criterion sits below its cap on a struck or absent premise. **Do not compute a grade.**
+   Fix it: raise each breached criterion to the `remedy_score` in the report (its cap, when
+   every premise died), or send the arbiter back to re-score it using only the surviving
+   findings — then re-run the gate until it exits 0. Never ship a grade the gate rejected.
+
+   Then compute:
 
    ```bash
    $PY "$GSKILL/scripts/compute_grade.py" "$WORK/final_scores.json" > "$WORK/grade.json"
@@ -475,6 +638,8 @@ student in the same breath.
 
 ## Quality bar
 
+- **No point is lost, and no fault is asserted, on a premise that was not unanimously
+  affirmed.** `apply_unanimity_gate.py` exits 0 before any grade is computed or written.
 - Every point lost names the **exact criterion** and the **cell/section**, per the prompt's
   "point out explicitly the reason and the related criterion".
 - Point out at least one genuinely strong section per notebook (the prompt asks for it).
