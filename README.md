@@ -5,7 +5,7 @@ This repo contains the lectures' material for the [Business Information Systems]
 Administrative, ephemeral issues (schedule, grades, questions, announcements) and any internal communication will be done via e-class.
 
 The course has been created, is being maintained, and taught by [Thanasis Argyriou, @linkedin](https://www.linkedin.com/in/thanasis-argyriou-06155a94/).  
-[Teacher's CV, Upd: Nov. 2023](https://bis-analytics.econ.uoa.gr/fileadmin/depts/econ.uoa.gr/bis-analytics/uploads/argyriou_cv_nov_23_gr.pdf).  
+[Teacher's CV, Upd: Aug. 2026](docs/cv_argyriou_t_2026_08.pdf).  
 Since 2026, the material has been updated with assistance from AI Agents such as Claude Code, AdaL, Codex, and has been inspired by the [Anthropic Course AI Fluency for Educators](https://anthropic.skilljar.com/ai-fluency-for-educators). For more info see the docs section.
 
 ## Lectures Outline
