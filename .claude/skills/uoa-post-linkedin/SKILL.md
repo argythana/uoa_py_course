@@ -42,24 +42,39 @@ evidence pointers, and status (`planned` → `drafted` → `published`). Read it
 
 ## LinkedIn format rules (the craft)
 
+`references/style_guide.md` holds the full craft (anti-AI-tell vocabulary and structures, hook
+angles, algorithm-informed reach rules, and what this skill borrows vs rejects from public
+LinkedIn skills). Read it. The essentials, inline:
+
 - **Plain text only.** LinkedIn renders no Markdown: no `**bold**`, no `#` headers, no
   `[links](...)`. Bare URLs are fine. Unicode bullets (`•`, `→`) are fine. 0–3 emoji total.
-- **The hook is the first ~200 characters** — that's all that shows before "…see more".
-  It must state the most interesting concrete fact, not clear its throat. Never open with
-  "I'm excited/thrilled to announce".
+- **The hook is the first ~200 characters** — that's all that shows before "…see more", and
+  the "see more" click is itself a ranked engagement signal, so the first line earns it. State
+  the most interesting concrete fact; never clear your throat or open with "I'm excited to
+  announce". Honest angles: before/after, a concrete number, a plain state-contrast. Never
+  manufacture surprise the content can't back.
 - **Short paragraphs**: 1–3 lines each, blank line between. Total 900–1,600 characters
-  target; 3,000 is LinkedIn's hard cap — stay well under it.
+  target (the lower half, ≈1,000–1,300, tends to get read to the end); 3,000 is LinkedIn's
+  hard cap. Never pad to hit a number.
 - **One honest limitation** ("lectures 14–16 are still on the old format") — credibility
-  beats polish.
+  beats polish. Vary the limitation across the series; don't reuse the same one twice running.
+- **Em-dashes are the #1 AI tell of 2026 — ration them.** At most ~2 " — " in a whole post,
+  and only where no other punctuation works; prefer a colon, period, comma, or parentheses.
+  A draft with 5+ em-dashes reads as machine-written; rewrite the extras.
 - **End with**: one call-to-action + the repo URL (or a deeper path if the post is about one
-  area), a series footer line `— Post N/6 on this year's course rebuild`, then 3–5 hashtags
-  on the last line (e.g. #Python #DataScience #MachineLearning #MLOps #HigherEducation —
-  pick per theme, don't repeat the identical set every post).
+  area), a series footer line `— Post N/6 on this year's course rebuild`, then 3–5 theme-
+  appropriate hashtags on the last line — **never 6+ (it measurably drops reach)** — and don't
+  repeat the identical set every post. External links in the body suppress reach: the URL may
+  stay in the body (transparency, our default) OR move to the first comment; offer the
+  first-comment option in the maintainer notes and let the maintainer choose.
 - **Voice**: first-person instructor-maintainer. Concrete, plain, quietly proud. Banned:
   "game-changer", "revolutionize", "🚀 excited to announce", "in today's fast-paced world",
-  and any sentence that could appear in any other course's post. The course openly uses
-  Claude Code / Codex to build and maintain material — say so plainly when relevant; it is
-  part of the story, not a confession.
+  plus the AI-slop vocabulary in `references/style_guide.md` (leverage, delve, unlock, harness,
+  streamline, foster, seamlessly, robust, "deep dive", …) and its AI-fingerprint structures
+  (rule-of-three-for-rhythm, "That's it.", "And that's okay.", "Not X. Y." snapbacks). No
+  sentence that could appear in any other course's post. The course openly uses Claude Code /
+  Codex to build and maintain material — say so plainly when relevant; it is part of the story,
+  not a confession.
 
 ## Hard guards (non-negotiable)
 
@@ -82,5 +97,9 @@ evidence pointers, and status (`planned` → `drafted` → `published`). Read it
 - [ ] Every number and named artefact verified against the repo this session.
 - [ ] No PII, no secrets, no gitignored content.
 - [ ] Total length 900–1,600 chars (report the count in the metadata block).
-- [ ] CTA + URL, series footer, 3–5 theme-appropriate hashtags present.
+- [ ] **≤2 em-dashes; no banned vocabulary or AI-fingerprint structures** (see
+      `references/style_guide.md`). Grep the body for " — " and the banned-word list.
+- [ ] CTA + URL, series footer, 3–5 hashtags (never 6+), honest limitation not reused from
+      the previous post.
+- [ ] Link-in-first-comment option noted for the maintainer.
 - [ ] Plan row updated.
