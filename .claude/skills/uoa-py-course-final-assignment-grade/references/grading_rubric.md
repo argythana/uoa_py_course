@@ -93,12 +93,23 @@ absent or broken. Keys in `code` are the exact keys `compute_grade.py` expects.
 
 ### `eda` — Proper Exploratory Data Analysis · cap 1.5 · **STRICT**
 - **1.5** — visualisations **matched to each variable's type** (hist/box for numeric, bar for
-  categorical, scatter for numeric pairs, heatmap for correlations) **with brief comments**.
-- **1.0** — decent coverage but some gaps or shallow commentary.
-- **≤1.0** — *Penalty rule (prompt):* inappropriate/misleading plots — spaghetti plots,
-  overplotting, a scatter on two discrete variables, message-less bar charts — lose **at least
-  0.5**. Subtract 0.5 per distinct caveat class, floor 0.
+  categorical, scatter for numeric pairs, heatmap for correlations) **with brief comments** on each.
+- **1.25** — type-matched breadth **with** commentary, but a modest gap (a variable type or two not
+  visualised, or only a curated feature subset explored).
+- **1.0** — decent coverage but shallow/partial commentary, **or** good commentary over thinner coverage.
+- **0.75** — *some* breadth across appropriate plot types **or** at least shallow commentary — but
+  not both.
+- **0.5** — thin coverage (a single / near-single plot type, or target-only) with **no** interpretive
+  markdown **and** no relational/correlation exploration.
+- **Penalty rule (prompt), applied on top of the rung:** inappropriate/misleading plots — spaghetti
+  plots, overplotting, a scatter on two discrete variables, a **tautological/circular** plot (e.g. a
+  boxplot of a feature grouped by a target that was *defined* by binning that feature),
+  message-less bar charts — lose **at least 0.5**. Subtract 0.5 per distinct caveat class, floor 0.
 - **0.0** — no real EDA, or only `.describe()` with no plots.
+- **Consistency ladder (2026-07-22):** score a student's three notebooks on the SAME rung logic —
+  the commented, type-matched notebook sits above the thin/uncommented ones. "single/near-single
+  plot type + no commentary + no relational exploration" → 0.5; "some breadth OR shallow commentary"
+  → 0.75; "type-matched breadth AND commentary" → 1.25–1.5.
 
 ### `descriptive_stats` — Descriptive Statistics · cap 0.5
 - **0.5** — summary statistics (`.describe()`) **and** correlations where informative, with
@@ -126,12 +137,20 @@ absent or broken. Keys in `code` are the exact keys `compute_grade.py` expects.
 - **0.0** — no working model, or no test-set prediction.
 
 ### `model_evaluation` — Model evaluation with proper metrics · cap 1.0
-- **1.0** — metric **appropriate to the task**, with interpretation: regression → R²/RMSE/MAE;
-  classification → accuracy + confusion matrix / precision-recall / F1; clustering → silhouette
-  / inertia + interpretation.
-- **0.5** — a metric is reported but the wrong/weak choice for the task, or no interpretation,
-  or the code computes fewer metrics than the markdown claims.
+- **1.0** — metric **appropriate to the task**, interpreted **at the comparison/decision level**
+  (the results are read and used to justify the verdict): regression → R²/RMSE/MAE; classification
+  → accuracy + confusion matrix / precision-recall / F1; clustering → silhouette / inertia +
+  interpretation.
+- **0.75** — appropriate metric with **partial / selection-level interpretation only**: the metric
+  is computed and *used* (e.g. to choose k or a winner), but its **magnitude/meaning is never read**
+  (e.g. silhouette 0.17 drives the k choice yet "0.17 = weak separation" is never stated).
+- **0.5** — a metric is reported but the wrong/weak choice for the task, or **no interpretation of
+  the results at all** (numbers printed, never read), or the code computes fewer metrics than the
+  markdown claims.
 - **0.0** — no evaluation, or a metric meaningless for the task (e.g. accuracy on a regression).
+- **Consistency ladder (apply uniformly across a student's three notebooks, 2026-07-22):**
+  "computed but unread" → 0.5; "used for selection but magnitude unread" → 0.75; "read and used to
+  justify the verdict" → 1.0. Score the three notebooks on the same rung logic.
 
 ### `model_selection` — Model's Comparison and model Selection · cap 0.5
 - **0.5** — compares variants/models, picks a **winner**, justifies it **numerically and
