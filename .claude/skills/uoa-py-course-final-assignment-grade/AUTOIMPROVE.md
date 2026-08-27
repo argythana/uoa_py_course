@@ -244,14 +244,14 @@ makes the *next* cycle's grades more accurate and its feedback notes sharper.
   notebook's markdown promises a prediction on "one hypothetical new observation" but the code
   only ever calls `.predict(X_test)`; no `X_new` row is constructed. Unanimous, verified. Reads
   like "predict on a new row you build by hand" being misread as "predict on the test set".
-- **Fixes landed:** the **recording invariant**. kaika_t exposed a silent gap — a student can
+- **Fixes landed:** the **recording invariant**. student-A exposed a silent gap — a student can
   carry grade-summary/feedback files on disk yet never have gone through `record_grade.py`
   (graded before recording existed), so they look done but are absent from the instructor's
   ledger. New `scripts/audit_grades_recorded.py` (deterministic; cross-references grade-summary
   files on disk against DB grade rows and ODS ledger rows via `slugify`; reports
   RECORDED / MISSING / db_ods_drift / ORPHANS; exit 3 on any gap). SKILL.md Phase F step 4 now
   states the invariant ("graded ⟺ in DB AND ODS; feedback files do not count") and runs the
-  audit right after every `record_grade`. Validated: audit found kaika_t MISSING (7/8), then
+  audit right after every `record_grade`. Validated: audit found student-A MISSING (7/8), then
   8/8 `all_graded_recorded: true` after recording.
 - **Watch next cycle:** (1) run `audit_grades_recorded.py` at the START of a future grading
   session too, to catch pre-existing gaps before adding more; (2) the
@@ -285,7 +285,7 @@ makes the *next* cycle's grades more accurate and its feedback notes sharper.
 - **Recurring student patterns:** (a) missing required classification algorithm — Naive Bayes
   absent = **5th of 9 graded submissions** missing a required algo (cohort pattern now firmly
   worth a class-wide note when grading concludes); (b) "new observation" validation that just
-  reuses a test row with a few fields overridden (2 of 3 notebooks) — kin to kaika_t's
+  reuses a test row with a few fields overridden (2 of 3 notebooks) — kin to student-A's
   promised-but-never-built miss; both cap `model_validation` at 0.25.
 - **Fixes landed:** SKILL.md Phase 3 diagnostic-run rule now says to patch the read to an
   **absolute** path to the submitted data (or symlink data into `$WORK`), with the
@@ -296,3 +296,358 @@ makes the *next* cycle's grades more accurate and its feedback notes sharper.
   cycle 4); (3) the `../wrong_folder/` path variant may recur across the batch (students who
   developed inside a differently-named folder) — the diagnostic protocol now handles it routinely.
 - **Status:** absorbed (diagnostic-run fix); grade sign-off pending
+
+### Cycle 2026-07-21_2208 (tenth class-26 cycle — clean high-scorer; cross-notebook deferral)
+- **Run shape:** clean 3-notebook submission (extracted folder; notebooks in a
+  `my_assignment_folder/` subfolder + `data/`); single zip preserved; two distinct legitimate
+  datasets (`ecommerce_customer_behavior` → regression; UCI Bank Marketing `bank.csv` → clustering
+  + classification, legit reuse); all three run clean with proper relative `data/` paths that
+  resolve; no venv, no installs, no draft (plain 3-voice); correct naming.
+- **What worked:** 2nd complete-classification-trio submission (KNN+NB+LogReg all fitted +
+  fine-tuned — the KNN k-sweep is real hyperparameter tuning — plus a bonus SVM; SVM-RBF the
+  verified true winner on every metric); detector correct; no fabrication / no wrong-winner; the
+  **model_validation calibration** ("genuinely constructed new row but never interpreted → 0.25;
+  0.5 requires interpreting the result") was applied CONSISTENTLY across regression + classification
+  by the arbiter; the arbiter moved its OWN regression EDA DOWN 1.5→1.25, adopting G2's evidence
+  (the promised categorical-vs-target boxplots are absent; the dominant driver `membership_type` is
+  never plotted against the target, and the pre-encoding heatmap excludes it). High panel
+  convergence.
+- **What mis-fired:** nothing in the pipeline. Both panel divergences resolved cleanly from cell
+  evidence.
+- **New situation — cross-notebook DEFERRAL:** the student reused `bank.csv` for clustering +
+  classification and DEFERRED the feature-type table, most EDA, and the stats interpretation from
+  the clustering notebook to the classification notebook. The panel split on
+  `data_presentation` (0.5 vs 0.25). Arbiter ruling: a deferred *prose table* is acceptable
+  (0.5, coached) IF the notebook independently covers target + both drops + the full feature list +
+  the numeric/categorical split; but deferred *EDA* and *uninterpreted stats* DO cost their own
+  criteria (eda 1.0, descriptive_stats 0.25). Clean and defensible.
+- **Recurring student pattern:** the `model_validation` shortfall now spans 4 students
+  (promised-but-never-built / reused-test-row / genuine-row-but-uninterpreted). Firmly a cohort
+  pattern; the rubric's "0.5 needs interpretation" level already prices it correctly (no fix
+  needed), but it deserves a class-wide teaching note when grading concludes.
+- **Fixes landed:** none needed (the model_validation calibration already exists and worked; the
+  deferral question resolved cleanly at arbitration).
+- **Watch next cycle:** (1) if another student defers sections across reused-dataset notebooks,
+  consider a one-line `grading_rubric.md` note on scoring deferred content (present-if-independently-
+  covered vs deducted); (2) catboost submission STILL ahead (grading-group flow last used cycle 4);
+  (3) cohort split now 2 complete-trio (this + student-A) vs 5 missing-a-required-algorithm — worth
+  summarizing for the instructor at the end.
+- **Status:** absorbed (no source change needed); grade sign-off pending
+
+### Cycle 2026-07-21_2347 (eleventh class-26 cycle — weak-but-honest; secret-gate false positive)
+- **Run shape:** 3-notebook submission (extracted folder; notebooks in `python_final_assignment/`
+  + `data/`); single zip preserved; two distinct legitimate **Excel `.xlsx`** datasets
+  (`sports_performance_data` → regression + classification; `athlete_events`, 271k rows, filtered
+  to Water Polo → clustering); all three run clean, relative `data/` paths resolve; no venv, no
+  installs, no draft (plain 3-voice). Extras: an optional Streamlit `app.py` + `readme.md` (bonus,
+  not graded). Naming FLAG: notebook prefix is an abbreviated surname plus the wrong initial
+  (`<abbrev-surname>_<wrong-initial>` instead of `<surname>_<initial>`).
+- **What worked:** VERY high panel convergence — Grader 1's 39 criteria matched the arbiter's
+  independent pass EXACTLY; Grader 2 differed on only 4 (+0.25 each). The arbiter moved UP on 3 of
+  4 with clean rubric reasoning (preprocessing "if needed" → scaling expected only for distance
+  models, so clean-split OLS/LR = full 1.0; the "thin feature engineering" concern was already
+  priced in `descriptive_stats` → avoided a double-count; clustering eval bar is "silhouette **/**
+  inertia + interpretation") and HELD 1 (classification eval 0.75: 0.4942 ≈ chance on a balanced
+  target is never acknowledged — "with interpretation" means interpret the RESULT, the same
+  standard by which the regression notebook EARNED full eval credit via its honest R² read). No
+  wrong-winner, no fabrication; ID/Name correctly excluded from clustering.
+- **What mis-fired:** the **Phase-3 secret gate false-positived** — a whole-file `grep` over the
+  `.ipynb` matched base64 image data in saved PNG outputs (which contains `sk-`/`hf_` substrings)
+  and flagged two notebooks as needing secrets. A code-cell-only rescan showed ZERO actual secret
+  usage, so execution proceeded correctly — but a naive run would have wrongly skipped two runnable
+  notebooks.
+- **Recurring student pattern (strengthening):** classification missing a required algorithm — and
+  for the FIRST time missing TWO (both KNN and Naive Bayes; only Logistic Regression present) =
+  6th of 11 graded submissions. Plus the now-familiar cluster of no-fine-tuning / no-model-selection
+  / no-model-validation / minimal-EDA (1–2 plots) — this submission is the clearest single instance
+  of the cohort's systemic gaps and prime fodder for `evaluate-course-from-final-submissions`.
+- **Fixes landed:** SKILL.md Phase 3 secret-gate now says to scan CODE CELLS only (never a raw
+  whole-file grep), with the base64/markdown false-positive reason spelled out. Also this session:
+  authored the new sibling skill `evaluate-course-from-final-submissions` (mines this corpus into a
+  per-lecture course-gap report; harvester verified PII-free on the 10-student corpus).
+- **Watch next cycle:** (1) the secret-gate fix should end spurious skip prompts; (2) catboost
+  submission STILL ahead (grading-group flow last used cycle 4); (3) cohort split now 2 complete-trio
+  vs 6 missing-a-required-algorithm — run `evaluate-course-from-final-submissions` once grading
+  concludes to turn this into lecture improvements.
+- **Status:** absorbed (secret-gate fix); grade sign-off pending
+
+### Cycle 2026-07-22_0032 (twelfth class-26 cycle — 2 broken notebooks; model_evaluation ladder)
+- **Run shape:** 3-notebook submission (extracted folder; notebooks in `final_assignment/` +
+  `data/` with a duplicate `.xlsx` in `data/archive/`); single zip preserved; two distinct
+  legitimate datasets (`marketing_sales_dataset.csv` 60k×23 → regression + clustering;
+  `ad_click_dataset.csv` 10k×9 → classification); no venv, no installs, no draft (plain 3-voice).
+  Naming FLAG: prefix is surname-only, missing the two initials. **regression +
+  clustering both BREAK run-all** (unhandled/mis-ordered NaN in the marketing features; regression
+  also a stray bare-name `NameError`); classification runs clean.
+- **What worked:** the **code-cell-only secret gate** (cycle-11 fix) — no false positive this time
+  where a raw grep would again have hit base64 PNG data. The NaN-break double-axis framing held:
+  `executability` = 0 (run-all) AND a `preprocessing` data-prep dock (different axes) with
+  `relative_paths` LEFT at 0.5 (paths resolve — NOT the absolute-path combined −1). The arbiter
+  **self-corrected a double-count** (clustering model_implementation 1.5→1.75: the degenerate-
+  outlier penalty belongs in model_evaluation, not implementation) and produced a clean
+  **model_evaluation consistency ladder**.
+- **What mis-fired:** highest panel SPREAD of the cohort (10 contested criteria) — a weak submission
+  has many partial-credit calls. Root cause on the biggest cluster: the rubric's `model_evaluation`
+  had no rung between "no interpretation" (0.5) and "full interpretation" (1.0), so graders split on
+  the middle case (metrics used to pick a winner but the metric's magnitude never read).
+- **Recurring student pattern:** classification missing BOTH KNN and Naive Bayes again (only LogReg
+  of the required trio; DT/RF extras don't substitute) = 7th of 12 graded, 2nd consecutive missing
+  TWO. Plus the cohort staples: no raw-data EDA, scattered imports, thin markdown, no/low
+  fine-tuning, uninterpreted metrics — and now **out-of-order / unhandled-NaN run-all breaks** (6th+
+  stale-kernel case).
+- **Fixes landed:** `grading_rubric.md` model_evaluation now has an explicit **0.75 rung** +
+  consistency ladder (0.5 computed-but-unread / 0.75 used-for-selection-but-magnitude-unread / 1.0
+  read-and-justifies-verdict), applied uniformly across a student's three notebooks. Validated: it
+  is exactly the ladder the arbiter used to resolve regression 0.5 / clustering 0.75 / classification
+  1.0 this cycle.
+- **Watch next cycle:** (1) the new 0.75 rung should cut model_evaluation spread; (2) unhandled-NaN
+  / out-of-order breaks are now common — the "grade content from saved outputs, no forced diagnostic
+  for genuine data-prep bugs" call is the established handling; (3) catboost submission STILL ahead;
+  (4) run `evaluate-course-from-final-submissions` once grading concludes — the corpus is rich now
+  (12 students, strong recurring themes).
+- **Status:** absorbed (model_evaluation-ladder fix); grade sign-off pending
+
+### Cycle 2026-07-22_0055 (thirteenth class-26 cycle — strong submission; FIRST unanimous panel)
+- **Run shape:** engineering-strong 3-notebook submission (in `my_assignment/` + `data/`); single
+  zip preserved; a portable `_find_data_file()` loader (searches relative locations) → all three
+  run CLEAN; defensive re-run guards; a **bonus `advanced_optional/` deployable app** (`app.py`,
+  `model.joblib`, `requirements.txt`, its own `train_and_save_model.ipynb` + a *different*
+  `stocks_sample.csv`, README_HANDOFF). No venv, no installs, no draft (plain 3-voice).
+- **NEW gate — single dataset for all three:** all three graded notebooks use the SAME
+  `2018_Financial_Data.csv`, violating the mandatory ≥2-different-datasets rule (sanctioned reuse is
+  classification+clustering only). **Pre-asked the instructor via AskUserQuestion → ruled "flag
+  only, grade normally"** (rejection_flag; do NOT dock `dataset_selection` for the reuse; instructor
+  decides rejection in review). Baked into the blind bundle before the panel ran → zero mid-panel
+  corrections (the cycle-3/5 lesson, validated again).
+- **What worked:** **FIRST perfectly-unanimous panel — all 39 criteria identical across G1, G2, and
+  the arbiter's independent pass.** No reconciliation round needed. Strong signal the rubric + the
+  new model_evaluation ladder (cycle 12) are well-calibrated: all three notebooks read their metrics
+  at the decision level → 1.0 uniformly, no spread. 3rd complete-classification-trio (KNN/NB/LogReg
+  all fitted + fine-tuned, plus a bonus SVM). No fabricated numbers; every figure verified against
+  executed copies.
+- **New student pattern — "wrong-winner IN THE PROSE":** classification picks the correct winner in
+  CODE (KNN k=15, F1 0.688 = true top) but the cell-38 "why the winner wins" narrative CONTRADICTS
+  it (argues LR/SVM should win, calls KNN "disadvantaged") and never reconciles the ~0.01-F1
+  near-tie. A subtler variant of the wrong-winner pattern — priced in `model_selection` (0.25), not
+  model_evaluation. Also uniform-across-the-cohort minors: uninterpreted EDA/stats, uninterpreted
+  new-obs predictions, pre-split leakage of impute/engineered-feature stats, scattered imports.
+- **Fixes landed:** `dataset_rules.md` (feedback skill, shared) → new bullet: "≥2 DIFFERENT datasets
+  mandatory; single dataset for all three violates it → rejection_flag + grade-normally + don't dock
+  dataset_selection (class-2026 ruling; re-confirm for later classes)." Prevents re-asking next time.
+- **Watch next cycle:** (1) more single-dataset submissions may appear — the new dataset_rules note
+  handles them (still surface, still confirm the ruling for later classes); (2) catboost submission
+  STILL ahead; (3) the corpus is now 13 students with rich, stable themes — good time to run
+  `evaluate-course-from-final-submissions` once grading concludes.
+- **Status:** absorbed (single-dataset ruling landed in dataset_rules.md); grade sign-off pending
+
+### Cycle 2026-07-22_2103 (fourteenth class-26 cycle — 2nd single-dataset; EDA ladder)
+- **Run shape:** 3 correctly-named notebooks (flat layout — CSV at top level, **no `data/`
+  subfolder**, a soft packaging note); single dataset `Corruption_Perception_Data.csv` (3000×33) for
+  ALL THREE; all run clean; no venv, no installs, no draft (plain 3-voice). 4th complete-classification
+  -trio (KNN/NB/LogReg all fitted + fine-tuned).
+- **What worked:** (1) the **cycle-13 single-dataset ruling applied DIRECTLY from `dataset_rules.md`
+  — no re-ask** (class-2026: flag + grade-normally + don't dock dataset_selection); the codified rule
+  paid off immediately. (2) High convergence — only 3 contested criteria, each a 0.25 split; the
+  arbiter moved its OWN regression imports DOWN to G1/G2 (literal rubric "all imports at top" → a late
+  import block alone = 0.25) and held both EDA at 0.5. (3) The cycle-12 model_evaluation ladder applied
+  cleanly (0.75 for clustering silhouette-magnitude-unread and classification accuracy-only-but-
+  interpreted). (4) A genuinely useful **data-quality informational flag**: the dataset is effectively
+  signal-free/synthetic (student self-identifies) — regression R²≈0, classification acc≈0.47,
+  clustering silhouette≈0.10; pipelines correct but fitting noise. Surfaced for the instructor.
+- **What mis-fired:** 2 of the 3 contested criteria were EDA (0.5 vs 0.75) — the rubric had no
+  intermediate rung between 1.0 and 0.0, so graders split on "thin coverage + no commentary" cases.
+- **New student pattern:** a **tautological/circular EDA plot** — a boxplot of CPI grouped by
+  `corruption_level`, where the target IS binned CPI (so the separation is guaranteed). Priced as a
+  misleading-plot caveat inside EDA.
+- **Fixes landed:** `grading_rubric.md` `eda` now has explicit **0.75 and 0.5 rungs + a consistency
+  ladder** (single/near-single plot type + no commentary + no relational exploration → 0.5; some
+  breadth OR shallow commentary → 0.75; type-matched breadth AND commentary → 1.25–1.5), and the
+  penalty examples now include the tautological/circular plot. Directly targets the recurring EDA
+  spread (EDA has been contested in most cycles).
+- **Watch next cycle:** (1) the new EDA rungs should cut EDA spread the way the model_evaluation
+  ladder cut its spread; (2) more single-dataset / flat-layout submissions likely — both now handled
+  without re-asking; (3) catboost submission STILL ahead; (4) corpus now 14 students — run
+  `evaluate-course-from-final-submissions` at grading close.
+- **Status:** absorbed (EDA-ladder fix); grade sign-off pending
+
+### Protocol change 2026-07-29 — the UNANIMITY GATE (instructor mandate, mid-batch)
+- **The mandate:** "When there is a difference between the reviewers on an issue, we need
+  absolute unanimity. It is not acceptable to have any hallucination at top academic level
+  grading… it does not really matter if we miss something, but the cost of a false positive is
+  unacceptable — we should never cause harm by reducing a student's grade and make a remark on
+  false premises." Max 3 deliberation rounds; extra blind reviewers as needed.
+- **The clarification that shaped the design (instructor, same session):** *unanimity is NOT
+  about producing an identical numeric grade — it is about unanimity on the ISSUE that causes
+  the penalty.* This is the load-bearing distinction. Graders may legitimately split 0.25 vs 0.5
+  on the same confirmed weakness (rubric calibration, arbiter settles it against the ladder);
+  they may NOT split on whether the weakness exists. The first design draft gated on score
+  equality and was rebuilt to gate on the anchored factual premise.
+- **What landed:**
+  - `scripts/extract_divergences.py` (new) — deterministic census: every (notebook, criterion)
+    any grader scored below cap = a proposed penalty needing a premise; pools the graders'
+    stated findings; flags `penalty_without_stated_finding` (a dock with no premise on record).
+    Numeric `score_spread` is demoted to a diagnostic — a symptom that premises differ, not the
+    thing to reconcile.
+  - `scripts/apply_unanimity_gate.py` (new) — the enforcement layer. A finding costs points only
+    on unanimous AFFIRM by every voter of a quorate round (≥3 voters incl. the arbiter, detected
+    by the `round<N>_arbiter.json` filename). Non-AFFIRM, UNSURE, and *absent* votes all break
+    unanimity (silence is never assent). MAX_ROUNDS=3, then STRUCK — points refunded, remark
+    deleted, not softened. `--check-final` cross-checks the arbiter's `justified_by` map and
+    exits 3 on a breach: a criterion below cap citing nothing, or citing only struck findings.
+  - SKILL.md — new "The unanimity rule" section; G1 graders must now state an anchored
+    `findings` entry for every below-cap score; new Phase G1½ (census + canonical findings.json);
+    Phase G2 is now the deliberation loop (2 fresh examiners round 1, 3 in rounds 2–3, arbiter
+    votes every round, examiners see statements only — never scores, tallies, or who raised
+    what); old G2 → G3, now BOUND by the gate (struck findings are off-limits, `justified_by`
+    required); Phase F runs the gate as a hard precondition before `compute_grade.py`.
+  - Re-wording rule: a narrowed finding is a NEW finding with a new id and needs its own
+    unanimous round — this is breach shape #2 from the dissertation skill, which cost 43 claims.
+  - Examiner instruction is explicitly asymmetric: *"If the evidence does not clearly and
+    unambiguously establish the claim as worded, vote REFUTE or UNSURE… ambiguity resolves in
+    the student's favour."*
+- **Validated before use** on a synthetic 4-finding fixture: unanimous-round-1 survives;
+  split-then-unanimous-round-2 survives; never-unanimous-through-3-rounds struck;
+  unanimously-refuted struck at round 1; both struck-premise penalties raised BREACH with
+  `remedy_score` = cap; after remedy the gate exits 0 and `compute_grade.py` runs clean.
+- **Applies from:** the 15th class-26 cycle onward (14 students were graded under the previous
+  3-voice protocol; the instructor will decide separately whether to re-grade that first batch).
+- **Watch next cycle:** (1) real-world round counts — if most findings settle in round 1, the
+  cost is modest; if rounds 2–3 fire often, the rubric ladders need work, not the gate;
+  (2) whether struck findings cluster on particular criteria (a signal that criterion's rubric
+  text is ambiguous); (3) catboost submission STILL ahead.
+- **Status:** absorbed (gate landed in scripts + SKILL.md)
+
+### Gate bug 2026-07-29 — vacuous-truth strike (found on the first live gate run)
+- **The bug:** `apply_unanimity_gate.py::settle()` walked rounds 1..3 and tested
+  `all(val == REFUTE for val in present.values())` **without first checking that any vote was
+  cast**. For a finding that was not on that round's ballot, `present` is empty and `all()` over
+  an empty set is **vacuously True** — so the gate reported findings as
+  "unanimously_refuted_round_N" for rounds in which nobody had voted on them.
+- **The harm:** it struck **X6b**, a narrowed finding introduced in round 2 and unanimously
+  AFFIRMED there, on the strength of round 1 — a round that predates the finding's existence.
+  Note the direction: the original-vs-narrowed pairs (R4/R4b) also mis-reported their *reason*,
+  but the vacuous strike is not uniformly student-favouring — it silently destroys findings that
+  legitimately passed, which corrupts the audit trail in both directions.
+- **The fix:** `settle()` now `continue`s past any round where the finding received no votes
+  ("not on this round's ballot" ≠ "refuted"), and unanimity in either direction now requires
+  `complete` (every voter of the round actually voted) as well as quorum. Re-ran: 32 survive /
+  6 struck, X6b correctly settled `unanimous_affirm_round_2`; the synthetic fixture still passes.
+- **Lesson beyond this script:** any gate that walks multiple rounds must distinguish
+  *abstained* from *absent from the ballot*. The dissertation gate avoids this by only ever
+  reading explicit ACCEPT votes; a REFUTE-detecting gate needs the emptiness guard.
+- **Merging lesson (same run):** R4 bundled THREE outputs (describe + heatmap + correlation
+  ranking) into one claim. Two of the three were genuinely uninterpreted, but the third WAS
+  interpreted in the conclusions cell — so the whole claim was refuted and the real shortfall
+  nearly vanished. The SKILL.md rule "one issue per finding — never bundle, they may not stand
+  or fall together" applies to the CANONICAL MERGE step too, not just to what graders state.
+  Bundling at merge time is the coordinator's error, and it cost two extra deliberation rounds.
+- **Status:** absorbed (fix landed in `scripts/apply_unanimity_gate.py`)
+
+### Lesson 2026-07-29 — the RE-EXECUTED copy is not evidence when a library default has changed
+- **What happened:** on a class-26 clustering notebook, two graders raised findings from the *fresh*
+  `nbconvert --execute` copy: (a) "cell 26 says the silhouette improves from K=3 to K=4, but the
+  computed values fall", and (b) "cell 26 swaps the sleep profiles of Cluster 0 and Cluster 1 relative
+  to the profiling table". The arbiter **refuted both** by reading the student's OWN saved outputs:
+  the submitted notebook shows silhouette 0.2316 → 0.2321 (a **rise**, exactly as the markdown says),
+  and Cluster 0 Sleep_Hours 5.2486 / Cluster 1 7.8364 (exactly as the markdown says).
+- **Root cause:** scikit-learn's `KMeans` `n_init` default changed. Re-running under `course_venv`
+  produces (i) **different silhouette values** and (ii) **permuted cluster labels**. The student's prose
+  was correct about their own run; the graders were comparing prose against a *different* fit.
+- **Why this is dangerous:** these are exactly the "markdown contradicts computed output" findings the
+  panel is best at detecting, and the cohort really does commit that error often — which makes a
+  version-artefact instance very easy to affirm. Two of three graders did.
+- **Rule (now mandatory), for graders and examiners alike:**
+  1. A claim of the form *"the markdown contradicts the notebook's output"* must be checked against the
+     **student's saved outputs in the submitted `.ipynb`**, not against the re-executed copy.
+  2. The re-executed copy is evidence for **executability** and for content the student never ran —
+     not for whether their written numbers matched what they saw.
+  3. **Stochastic/label-permuting outputs** (KMeans cluster indices, silhouette values, any
+     `random_state`-free fit, feature importances, t-SNE/UMAP layouts) are the highest-risk class. If
+     saved and fresh outputs disagree on such a quantity, the disagreement is evidence about the
+     *environment*, not about the student.
+  4. When saved and fresh outputs disagree and it matters, say so explicitly and grade on the saved run.
+- **Fix landed:** this entry + the rule above added to the grader/examiner briefings for the remainder
+  of the batch (the shared `GRADER_INSTRUCTIONS.md` used by every panel from this point).
+- **Watch:** re-check earlier cycles in this batch for any surviving "markdown vs output" finding on a
+  KMeans label or silhouette value — that is the shape most likely to have slipped through before the
+  rule existed.
+- **Status:** absorbed
+
+## Gate bug 2026-07-29 — the reconciliation key name was a silent grade-blocker
+
+`check_final()` read the arbiter's per-criterion justification map from `spec["justified_by"]`
+only. A reconciliation that used the equally natural key `cites` therefore looked like it had
+justified *nothing*, and the gate reported **every** below-cap criterion as
+`scored below cap but cites NO finding` — eleven simultaneous BREACHes on a submission whose
+reconciliation was in fact perfectly well-premised.
+
+Why it matters: the failure mode is *maximally alarming and completely wrong*. A breach report
+that wide reads like a grader who deducted marks with no evidence at all, which is exactly the
+pathology the unanimity gate exists to catch. Acting on it — forcing every criterion back up to
+cap via `remedy_score` — would have handed out an inflated grade on the strength of a typo.
+
+Fix: `check_final()` now accepts `justified_by` **or** `cites`. More generally, when a validator
+reports that *every single* item failed the same way, suspect the validator's own contract before
+suspecting the data — a real breach is usually local, and a total breach is usually a key mismatch.
+
+Also: keep the reconciliation prompt and the checker in sync. The prompt in the skill asks for
+`justified_by`; any ad-hoc prompt that invents its own key must still be read correctly.
+
+## Lesson 2026-07-30 — the SECTION-HEADING-SCOPED claim
+
+A finding read: "In the EDA section only four of the eight predictors are plotted against the
+target." Every count in it was exact. It was still refuted unanimously by both fresh examiners,
+and rightly so: two cells later the student's correlation heatmap included the target and so
+related **all eight** predictors to it, a sorted target-correlation series covered all eight, and
+the next markdown cell interpreted them. The claim was true only because the student filed that
+heatmap under the heading *"4. Descriptive Statistics"* rather than *"3. Exploratory Data
+Analysis"*.
+
+**The pattern to watch for:** a claim whose truth depends on where a student put a `##` heading
+rather than on what the student actually did. It is seductive because the arithmetic is
+verifiable and the wording feels precise — the arbiter that raised it even affirmed it while
+recording the caveat itself.
+
+**Rule:** when a finding is scoped to a *named section* ("in the EDA section", "in the
+preprocessing step"), the examiner must ask whether the same substantive work appears elsewhere
+in the notebook under a different heading. If it does, the claim is a labelling artefact and must
+be refuted — the student did the work; only the filing differs. Grade the analysis, not the
+table of contents.
+
+Corollary for graders: prefer notebook-wide wording ("nowhere in the notebook does X") over
+section-scoped wording. A section-scoped claim that would be false notebook-wide is not a
+defensible deduction premise.
+
+## Lesson 2026-07-30 — the FILE-SCOPED claim (the section-heading trap, one level up)
+
+A finding read: "Multiple Linear Regression, the regression algorithm the assignment requires, is
+not implemented in this notebook." Two of three blind graders raised it. It was exhaustively
+verified — the regression notebook really does fit only CatBoost, XGBoost, SVR and a decision
+tree, with zero hits for `LinearRegression`, `Ridge`, `Lasso`, `ElasticNet`, `SGDRegressor`,
+`statsmodels`/`OLS`, or any hand-rolled least-squares fit.
+
+It was still refuted, and correctly. The student had split **one regression pipeline across two
+notebooks**. The companion notebook fits a `RidgeCV` on a StandardScaler-scaled 22-feature matrix
+built from the dataset's own raw and engineered features, predicting the same continuous target,
+hyperparameter-tuned and test-evaluated with MAE/RMSE/R² entered in the leaderboard. That *is* a
+multiple linear regression on the regression dataset. The claim survived only on the per-file
+boundary the student happened to draw.
+
+**This is the [section-heading-scoped claim] pattern one level up.** There, a claim was true only
+because of where a `##` heading fell; here, only because of where a *file* boundary fell. The
+generalisation:
+
+> When a finding says "X is absent", the scope of the search must match the scope of the
+> **requirement**, not the scope of the file you happened to open. The assignment requires an
+> algorithm *in the submission*. A submission is not always one notebook per category — a
+> multi-notebook pipeline is a legitimate structure, and a required element may legitimately live
+> in a later stage of it.
+
+**Rule for graders and examiners:** before affirming any "required element is missing" claim,
+search **every notebook in the submission**, including data-preparation and final-comparison
+notebooks. Only after that sweep may the claim be affirmed — and if the element is found anywhere,
+the correct finding (if any) is the much narrower and much cheaper "it is not in the notebook where
+a reader would expect it", which is an organisation remark, not a missing-requirement deduction.
+
+Corollary: a *file-scoped* absence claim is as suspect as a section-scoped one. Prefer
+"nowhere in the submission" wording, and make the searcher prove it.
