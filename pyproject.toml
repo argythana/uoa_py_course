@@ -52,7 +52,15 @@ dev = [
 # never reaches the student-facing `uv export` (requirements.txt) and a plain
 # `uv sync` removes the packages again after the grading session.
 grading = [
+    "arch>=8.0.0",
+    "catboost>=1.2.10",
+    "hdbscan>=0.8.44",
+    "holidays>=0.101",
+    "imbalanced-learn>=0.14.2",
+    "optuna>=4.9.0",
+    "shap>=0.52.0",
     "xgboost>=3.3.0",
+    "xlrd>=2.0.2",
 ]
 
 # Pending lectures (10–13 ML, 14–16 PyTorch) will add their own deps here as
