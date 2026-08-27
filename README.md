@@ -5,7 +5,8 @@ This repo contains the lectures' material for the [Business Information Systems]
 Administrative, ephemeral issues (schedule, grades, questions, announcements) and any internal communication will be done via e-class.
 
 The course has been created, is being maintained, and taught by [Thanasis Argyriou, @linkedin](https://www.linkedin.com/in/thanasis-argyriou-06155a94/).  
-[Teacher's CV, Upd: Nov. 2023](https://bis-analytics.econ.uoa.gr/fileadmin/depts/econ.uoa.gr/bis-analytics/uploads/argyriou_cv_nov_23_gr.pdf). Since 2026, the material is been updated with assistance from AI Agents such as Claude Code, AdaL, codex, and has been inspired by the [Anthropic Course AI Fluency for Educators](https://anthropic.skilljar.com/ai-fluency-for-educators). For more info see the docs section.
+[Teacher's CV, Upd: Nov. 2023](https://bis-analytics.econ.uoa.gr/fileadmin/depts/econ.uoa.gr/bis-analytics/uploads/argyriou_cv_nov_23_gr.pdf).  
+Since 2026, the material is been updated with assistance from AI Agents such as Claude Code, AdaL, codex, and has been inspired by the [Anthropic Course AI Fluency for Educators](https://anthropic.skilljar.com/ai-fluency-for-educators). For more info see the docs section.
 
 ## Lectures Outline
 
@@ -45,8 +46,8 @@ Every lecture folder contains a `goals_NN.md` file with:
 ### A lot of good news! You will learn a beautiful new language
 
 - Designed for absolute beginners, no previous coding experience required. Starts from zero, goes beyond the basics in several advanced topics.
-- Think of it as learning a new language. You will be able to read, write, and speak `Python`.  You can't learn a foreign language (or coding) in five months, but you can learn enough to advance on your own.
-- You will be surprised by how much you can learn in a short period of time.
+- It is like learning a new language. You will be able to read, write, and speak `Python`.  You can't learn a foreign language (or coding) in five months, but you can learn enough to advance on your own.
+- You will be surprised by how much you can learn in a short period.
 - You need to learn, more or less, 30 new concepts in each lecture and a little syntax, notation and grammar rules. Also, some idioms, some slang, and some culture and mindset, some memes and some, not funny at all, coding jokes.
 - Plus a few super helpful and cool tools (coding assistants, editors, notebooks) and you are ready to go.
 
@@ -54,9 +55,14 @@ Every lecture folder contains a `goals_NN.md` file with:
 
 - Mid-course assignments and practice exercises are optional and are graded only positively (extra points if you submit).
 - Grades are secondary. Don't worry about it. I mean it. The goal is to learn and enjoy it.
-- Use of AI assistants and GitHub co-pilot is "mandatory". Learn to use them effectively and avoid common pitfalls. AI Fluency material is provided as a part of all the lectures on Python fundamentals. **Worth a read:** [this study](https://ai-project-website.github.io/AI-assistance-reduces-persistence/) reports that always-on AI assistance can reduce student persistence on hard problems. The 4Ds framework (Delegate, Describe, Discern, Diligence) in the AI Fluency readings is the course's response — assistants as a *learning amplifier*, not as a way to outsource thinking.
 - No exams, a [final assignment](https://github.com/argythana/uoa_py_course/tree/main/final_assignment), on a different domain for each student.
 - The final assignment topic is generic, the dataset and the domain to work on is chosen by you.
+
+### You need to use agents. Be careful: they compete with your future brain function
+
+- Use of AI assistants and GitHub co-pilot is "mandatory". Learn to use them effectively and avoid common pitfalls. AI Fluency material is provided as a part of all the lectures on Python fundamentals. **Worth a read:** [this study](https://ai-project-website.github.io/AI-assistance-reduces-persistence/) reports that always-on AI assistance can reduce student persistence on hard problems. The 4Ds framework (Delegate, Describe, Discern, Diligence) in the AI Fluency readings is the course's response — assistants as a *learning amplifier*, not as a way to outsource thinking.
+- [Must see](https://www.youtube.com/watch?v=n97BCfyFIvw) twice. Once before the first lecture, and once before writing the final assignment.
+- In short: even if an agent types most of the code, you own the result.
 
 ### Even more good news! I'm here to help, not to judge you
 
@@ -72,7 +78,7 @@ Every lecture folder contains a `goals_NN.md` file with:
 - Negative feedback on the course material and the lectures delivery.
 - Good programming memes.
 
-### One more bit of good news: you'll learn MLOps, not just ML
+### One more bit of good news: you'll learn some MLOps, not just ML
 
 Most introductory courses stop once a model is trained. This one goes further — [Lecture 13](https://github.com/argythana/uoa_py_course/tree/main/lectures_07_13_pandas_plots_scikit/lecture_13_pipelines_gridsearch_mlflow) brings in **MLflow**, the industry-standard tool for experiment tracking, model management, and reproducible pipelines that sits at the heart of modern **MLOps**. Learning it here is a real, marketable advantage: you leave the course knowing not just how to build a model, but how to track, compare, and ship it like a professional.
 
