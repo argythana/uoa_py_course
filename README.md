@@ -6,7 +6,7 @@ Administrative, ephemeral issues (schedule, grades, questions, announcements) an
 
 The course has been created, is being maintained, and taught by [Thanasis Argyriou, @linkedin](https://www.linkedin.com/in/thanasis-argyriou-06155a94/).  
 [Teacher's CV, Upd: Nov. 2023](https://bis-analytics.econ.uoa.gr/fileadmin/depts/econ.uoa.gr/bis-analytics/uploads/argyriou_cv_nov_23_gr.pdf).  
-Since 2026, the material is been updated with assistance from AI Agents such as Claude Code, AdaL, codex, and has been inspired by the [Anthropic Course AI Fluency for Educators](https://anthropic.skilljar.com/ai-fluency-for-educators). For more info see the docs section.
+Since 2026, the material has been updated with assistance from AI Agents such as Claude Code, AdaL, Codex, and has been inspired by the [Anthropic Course AI Fluency for Educators](https://anthropic.skilljar.com/ai-fluency-for-educators). For more info see the docs section.
 
 ## Lectures Outline
 
@@ -58,11 +58,20 @@ Every lecture folder contains a `goals_NN.md` file with:
 - No exams, a [final assignment](https://github.com/argythana/uoa_py_course/tree/main/final_assignment), on a different domain for each student.
 - The final assignment topic is generic, the dataset and the domain to work on is chosen by you.
 
-### You need to use agents. Be careful: they compete with your future brain function
+### You should use AI coding assistants
 
-- Use of AI assistants and GitHub co-pilot is "mandatory". Learn to use them effectively and avoid common pitfalls. AI Fluency material is provided as a part of all the lectures on Python fundamentals. **Worth a read:** [this study](https://ai-project-website.github.io/AI-assistance-reduces-persistence/) reports that always-on AI assistance can reduce student persistence on hard problems. The 4Ds framework (Delegate, Describe, Discern, Diligence) in the AI Fluency readings is the course's response — assistants as a *learning amplifier*, not as a way to outsource thinking.
-- [Must see](https://www.youtube.com/watch?v=n97BCfyFIvw) twice. Once before the first lecture, and once before writing the final assignment.
+- Use of AI assistants and GitHub co-pilot is "mandatory". Learn to use them effectively and avoid common pitfalls. AI Fluency material is provided as a part of all the lectures on Python fundamentals. The 4Ds framework (Delegate, Describe, Discern, Diligence) in the AI Fluency readings is the course's response — assistants as a *learning amplifier*, not as a way to outsource thinking.
+- [Must watch twice!](https://www.youtube.com/watch?v=n97BCfyFIvw) Once after the first lecture, and once before writing the final assignment.
 - In short: even if an agent types most of the code, you own the result.
+
+### You should not use AI coding assistants
+
+When studying, please use the AI to improve your understanding after you read carefully each lecture. Do the course exercises on your own. Be careful: AI coding assistants compete with your future intelligence.
+
+Your skills will not grow if you only use AI. You need to do the heavy lifting in order to learn.
+
+- [Must read on building persistence skills](https://ai-project-website.github.io/AI-assistance-reduces-persistence/) reports that always-on AI assistance can reduce student persistence on hard problems.
+- [Must read on the penalty of learning with AI](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6868618)
 
 ### Even more good news! I'm here to help, not to judge you
 
