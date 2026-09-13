@@ -2,33 +2,19 @@
 name: uoa-py-course-final-assignment-feedback
 description: >
   Use this skill to give a student FORMATIVE, instructor-voice feedback on a
-  draft (often partial) of the Python-course final assignment — guidance on how
-  to improve, never a grade. Trigger on requests like "give feedback on this
-  assignment draft", "review <student>'s final assignment submission", "feedback
-  on the eClass submission for <student>", "the student submitted an early
-  draft, what should they improve", "feedback on this
-  regression/clustering/classification notebook for the final assignment", or
-  when the user supplies a .zip / folder / .ipynb of a final-assignment draft
-  and asks for feedback rather than a grade. Both the eClass download automation
-  (automation_infrastructure/eclass/download_submissions.py) and emailed drafts
-  land in one unified per-student location,
-  students_work/class_<YY>/<lastname_t>/final_assignment/; the skill locates the
-  student there, reads the already-extracted dated download (or extracts a .zip
-  only if needed). It reads the authoritative specs
-  (final_assignment/submission_requirements.prompt.md and
-  final_assignment/grade_feedback.prompt.md) for WHAT the assignment requires,
-  runs each submitted notebook in course_venv (also checking each dataset
-  read-path resolves on disk), and writes ONE consolidated English feedback file
-  with per-section readiness flags (✅/◻️/⚠️ — no numbers) plus a simple
-  checklist of missing assignment items, into that same final_assignment/
-  folder. Do NOT use this skill to GRADE or assign points/percentages/a
-  suggested grade (that is final_assignment/grade_feedback.prompt.md's job); to
-  assess an MSc dissertation (use assess_postgrad_dissertation); to evaluate
-  lecture material (use uoa-py-course-lecture-eval); to download submissions
-  from eClass (use automation_infrastructure/eclass/download_submissions.py); or
-  to edit/fix the student's notebooks. One submission per invocation. If the
-  input is ambiguous (multiple students match, no notebooks, a .rar that can't
-  be extracted), ask which submission to review before proceeding.
+  draft (often partial) of the Python-course final assignment: how to improve,
+  never a grade. Trigger on "give feedback on this assignment draft", "review
+  <student>'s final assignment submission", "feedback on the eClass submission
+  for <student>", "the student submitted an early draft, what should they
+  improve", or when the user supplies a .zip / folder / .ipynb of a draft and
+  asks for feedback rather than a grade. It locates the student's
+  final_assignment/ folder under students_work/, reads the assignment specs,
+  runs each notebook in course_venv, and writes ONE consolidated English
+  feedback file with per-section readiness flags and a checklist of missing
+  items into that folder. Do NOT use it to grade or assign points
+  (uoa-py-course-final-assignment-grade), assess a dissertation, evaluate
+  lectures, download eClass submissions, or edit the student's notebooks. One
+  submission per invocation; if ambiguous, ask which submission first.
 ---
 
 # Final-assignment draft feedback

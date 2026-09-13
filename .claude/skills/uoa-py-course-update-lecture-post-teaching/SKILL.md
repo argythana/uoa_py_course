@@ -1,34 +1,20 @@
 ---
 name: uoa-py-course-update-lecture-post-teaching
 description: >
-  Use this skill to apply post-teaching corrections to a lecture in this course
-  repo after the maintainer has actually taught it and observed failures, missed
-  beats, student confusion, or pedagogical intent that did not survive an
-  earlier `uoa-py-course-create-excellent-lecture` run. The trigger is
-  *class-observed pain points*, not rubric gaps. Trigger on requests like
-  "update lecture NN after teaching it", "lecture NN missed the intent of the
-  draft, fix it", "students got stuck on X in lecture NN, add a section", "the
-  original draft for lecture NN had Y workflow and the refactored version
-  dropped it — restore it", "the live class showed Z is broken in lecture NN",
-  or when the maintainer supplies live-teaching notes / a list of student
-  questions / an overlooked design artefact and asks for the fixes to land.
-  Workflow: (1) recover the original intent from outline, `goals_<NN>.md`, and
-  any `*_draft*.ipynb` or hand-built notebook in the lecture folder; (2) diff
-  intent vs as-shipped lecture; (3) propose a minimal-surgery fix; (4) delegate
-  the content edits to `uoa-py-course-create-excellent-lecture` in **update
-  mode**; (5) re-run `uoa-py-course-lecture-eval` to confirm no regression; (6)
-  patch the lessons learned back into `uoa-py-course-create-excellent-lecture`
-  so the same failure does not repeat. Do NOT use it to: improve a lecture
-  against the eval rubric without a class-observed failure (use
-  `uoa-py-course-create-excellent-lecture` directly); plan a lecture from
-  scratch (use `uoa-py-course-lecture-outline`); evaluate or score a lecture
-  (use `uoa-py-course-lecture-eval`); grade student work; or apply a
-  maintainer-named change that does not stem from teaching observations (use
-  `uoa-py-course-create-excellent-lecture`'s update mode directly — this skill
-  exists specifically for the *diagnostic* step of figuring out what the failure
-  was, before that named change can be formulated). If the maintainer already
-  knows exactly which section to add and why, route to
-  `uoa-py-course-create-excellent-lecture` instead.
+  Use this skill to apply post-teaching corrections to a lecture after the
+  maintainer has taught it and observed failures, missed beats, student
+  confusion, or intent that did not survive an earlier
+  `uoa-py-course-create-excellent-lecture` run. The trigger is class-observed
+  pain points, not rubric gaps. Trigger on "update lecture NN after teaching
+  it", "lecture NN missed the intent of the draft, fix it", "students got stuck
+  on X in lecture NN, add a section", "the refactored lecture NN dropped the Y
+  workflow, restore it", "the live class showed Z is broken in lecture NN", or
+  when the maintainer supplies live-teaching notes or student questions. It
+  recovers the original intent, diffs it against the shipped lecture, delegates
+  a minimal fix to the create skill in update mode, and re-runs the eval skill.
+  Do NOT use it without a class-observed failure, to plan, evaluate, or score a
+  lecture, to grade student work, or for a change the maintainer has already
+  fully specified.
 ---
 
 # Update lecture post-teaching

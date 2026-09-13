@@ -1,37 +1,20 @@
 ---
 name: evaluate-course-from-final-submissions
 description: >
-  Use this skill to turn the ACCUMULATED final-assignment GRADING OUTPUT (many
-  students, already graded) into COURSE-IMPROVEMENT signal — a prioritized,
-  aggregate, PII-free report of where the delivered material has holes, keyed by
-  lecture number. Trigger on requests like "what do the final submissions say
-  about the course", "find course gaps from the graded assignments", "which
-  lectures need work based on student mistakes", "summarize the cohort's
-  recurring weaknesses", "aggregate the grading results into lecture
-  improvements", "where is the material under-teaching students", or when a
-  lecture-improvement skill invokes it for input. It reads the grade skill's
-  cumulative AUTOIMPROVE log and the per-student grade-summary +
-  criterion-feedback files under gitignored `students_work/`, harvests the 13
-  criterion scores into a deterministic PII-free JSON
-  (`scripts/harvest_grade_corpus.py`), groups recurring criterion-level
-  weaknesses with counts (N of M submissions), then for EACH theme LOCATES where
-  it is taught (`goals_NN.md`) and where the assignment asks for it
-  (`submission_requirements.prompt.md`) and TRIAGES it as a MATERIAL gap
-  (under-taught), an ASSIGNMENT-FRAMING gap (unclear ask), or STUDENT-EXECUTION
-  (taught + asked clearly, still missed). Output is one aggregate report
-  (`admin_docs/course_eval/course_gap_report_<YY>_<TS>.md`) with per-lecture
-  improvement briefs the lecture skills can consume. Do NOT use it to: GRADE a
-  student or score a submission (use `uoa-py-course-final-assignment-grade`);
-  give FORMATIVE feedback on a draft (use
-  `uoa-py-course-final-assignment-feedback`); evaluate or score ONE lecture
-  against the rubric (use `uoa-py-course-lecture-eval`); rewrite / improve / add
-  content to a lecture (use `uoa-py-course-create-excellent-lecture`); apply
-  post-teaching corrections to a lecture (use
-  `uoa-py-course-update-lecture-post-teaching`); plan a lecture from scratch
-  (use `uoa-py-course-lecture-outline`); or assess a postgrad dissertation (use
-  `assess_postgrad_dissertation`). This skill only produces the cross-submission
-  gap analysis — it never touches student notebooks or lecture files. It could
-  be called BY the lecture-improvement skills to source their evidence.
+  Use this skill to turn ACCUMULATED final-assignment grading output (many
+  students, already graded) into a prioritized, aggregate, PII-free
+  course-improvement report keyed by lecture number. Trigger on "what do the
+  final submissions say about the course", "find course gaps from the graded
+  assignments", "which lectures need work based on student mistakes", "summarize
+  the cohort's recurring weaknesses", "aggregate the grading results into
+  lecture improvements", or when a lecture-improvement skill needs evidence. It
+  harvests the 13 criterion scores from the grade skill's AUTOIMPROVE log and
+  per-student summaries, groups recurring weaknesses with counts, triages each
+  as a material gap, an assignment-framing gap, or student execution, and writes
+  one report under admin_docs/course_eval/ with per-lecture briefs. Do NOT use
+  it to grade a submission, give formative feedback, evaluate, plan, or edit a
+  lecture, or assess a dissertation; dedicated skills own those. It never
+  touches student notebooks or lecture files.
 ---
 
 # Evaluate the course from its final submissions

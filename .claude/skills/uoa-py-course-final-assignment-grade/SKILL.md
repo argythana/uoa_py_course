@@ -2,46 +2,19 @@
 name: uoa-py-course-final-assignment-grade
 description: >
   Use this skill to GRADE a student's COMPLETE Python-course final assignment
-  and produce a suggested numeric grade with per-notebook, per-criterion
-  justification. Trigger on requests like "grade <student>'s final assignment",
-  "score this submission", "what grade should this assignment get", "grade the
-  eClass submission for <student>", "run the grading panel on <student>", or
-  when the user supplies a .zip / folder / .ipynb of a final-assignment
-  submission and asks for a grade / score / points rather than formative
-  coaching. It reads the authoritative specs
-  (final_assignment/submission_requirements.prompt.md for the 13 weighted
-  criteria and notebook weights, final_assignment/grade_feedback.prompt.md for
-  the grading orientation and output rules), REUSES the feedback skill's
-  deterministic pipeline (locate → inventory → static checks → dataset
-  inspection → run-all execution in course_venv), then runs a THREE-grader
-  panel: two independent graders plus a third arbiter that grades independently
-  FIRST and only then receives the other two graders' scores+feedback to produce
-  the final reconciled verdict. Every deduction is gated by a UNANIMITY RULE —
-  unanimity on the ISSUE causing the penalty (the anchored factual premise), not
-  on the number: contested issues go back to extra blind examiners for up to 3
-  deliberation rounds, and anything not unanimously affirmed by then is struck
-  (points refunded, remark deleted), because a false positive that wrongly
-  lowers a real student's grade is unacceptable while a miss is not; enforced
-  mechanically by scripts/apply_unanimity_gate.py, never by hand. If an earlier
-  formative draft-feedback file exists for the student (from
-  uoa-py-course-final-assignment-feedback), the arbiter also folds it in as a
-  FOURTH equal-weight voice — validated cell-by-cell against the final
-  submission and never graded on improvement. Grades are computed
-  deterministically by scripts/compute_grade.py (criterion sums → nearest-0.5
-  notebook grades → weighted total → nearest-0.5 final grade; regression 0.25 /
-  clustering 0.25 / classification 0.50). It writes timestamped per-notebook
-  `<prefix>_<category>_feedback_<TS>.md` files plus an instructor-facing
-  `<prefix>_assignment_grade_summary_<TS>.md` (with the panel reconciliation)
-  into the student's gitignored final_assignment/ folder — never overwriting a
-  prior grade run or the formative feedback skill's drafts — with the mandatory
-  "AI-suggested, not final" disclaimers. Do NOT use this skill to give FORMATIVE
-  no-grade coaching on a draft (use uoa-py-course-final-assignment-feedback); to
-  assess an MSc dissertation (use assess_postgrad_dissertation); to evaluate
-  lecture material (use uoa-py-course-lecture-eval); to download submissions
-  from eClass (use automation_infrastructure/eclass/download_submissions.py); or
-  to edit/fix the student's notebooks. One submission per invocation. If the
-  input is ambiguous (multiple students match, no notebooks, a .rar that can't
-  be extracted), ask which submission to grade before proceeding.
+  and produce a suggested numeric grade with per-criterion justification.
+  Trigger on "grade <student>'s final assignment", "score this submission",
+  "what grade should this assignment get", "grade the eClass submission for
+  <student>", "run the grading panel on <student>", or when the user supplies a
+  .zip / folder / .ipynb and asks for a grade or score rather than formative
+  coaching. It reuses the feedback skill's deterministic pipeline, runs a
+  three-grader panel with an independent arbiter under a unanimity rule on every
+  deduction, computes grades deterministically, and writes timestamped
+  per-notebook feedback plus a grade summary into the student's gitignored
+  final_assignment/ folder. Do NOT use it for formative no-grade coaching
+  (uoa-py-course-final-assignment-feedback), dissertations, lecture evaluation,
+  downloading eClass submissions, or editing notebooks. One submission per
+  invocation; if ambiguous, ask which submission first.
 ---
 
 # Final-assignment grading panel
