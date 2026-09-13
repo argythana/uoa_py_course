@@ -1,6 +1,19 @@
 ---
 name: uoa-py-course-lecture-eval
-description: Use this skill to evaluate one lecture folder in this course repo against the 9-category pedagogical rubric (six internal + three external) and produce a Markdown report with a composite tier and prioritized fixes. Trigger on requests like "evaluate lecture NN", "audit lecture NN", "score lecture NN", "review the lecture material for NN", or when the user supplies a `lectures_*/` folder path and asks for a quality assessment. Do NOT use it to: improve, rewrite, or propose content for a lecture (that work belongs to the future `create-improve-lecture` skill — this skill flags absence only); evaluate non-lecture material such as `README.md`, `CLAUDE.md`, or arbitrary scripts; grade student submissions or final-assignment notebooks (use `final_assignment/grade_feedback.prompt.md` instead). If the lecture number or path doesn't resolve to exactly one folder, ask which folder before proceeding.
+description: >
+  Use this skill to evaluate one lecture folder in this course repo against the
+  9-category pedagogical rubric (six internal + three external) and produce a
+  Markdown report with a composite tier and prioritized fixes. Trigger on
+  requests like "evaluate lecture NN", "audit lecture NN", "score lecture NN",
+  "review the lecture material for NN", or when the user supplies a
+  `lectures_*/` folder path and asks for a quality assessment. Do NOT use it to:
+  improve, rewrite, or propose content for a lecture (that work belongs to the
+  future `create-improve-lecture` skill — this skill flags absence only);
+  evaluate non-lecture material such as `README.md`, `CLAUDE.md`, or arbitrary
+  scripts; grade student submissions or final-assignment notebooks (use
+  `final_assignment/grade_feedback.prompt.md` instead). If the lecture number or
+  path doesn't resolve to exactly one folder, ask which folder before
+  proceeding.
 ---
 
 # Lecture evaluation

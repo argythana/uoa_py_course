@@ -1,6 +1,22 @@
 ---
 name: uoa-post-linkedin
-description: Use this skill to draft English-language LinkedIn posts announcing updates to the UoA "Python for Data Science, ML and AI" MSc course. Trigger on requests like "draft the next linkedin post", "write the linkedin post about <theme>", "linkedin post for the course updates", "continue the course post series", "mark post N as published", or "rebuild the linkedin series plan". The series plan (themes, evidence, status) is the file admin_docs/linkedin_posts/series_plan.md — this skill reads it, gathers and VERIFIES evidence from git history and repo files, writes one plain-text post draft per invocation to admin_docs/linkedin_posts/post_NN_<slug>.md, and updates the plan's status column. It never publishes anything (no LinkedIn API — the maintainer copies the text out and posts manually), never invents numbers or features not verifiable in the public repo, and never mentions students, grades, PII, secrets, or gitignored private content. Do NOT use this skill to write feedback or grades (separate skills exist), to edit lecture material, or to post to any platform automatically. One post per invocation unless the user explicitly asks for the whole series.
+description: >
+  Use this skill to draft English-language LinkedIn posts announcing updates to
+  the UoA "Python for Data Science, ML and AI" MSc course. Trigger on requests
+  like "draft the next linkedin post", "write the linkedin post about <theme>",
+  "linkedin post for the course updates", "continue the course post series",
+  "mark post N as published", or "rebuild the linkedin series plan". The series
+  plan (themes, evidence, status) is the file
+  admin_docs/linkedin_posts/series_plan.md — this skill reads it, gathers and
+  VERIFIES evidence from git history and repo files, writes one plain-text post
+  draft per invocation to admin_docs/linkedin_posts/post_NN_<slug>.md, and
+  updates the plan's status column. It never publishes anything (no LinkedIn API
+  — the maintainer copies the text out and posts manually), never invents
+  numbers or features not verifiable in the public repo, and never mentions
+  students, grades, PII, secrets, or gitignored private content. Do NOT use this
+  skill to write feedback or grades (separate skills exist), to edit lecture
+  material, or to post to any platform automatically. One post per invocation
+  unless the user explicitly asks for the whole series.
 ---
 
 # LinkedIn post drafting for the UoA Python course

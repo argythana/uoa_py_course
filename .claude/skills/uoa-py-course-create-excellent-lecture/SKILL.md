@@ -1,6 +1,25 @@
 ---
 name: uoa-py-course-create-excellent-lecture
-description: Use this skill to drive a single lecture in this course repo from its current state (whatever tier) up to composite `strong` on the 9-category rubric used by `uoa-py-course-lecture-eval`, OR to apply a targeted update / modification to an already-`solid`-or-`strong` lecture (add a section, retire content, rescope, lift content between lectures). Trigger on requests like "improve lecture NN", "bring lecture NN to strong", "fix every gap in lecture NN", "refactor lecture NN to the Lecture 09 template", "make lecture NN as good as lecture 09", "update lecture NN to add X", "lift section X from lecture NN to lecture MM", or when the user supplies an eval report and asks for the fixes to land. Do NOT use it to: evaluate or score a lecture (use `uoa-py-course-lecture-eval`); plan a lecture from scratch without any existing material (use `uoa-py-course-lecture-outline` first, then this skill once the outline is approved); grade student work (use `final_assignment/grade_feedback.prompt.md`); rewrite arbitrary files outside `lectures_*/`; or edit `docs/Lectures_outline.md` directly (the skill emits a suggested patch instead). If the lecture is missing both an eval report and an outline, this skill runs them first; if the user has not yet decided on destructive moves (deletions, renames), this skill asks before touching the lecture folder.
+description: >
+  Use this skill to drive a single lecture in this course repo from its current
+  state (whatever tier) up to composite `strong` on the 9-category rubric used
+  by `uoa-py-course-lecture-eval`, OR to apply a targeted update / modification
+  to an already-`solid`-or-`strong` lecture (add a section, retire content,
+  rescope, lift content between lectures). Trigger on requests like "improve
+  lecture NN", "bring lecture NN to strong", "fix every gap in lecture NN",
+  "refactor lecture NN to the Lecture 09 template", "make lecture NN as good as
+  lecture 09", "update lecture NN to add X", "lift section X from lecture NN to
+  lecture MM", or when the user supplies an eval report and asks for the fixes
+  to land. Do NOT use it to: evaluate or score a lecture (use
+  `uoa-py-course-lecture-eval`); plan a lecture from scratch without any
+  existing material (use `uoa-py-course-lecture-outline` first, then this skill
+  once the outline is approved); grade student work (use
+  `final_assignment/grade_feedback.prompt.md`); rewrite arbitrary files outside
+  `lectures_*/`; or edit `docs/Lectures_outline.md` directly (the skill emits a
+  suggested patch instead). If the lecture is missing both an eval report and an
+  outline, this skill runs them first; if the user has not yet decided on
+  destructive moves (deletions, renames), this skill asks before touching the
+  lecture folder.
 ---
 
 # Create excellent lecture

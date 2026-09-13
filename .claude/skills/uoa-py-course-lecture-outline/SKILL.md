@@ -1,6 +1,18 @@
 ---
 name: uoa-py-course-lecture-outline
-description: Use this skill to produce a structural outline for one lecture in this course repo — a draft `goals_NN.md` plus an internal design doc that pre-conforms to the 9-category rubric used by `uoa-py-course-lecture-eval`. Trigger on requests like "outline lecture NN", "plan a lecture on X", "design lecture NN before writing it", "draft goals_NN.md for X", "plan the refactor of lecture NN", or "scaffold the outline for the regression lecture". Do NOT use it to: generate lecture content (no code, no datasets, no specific industry uses — that work belongs to the future `create-improve-lecture` skill); evaluate an existing lecture (use `uoa-py-course-lecture-eval`); grade student submissions; rewrite `docs/Lectures_outline.md` directly (the skill emits a suggested patch instead). If the lecture number or topic is ambiguous, ask before proceeding.
+description: >
+  Use this skill to produce a structural outline for one lecture in this course
+  repo — a draft `goals_NN.md` plus an internal design doc that pre-conforms to
+  the 9-category rubric used by `uoa-py-course-lecture-eval`. Trigger on
+  requests like "outline lecture NN", "plan a lecture on X", "design lecture NN
+  before writing it", "draft goals_NN.md for X", "plan the refactor of lecture
+  NN", or "scaffold the outline for the regression lecture". Do NOT use it to:
+  generate lecture content (no code, no datasets, no specific industry uses —
+  that work belongs to the future `create-improve-lecture` skill); evaluate an
+  existing lecture (use `uoa-py-course-lecture-eval`); grade student
+  submissions; rewrite `docs/Lectures_outline.md` directly (the skill emits a
+  suggested patch instead). If the lecture number or topic is ambiguous, ask
+  before proceeding.
 ---
 
 # Lecture outline
