@@ -26,6 +26,8 @@ Each lecture lives in its own folder under one of three parent directories:
 | `lectures_07_13_pandas_plots_scikit/` | 07–13 | Data science with pandas, plots, scikit-learn |
 | `lectures_14_16_nns_pytorch/` | 14–16 | Neural networks with PyTorch |
 
+The instructor's own tooling (eClass automation, per-student folders, publishing material) lives in [`automation_infrastructure/`](automation_infrastructure/README.md). It is not course material.
+
 ### Naming Conventions
 
 | File type | Pattern | Example |
