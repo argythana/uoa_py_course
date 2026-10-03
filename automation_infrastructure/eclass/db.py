@@ -1,7 +1,7 @@
 """Shared SQLite access for the eClass mirror: bootstrap, migrate, upsert, query.
 
 The mirror DB lives at ``admin_docs/eclass_data/eclass.db`` (gitignored — it
-holds student PII). Two entry points write to it:
+holds student PII). Three entry points write to it:
 
 - :mod:`automation_infrastructure.eclass.refresh_db` scrapes the roster into
   ``users``.
@@ -10,6 +10,9 @@ holds student PII). Two entry points write to it:
   downloads, so a later download run can ask the DB *"do we already hold this
   submission, at this timestamp?"* with a single indexed lookup instead of
   walking every student's folder on disk.
+- :mod:`automation_infrastructure.eclass.upload_documents` records one
+  ``document_uploads`` row per file it publishes to a course's Έγγραφα, so a
+  later run re-uploads only what changed.
 
 This module is import-safe: it opens connections, runs SQL, and returns data;
 it never prints. Callers own the connection (open it, commit, close it).
@@ -45,13 +48,13 @@ def open_db(db_path: Path = DB_PATH) -> sqlite3.Connection:
     before returning. The caller owns the connection and must close it.
     """
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    fresh = not db_path.exists()
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
-    if fresh:
-        conn.executescript(SCHEMA_PATH.read_text(encoding="utf-8"))
-        conn.commit()
+    # Every statement in schema.sql is IF NOT EXISTS, so running it on each open
+    # bootstraps a fresh DB and adds tables introduced since an older one was made.
+    conn.executescript(SCHEMA_PATH.read_text(encoding="utf-8"))
+    conn.commit()
     _migrate(conn)
     return conn
 
@@ -202,4 +205,44 @@ def upsert_grade(
         """,
         (user_id, assignment_id, grade_item, score, max_score,
          graded_at or utc_now(), utc_now()),
+    )
+
+
+# -- document_uploads --------------------------------------------------------
+
+def get_document_upload(conn: sqlite3.Connection, course_code: str,
+                        remote_path: str) -> sqlite3.Row | None:
+    """The ledger row for one published file, or None if we never uploaded it."""
+    return conn.execute(
+        "SELECT remote_path, eclass_path, file_sha256, size_bytes, source, uploaded_at "
+        "FROM document_uploads WHERE course_code = ? AND remote_path = ?",
+        (course_code, remote_path),
+    ).fetchone()
+
+
+def upsert_document_upload(
+    conn: sqlite3.Connection,
+    *,
+    course_code: str,
+    remote_path: str,
+    eclass_path: str,
+    file_sha256: str,
+    size_bytes: int,
+    source: str | None = None,
+) -> None:
+    """Insert or refresh one ``document_uploads`` row (keyed on course + remote path)."""
+    conn.execute(
+        """
+        INSERT INTO document_uploads
+            (course_code, remote_path, eclass_path, file_sha256, size_bytes,
+             source, uploaded_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(course_code, remote_path) DO UPDATE SET
+            eclass_path = excluded.eclass_path,
+            file_sha256 = excluded.file_sha256,
+            size_bytes  = excluded.size_bytes,
+            source      = excluded.source,
+            uploaded_at = excluded.uploaded_at
+        """,
+        (course_code, remote_path, eclass_path, file_sha256, size_bytes, source, utc_now()),
     )

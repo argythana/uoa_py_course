@@ -87,6 +87,7 @@ typically does.
   workflow.
 - File-upload flows (`document`, `work`). These usually need
   `multipart/form-data` and a per-form CSRF token — non-trivial.
+  (`document` since solved — see §8.)
 - Any other courses on this account (recon only touched ECON537).
 
 ## 5. Recommended next step (pick one)
@@ -220,3 +221,56 @@ Each TODO is a self-contained piece of work: write `scrape_<module>.py`
 following the `scrape_users.py` pattern, write a matching `upsert_<module>`
 in `refresh_db.py`, and add the scraper to the `SCRAPERS` list. The
 schema, login helper, and transaction wrapper are already in place.
+
+## 8. Pilot v3 — document-module uploader (status: shipped)
+
+Publishes a course repository to a course's Έγγραφα. See `scrapers/documents.py`
+and `upload_documents.py`. It was first used on 2026-10-03 to publish
+teach-llm-system to **ECON875**: 41 files and 10 folders. Every file was
+downloaded back and was byte-identical, and a re-run uploaded nothing.
+
+Recon (Open eClass **4.4.1**, ECON875). The server code is
+`modules/document/index.php` in github.com/gunet/openeclass:
+
+- **Internal paths.** Every folder and file has a random internal path
+  (`/652fc0d2jNsb/6ac13b46P15m.md`). The visible name is stored separately, so a
+  visible path is resolved one folder at a time by listing each folder.
+- **List a folder.** `GET index.php?course=<C>&openDir=<internal>` (`/` is the
+  root). In each row of `table.table-default`, a checkbox carries `filepath`
+  (the internal path) and `isdir`, and hidden rows have class `not_visible`. A
+  file's real filename is the last segment of its `file.php/<C>/...` link, since
+  the link text may be a title.
+- **Create a folder.** `POST index.php?course=<C>` with `newDirPath` (the
+  parent's internal path, `''` for the root), `newDirName` and `token`. The
+  folder is created visible. An existing name is answered with a warning.
+- **Upload a file.** This is the page's Uppy widget: `POST index.php?course=<C>`
+  as multipart, sending `userFile`, `uploadPath`, `replace` (`1` overwrites a
+  same-named file in the folder), `uncompress`, `file_creator`,
+  `file_copyrighted`, `token` and `XHRUpload=true`. With `XHRUpload` the server
+  answers `200` on success or `400` with the reason stored in the session, and
+  the next page view shows that reason as an `alert-danger`. Files are visible
+  at once. A replace deletes the old record and inserts a new one, which gets a
+  new internal path.
+- **Public URL.** `file.php/<C>/<visible path>` serves a file by its visible
+  path. The verification step uses it.
+- `token` is the per-session CSRF token, the same on every page. Uploads are
+  checked against the platform's extension whitelist. `.ipynb`, `.md`, `.png`
+  and `.pdf` all passed for a teacher account.
+
+Design decisions:
+
+- **Upload git HEAD, not the working tree**, so eClass matches GitHub.
+  Uncommitted edits and unpushed commits produce warnings.
+- **One upload per file rather than a zip with `uncompress=1`.** This allows
+  per-file replace and dedup.
+- **The ledger lives in the mirror DB** (`document_uploads`: sha256 + internal
+  path). A file is skipped when its hash matches and its internal path is still
+  listed. `open_db()` now runs the idempotent `schema.sql` on every open, so new
+  tables also reach DBs created earlier.
+- **Never delete on eClass.** Orphans are reported, as `scaffold_student_dirs.sh`
+  does for folders.
+
+Observation: the 8th CAS login within about 10 minutes on 2026-10-03 was
+rejected ("still on sso.uoa.gr"), although the credentials were unchanged and
+the previous login had succeeded. Treat bursts of logins as a lockout risk.
+Prefer one CLI run, which uses one login, to many ad-hoc probes.

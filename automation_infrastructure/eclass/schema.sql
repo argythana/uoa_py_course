@@ -1,5 +1,5 @@
 -- UoA eClass mirror database — current-state mirror, course-events scope.
--- Populated by automation_infrastructure/eclass/{refresh_db,download_submissions}.py.
+-- Populated by automation_infrastructure/eclass/{refresh_db,download_submissions,upload_documents}.py.
 -- All rows are upserted on natural keys; a partially-failed scrape never
 -- wipes out previously-good data.
 
@@ -84,6 +84,22 @@ CREATE TABLE IF NOT EXISTS announcements (
     posted_at          TEXT,
     last_scraped_at    TEXT    NOT NULL,
     UNIQUE (course_code, announcement_id)
+);
+
+-- One row per file published to a course's document module (Έγγραφα) by
+-- upload_documents.py. remote_path is the path students see, built from folder
+-- names ("lecture_01_x/reading_material/lec_01a.ipynb"); eclass_path is eClass's
+-- internal path for it. A later upload run skips a file whose sha256 matches and
+-- whose eclass_path is still listed, and replaces it when the content changed.
+CREATE TABLE IF NOT EXISTS document_uploads (
+    course_code        TEXT    NOT NULL,
+    remote_path        TEXT    NOT NULL,
+    eclass_path        TEXT    NOT NULL,
+    file_sha256        TEXT    NOT NULL,
+    size_bytes         INTEGER NOT NULL,
+    source             TEXT,                 -- where the bytes came from, e.g. "teach-llm-system@59641e8"
+    uploaded_at        TEXT    NOT NULL,     -- ISO-8601 UTC
+    PRIMARY KEY (course_code, remote_path)
 );
 
 -- Useful query indexes
