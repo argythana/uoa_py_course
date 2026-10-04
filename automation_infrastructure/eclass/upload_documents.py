@@ -21,7 +21,8 @@ Re-running is cheap and safe. Each uploaded file is recorded in the mirror DB
 eClass-internal path; a file whose content is unchanged and still listed on
 eClass is skipped, a changed one replaces the eClass copy in place, and a new one
 is uploaded. Nothing is ever deleted on eClass: files that are on eClass but no
-longer in the source are reported as orphans for you to remove by hand.
+longer in the source are reported as orphans; remove them by hand or with
+``delete_documents``.
 
     # Preview: logs in, compares with eClass, changes nothing.
     python -m automation_infrastructure.eclass.upload_documents --profile teach-llm-system --dry-run
@@ -379,7 +380,7 @@ def main(argv: list[str] | None = None) -> int:
     if remote.created:
         print(f"\n{verb} {len(remote.created)} folder(s): {', '.join(remote.created)}")
     if left_over:
-        print("\non eClass but not in the source (left in place; delete by hand if unwanted):\n"
+        print("\non eClass but not in the source (left in place; remove with delete_documents if unwanted):\n"
               + "\n".join(f"  {p}" for p in left_over))
     prefix = "would have " if args.dry_run else ""
     print(f"\n{prefix}uploaded {counts['uploaded']}, {prefix}replaced {counts['replaced']}, "

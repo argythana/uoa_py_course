@@ -36,6 +36,7 @@ misplaced: move it to `admin_docs/`.
 | Create this year's per-student folders | `automation_infrastructure/scaffold_student_dirs.sh [--year YYYY]` | `students_work/class_<YY>/` |
 | Download final-assignment submissions | `python -m automation_infrastructure.eclass.download_submissions` | `students_work/class_<YY>/<slug>/final_assignment/` |
 | Publish a course repo to eClass Έγγραφα | `python -m automation_infrastructure.eclass.upload_documents --profile teach-llm-system --dry-run` | eClass (visible to students) + `eclass.db` |
+| Delete named files from eClass Έγγραφα | `python -m automation_infrastructure.eclass.delete_documents --course ECON875 PATH ...` (add `--yes` to delete) | eClass + `eclass.db` |
 | Check the eClass login only | `python -m automation_infrastructure.eclass.session` | nothing |
 
 A typical year runs in this order: mirror the roster, scaffold the folders, and
@@ -57,8 +58,10 @@ the design decisions).
 - **Dry-run anything that writes to eClass.** `upload_documents --dry-run`
   logs in and compares, but changes nothing. Real uploads are visible to
   students at once.
-- **Nothing here deletes.** The tools report orphan folders or files (on disk
-  or on eClass) and leave their removal to you.
+- **Nothing deletes on its own.** The tools report orphan folders or files (on
+  disk or on eClass) and leave their removal to you. The one deleting tool,
+  `delete_documents`, removes only the eClass files you name by exact path, and
+  only with `--yes`.
 - **No student data in commits or chats.** Names, emails and academic numbers
   live only under `admin_docs/` and `students_work/`.
 
@@ -76,6 +79,7 @@ automation_infrastructure/
     ├── refresh_db.py          CLI: roster → DB
     ├── download_submissions.py, extract.py   CLI: work-module submissions → students_work/
     ├── upload_documents.py    CLI: repo HEAD + PDFs → course Έγγραφα
+    ├── delete_documents.py    CLI: delete named files from a course's Έγγραφα
     ├── scrapers/              one module per eClass module (users, work, documents)
     └── recon/                 historical probe scripts
 ```

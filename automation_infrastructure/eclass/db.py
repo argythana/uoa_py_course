@@ -246,3 +246,13 @@ def upsert_document_upload(
         """,
         (course_code, remote_path, eclass_path, file_sha256, size_bytes, source, utc_now()),
     )
+
+
+def delete_document_upload(conn: sqlite3.Connection, course_code: str,
+                           remote_path: str) -> bool:
+    """Drop the ledger row of a file deleted from eClass; True if there was one."""
+    cur = conn.execute(
+        "DELETE FROM document_uploads WHERE course_code = ? AND remote_path = ?",
+        (course_code, remote_path),
+    )
+    return cur.rowcount > 0

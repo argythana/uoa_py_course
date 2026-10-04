@@ -251,6 +251,12 @@ Recon (Open eClass **4.4.1**, ECON875). The server code is
   the next page view shows that reason as an `alert-danger`. Files are visible
   at once. A replace deletes the old record and inserts a new one, which gets a
   new internal path.
+- **Delete a file or folder.** Each row's action menu holds a form that
+  `POST`s to `index.php?course=<C>&filePath=<code>&delete=1&token=<token>` with
+  an empty body (recon 2026-10-04, `recon/04_document_actions.py`). `<code>` is
+  the entry's short public id (`odeMcF`), also used by its download link, not
+  the internal path. The answer is a redirect either way, so success is checked
+  by listing the folder again.
 - **Public URL.** `file.php/<C>/<visible path>` serves a file by its visible
   path. The verification step uses it.
 - `token` is the per-session CSRF token, the same on every page. Uploads are
@@ -267,8 +273,11 @@ Design decisions:
   path). A file is skipped when its hash matches and its internal path is still
   listed. `open_db()` now runs the idempotent `schema.sql` on every open, so new
   tables also reach DBs created earlier.
-- **Never delete on eClass.** Orphans are reported, as `scaffold_student_dirs.sh`
-  does for folders.
+- **The uploader never deletes on eClass.** Orphans are reported, as
+  `scaffold_student_dirs.sh` does for folders. Deleting is a separate tool,
+  `delete_documents.py` (2026-10-04), that takes exact visible paths of files,
+  refuses folders, resolves every path before deleting any, and acts only with
+  `--yes`.
 
 Observation: the 8th CAS login within about 10 minutes on 2026-10-03 was
 rejected ("still on sso.uoa.gr"), although the credentials were unchanged and

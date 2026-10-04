@@ -1,4 +1,4 @@
-"""Read and write the eClass 'document' (Έγγραφα) module: list, mkdir, upload.
+"""Read and write the eClass 'document' (Έγγραφα) module: list, mkdir, upload, delete.
 
 The module lives at ``/modules/document/index.php?course=<CODE>`` (Open eClass
 4.4, recon October 2026 on ECON875). Every folder and file has an
@@ -25,6 +25,11 @@ Endpoints (teacher account):
   widget sends. With ``XHRUpload`` the server answers ``200`` on success or
   ``400`` with the reason parked in the session; the next page view renders it as
   an ``alert-danger``. Uploaded files are visible immediately.
+- **delete a file or folder**: ``POST index.php?course=<C>&filePath=<code>&delete=1
+  &token=<token>`` with an empty body, the form behind each row's "Διαγραφή".
+  ``<code>`` is the entry's short public id (``odeMcF``), the one its download
+  link also uses, not the internal path. Responds with a redirect; success is
+  only learned by listing the folder again.
 
 ``token`` is the per-session CSRF token from any page of the module. File types
 are checked against the platform's upload whitelist (a rejected type is a 400).
@@ -37,7 +42,7 @@ from __future__ import annotations
 
 import mimetypes
 from dataclasses import dataclass
-from urllib.parse import unquote, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 import requests
 from bs4 import BeautifulSoup
@@ -48,7 +53,7 @@ MODULE_URL = f"{BASE}/modules/document/index.php"
 
 
 class DocumentError(RuntimeError):
-    """eClass refused a document-module action (upload, mkdir)."""
+    """eClass refused a document-module action (upload, mkdir, delete)."""
 
 
 @dataclass
@@ -61,6 +66,7 @@ class Entry:
     visible: bool       # False when eClass shows the row as hidden from students
     size_text: str      # human size as listed ("6.92 KB"); '' for folders
     date_text: str      # human date as listed ("18/10/23, 2:25 μ.μ.")
+    code: str = ""      # short public id used by download/delete (``odeMcF``)
 
 
 @dataclass
@@ -103,6 +109,10 @@ def parse_listing(html: str) -> Listing:
             href = link.get("href", "") if link else ""
             name = unquote(urlparse(href).path.rsplit("/", 1)[-1]) if href else ""
         cells = row.find_all("td")
+        delete_form = row.find("form", action=lambda a: a and "delete=1" in a)
+        code = ""
+        if delete_form is not None:
+            code = parse_qs(urlparse(delete_form["action"]).query).get("filePath", [""])[0]
         entries.append(Entry(
             name=name,
             path=checkbox["filepath"],
@@ -110,6 +120,7 @@ def parse_listing(html: str) -> Listing:
             visible="not_visible" not in (row.get("class") or []),
             size_text=" ".join(cells[2].get_text().split()) if len(cells) > 2 else "",
             date_text=" ".join(cells[3].get_text().split()) if len(cells) > 3 else "",
+            code=code,
         ))
     return Listing(entries=entries, token=token_input["value"])
 
@@ -175,3 +186,19 @@ def upload_file(session: requests.Session, course: str, dir_path: str, filename:
     messages = pending_errors(session, course) if r.status_code == 400 else []
     detail = "; ".join(messages) or r.text.strip()[:200] or "no message"
     raise DocumentError(f"HTTP {r.status_code}: {detail}")
+
+
+def delete_entry(session: requests.Session, course: str, entry: Entry, token: str) -> None:
+    """Delete one listed file or folder (a folder goes with everything inside it).
+
+    Sends the request of the row's "Διαγραφή" form. Callers confirm the result by
+    listing the folder again: the response is a redirect either way.
+    """
+    if not entry.code:
+        raise DocumentError(f"no delete action listed for {entry.name!r}")
+    r = session.post(
+        MODULE_URL,
+        params={"course": course, "filePath": entry.code, "delete": "1", "token": token},
+        timeout=30,
+    )
+    r.raise_for_status()

@@ -115,9 +115,10 @@ sqlite3 admin_docs/eclass_data/eclass.db \
 | `eclass/session.py`           | Reusable CAS login helper (`login`, `logout`)            |
 | `eclass/scrapers/users.py`    | Roster scraper (DataTables AJAX → list of dicts)         |
 | `eclass/scrapers/work.py`     | Assignment list + submission download helpers (`work` module) |
-| `eclass/scrapers/documents.py` | List folders, create folders, upload files (`document` module) |
+| `eclass/scrapers/documents.py` | List folders, create folders, upload and delete files (`document` module) |
 | `eclass/download_submissions.py` | CLI: download a final assignment's submissions into `students_work/`; writes the `assignments`/`submissions` ledger |
 | `eclass/upload_documents.py`  | CLI: publish a repo's HEAD (+ generated PDFs) to a course's Έγγραφα; writes the `document_uploads` ledger |
+| `eclass/delete_documents.py`  | CLI: delete files named by exact visible path from a course's Έγγραφα; drops their ledger rows |
 | `eclass/refresh_db.py`        | Orchestrator: bootstrap → scrape roster → upsert         |
 | `eclass/db.py`                | Shared DB access: bootstrap, migration, assignment/submission/upload upserts + dedup queries |
 | `eclass/schema.sql`           | The 7-table SQLite schema                                |
@@ -207,14 +208,40 @@ python -m automation_infrastructure.eclass.upload_documents --course ECONxxx \
   skipped, changed files replace the eClass copy in place, and new files and
   folders are created.
 - **Nothing is deleted on eClass.** Files that are on eClass but no longer in the
-  source are listed as orphans. Remove them in the web UI. The course root is
-  not checked, because it also holds older material.
+  source are listed as orphans. Remove them with `delete_documents` (below) or in
+  the web UI. The course root is not checked, because it also holds older
+  material.
 - **Warnings, not blockers:** uncommitted edits (left out, since HEAD is
   uploaded) and unpushed commits (uploaded, so eClass runs ahead of GitHub).
 - **Blocker:** a PDF older than its Markdown guide stops the run. Rebuild it, or
   pass `--allow-stale-pdfs`.
 - Uploads are **visible to students immediately**, so run `--dry-run` first.
   `--force` re-uploads everything.
+
+### Deleting files from Έγγραφα
+
+`eclass/delete_documents.py` deletes the files you name, by the visible path the
+uploader prints (for example in its orphan list). It is separate from the
+uploader on purpose: publishing never deletes.
+
+```bash
+# Preview: logs in, finds each file, deletes nothing.
+python -m automation_infrastructure.eclass.delete_documents --course ECON875 \
+    lecture_01_ollama_models_prompts_langchain/reading_material/old_name.ipynb
+
+# Delete.
+python -m automation_infrastructure.eclass.delete_documents --course ECON875 --yes \
+    lecture_01_ollama_models_prompts_langchain/reading_material/old_name.ipynb
+```
+
+- **Exact paths only**: no wildcards or patterns; one argument, one file.
+- **Files only**: a path that names a folder is refused. Delete folders in the
+  web UI.
+- **All or nothing**: every path is looked up first, and one missing or refused
+  path stops the run before anything is deleted.
+- Each deletion is confirmed by listing the folder again, and the file's
+  `document_uploads` row is dropped, so the uploader re-uploads it if it comes
+  back to the source.
 
 ## Adding a new module scraper
 
