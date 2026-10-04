@@ -59,3 +59,6 @@ roadmap_brainstorm.md
 
 # Zip bundles (e.g. e-class uploads — regenerated from source folders)
 **/*.zip
+
+# Local alumni seminar notes, not part of the course
+alumni_seminars/
