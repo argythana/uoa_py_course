@@ -6,11 +6,10 @@
 .idea/
 .vscode/
 # .claude/: only skills/ is public (open-sourced course toolchain); settings,
-# prompts, scripts, and eval reports stay local. The dissertation skill is
-# secretariat process, not course toolchain — keep it private.
+# prompts, scripts, and eval reports stay local. Private companion skills are
+# installed as links and ignored by each user's own git rules, not named here.
 .claude/*
 !.claude/skills/
-.claude/skills/assess_postgrad_dissertation
 .codex/
 .gradio/
 
