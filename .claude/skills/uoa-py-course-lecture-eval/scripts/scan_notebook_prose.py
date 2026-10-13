@@ -94,6 +94,7 @@ import argparse
 import json
 import re
 import sys
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -111,6 +112,9 @@ _HR = re.compile(r"^\s*([-*_])(\s*\1){2,}\s*$")
 _WRAPPER = re.compile(r"^\s*<div[^>]*>\s*|\s*</div>\s*$")
 _BOLD = re.compile(r"\*\*(.+?)\*\*")
 _CODE_SPAN = re.compile(r"`+[^`]*`+")
+_CODE_TERM = re.compile(r"`[^`]+`")  # a term written as code, such as `Document`
+_URL = re.compile(r"https?://\S+")
+_POINTER = re.compile(r"`lec_\d\d[a-z]?\w*`")
 _LINK = re.compile(r"!?\[([^\]]*)\]\([^)]*\)")
 _ARTICLE = r"(?:(?:A|An|The)\s+)?"
 # - [A/An/The] **term** [(alias)] is/are ...
@@ -209,6 +213,10 @@ class Definition:
 
     @property
     def aliases(self) -> list[str]:
+        if _CODE_TERM.fullmatch(self.term.strip()):
+            return [
+                self.term.strip()
+            ]  # `Document` matches only as code, not "documents"
         names = [normalize(self.term)]
         names += [normalize(a) for a in re.findall(r"\(([^)]+)\)", self.term)]
         return [n for n in names if n]
@@ -562,9 +570,31 @@ def definitions(notebooks: list[Notebook]) -> list[Definition]:
     return found
 
 
-def mentions(text: str, alias: str) -> bool:
+def prose_of(text: str, longer: Iterable[str] = ()) -> str:
+    """The prose of ``text``: no code spans, link targets or URLs, and no longer
+    defined terms that contain the term being searched ("token ID" when searching "ID")."""
+    text = _URL.sub(" ", _LINK.sub(r"\1", text))
+    text = _CODE_SPAN.sub(  # a notebook pointer such as `lec_01c` stays readable
+        lambda m: m.group().strip("`") if _POINTER.fullmatch(m.group()) else " ", text
+    )
+    for other in longer:
+        text = re.sub(
+            rf"(?<![\w-]){re.escape(other)}(?:s|es)?(?![\w-])", " ", text, flags=re.I
+        )
+    return " ".join(text.split())
+
+
+def longer_aliases(alias: str, aliases: Iterable[str]) -> list[str]:
+    """The other aliases that contain ``alias`` as a whole word."""
+    word = re.compile(rf"(?<![\w-]){re.escape(alias)}(?![\w-])", re.IGNORECASE)
+    return [a for a in aliases if a != alias and word.search(a)]
+
+
+def mentions(text: str, alias: str, longer: Iterable[str] = ()) -> bool:
+    if _CODE_TERM.fullmatch(alias):
+        return alias in text
     pattern = rf"(?<![\w-]){re.escape(alias)}(?:s|es)?(?![\w-])"
-    return re.search(pattern, text.replace("`", ""), re.IGNORECASE) is not None
+    return re.search(pattern, prose_of(text, longer), re.IGNORECASE) is not None
 
 
 # ---------------------------------------------------------------- checks
@@ -684,6 +714,8 @@ def _check_item(
 
 def _known(bold_text: str) -> list[str]:
     """Normalised words and phrases of a bold span that a definition could match."""
+    if _CODE_TERM.fullmatch(bold_text.strip()):
+        return [bold_text.strip()]
     t = normalize(bold_text)
     words = t.split()
     phrases = {t}
@@ -695,6 +727,7 @@ def _known(bold_text: str) -> list[str]:
 
 def cross_notebook_hits(notebooks: list[Notebook], defs: list[Definition]) -> list[Hit]:
     hits: list[Hit] = []
+    every = [a for d in defs for a in d.aliases]
     first: dict[str, Definition] = {}
     for d in defs:
         key = normalize(d.term)
@@ -720,7 +753,9 @@ def cross_notebook_hits(notebooks: list[Notebook], defs: list[Definition]) -> li
                 continue
             for cell in nb.cells:
                 if cell.kind == "markdown" and any(
-                    unpointed_mention(cell.source, a, d.notebook.short)
+                    unpointed_mention(
+                        cell.source, a, d.notebook.short, longer_aliases(a, every)
+                    )
                     for a in d.aliases
                 ):
                     where = "an optional notebook" if relies else "a later notebook"
@@ -736,15 +771,22 @@ def cross_notebook_hits(notebooks: list[Notebook], defs: list[Definition]) -> li
     return hits
 
 
-def unpointed_mention(text: str, alias: str, owner: str) -> bool:
+def unpointed_mention(
+    text: str, alias: str, owner: str, longer: Iterable[str] = ()
+) -> bool:
     """A mention of ``alias`` that is not a forward gloss pointing to its owner.
 
     "a chat template, the recipe ... (`lec_01c` looks inside)" names the notebook that
     defines the term, or its lecture ("lecture 2"), within 150 characters: an allowed
     forward mention.
     """
-    flat = " ".join(text.replace("`", "").split())
-    pattern = rf"(?<![\w-]){re.escape(alias)}(?:s|es)?(?![\w-])"
+    if _CODE_TERM.fullmatch(alias):
+        flat = " ".join(text.split())
+        pattern, flags = re.escape(alias), 0
+    else:
+        flat = prose_of(text, longer)
+        pattern = rf"(?<![\w-]){re.escape(alias)}(?:s|es)?(?![\w-])"
+        flags = re.IGNORECASE
     lecture = re.match(r"lec_(\d\d)", owner)
     pointers = [re.escape(owner.lower())]
     if lecture:
@@ -752,19 +794,20 @@ def unpointed_mention(text: str, alias: str, owner: str) -> bool:
     near = re.compile("|".join(pointers))
     return any(
         not near.search(flat[max(0, m.start() - 150) : m.end() + 150].lower())
-        for m in re.finditer(pattern, flat, re.IGNORECASE)
+        for m in re.finditer(pattern, flat, flags)
     )
 
 
 def uses(d: Definition, defs: list[Definition]) -> list[Definition]:
     """The other definitions whose term the definition ``d`` mentions."""
     own = set(d.aliases)
+    every = [a for x in defs for a in x.aliases]
     return [
         e
         for e in defs
         if e is not d
         and not own & set(e.aliases)
-        and any(mentions(d.body, a) for a in e.aliases)
+        and any(mentions(d.body, a, longer_aliases(a, every)) for a in e.aliases)
     ]
 
 
