@@ -103,7 +103,13 @@ Lectures arrive in three states. The skill adapts:
    - The next lecture's (`NN+1`) row — what concepts must this lecture *not* pre-empt.
    - The AI-Agents table at the top — what `read_agents_*.md` files have already been declared.
    Use this index throughout the rest of the procedure: any time the new content uses a concept, decide whether the concept is taught earlier (assume it, reference it), taught here (own it, add it to goals), or taught later (forward-reference it, do not duplicate the worked example).
-6. Sanity-check: the eval's must-fix findings should align with the outline's create-improve commitments (in create mode), or the maintainer's stated change (in update mode). If the eval and the maintainer's intent diverge significantly, flag it and pause for direction.
+6. **Term inventory.** Before writing any prose, list the vocabulary this lecture inherits and the vocabulary it must define, with the eval skill's scan script `.claude/skills/uoa-py-course-lecture-eval/scripts/scan_notebook_prose.py`. The rules it applies (P1, P2, 1–11) are in §"Pattern: scannable markdown style".
+   - **Inherited terms.** Run `--terms` over every earlier lecture; for lecture 11: `for MM in $(seq -f %02g 1 10); do python3 .claude/skills/uoa-py-course-lecture-eval/scripts/scan_notebook_prose.py --terms --lecture "$MM"; done`. A term defined there is reused with a `term (lec_MMx)` pointer, never defined again. Lectures written before the prose rules carry few definition bullets: a term they teach in another form still counts as taught, and its old form is a note for the maintainer, not an edit (this skill touches one lecture only).
+   - **This lecture's candidates.** Run `python3 .claude/skills/uoa-py-course-lecture-eval/scripts/scan_notebook_prose.py --inventory --lecture NN` for each candidate term's first use, later uses and proposal (definition bullet or inline gloss). Confirm each proposal with the course-vocabulary test (habit 4 of the pattern).
+   - **Definition order.** For each new term, write down the terms its definition needs; add any missing one first (rule 10) and order the bullets so each builds on those above (rule 9). Assign every bullet to the first notebook that uses the term, mandatory before optional, above the first code cell that uses it.
+
+   The output is a short table (term | defined in | status: inherited / new here / inline gloss) that feeds Phase 1 and every Phase 4 subagent prompt. In update mode, build it only for the terms the change introduces.
+7. Sanity-check: the eval's must-fix findings should align with the outline's create-improve commitments (in create mode), or the maintainer's stated change (in update mode). If the eval and the maintainer's intent diverge significantly, flag it and pause for direction.
 
 ### Phase 1 — Gap synthesis (or delta synthesis in update mode)
 
@@ -119,7 +125,7 @@ In **update mode**, the synthesis is a *delta*, not a gap:
 - What the maintainer asked to change (one sentence).
 - Which files are affected (typically 1–3, including `goals_<NN>.md`).
 - Predicted side-effects on the rubric — e.g. "adding a new optional notebook bumps optional load by ~0.3 h; declaring a new goal will fail cat 4 unless we also add a tied exercise; renaming a notebook means cross-references in other notebooks need updating."
-- Any concept the change introduces or removes — cross-check against `docs/Lectures_outline.md` (Phase 0 step 4). If the change uses a concept not yet taught, surface it: the maintainer either teaches it here (adds material + goal) or avoids it.
+- Any concept the change introduces or removes — cross-check against `docs/Lectures_outline.md` (Phase 0 step 5) and the term inventory (Phase 0 step 6). If the change uses a concept not yet taught, surface it: the maintainer either teaches it here (adds material + goal) or avoids it.
 
 Output is a short summary in chat (≤30 lines). Do not write this synthesis to disk — it is conversational, not an artefact.
 
@@ -159,18 +165,28 @@ This is the bulk of the work. Independent pieces run as concurrent subagents in 
 - **New notebook from scratch** — `lec_NNe_<topic>_vs_other_<things>.ipynb` (optional reference notebook with forward-references).
 - **`read_agents_<topic>_workflows.md`** — the AI-fluency reading. Subagent uses the 4Ds framework (Delegation / Description / Discernment / Diligence), targets ≥1500 words for `strong` tier, references current models (Claude / Copilot / ChatGPT family names from CLAUDE.md's "currentDate" frame), includes 3 concrete "try this with an assistant" tasks (one per AI-fluency goal A1, A2, A3).
 
+**Every subagent prompt carries the term inventory and the prose rules.** Paste the Phase 0 step 6 term inventory (inherited terms with their `lec_MMx` home, the terms this file defines and in what order, the terms a sibling notebook defines first) and the rules table from §"Pattern: scannable markdown style". A subagent that has not seen the rules writes inline definitions and bold emphasis; one that has not seen the inventory redefines terms an earlier lecture owns. A notebook subagent runs `python3 .claude/skills/uoa-py-course-lecture-eval/scripts/scan_notebook_prose.py <its notebook>` alongside the execution check and fixes the hits before returning PASS.
+
 **Foreground tasks** (surgical, sequential, by main agent):
 
 - **Edit `lec_NNa` for cat-7 + cat-3 fixes.** Dump cell-level structure with `python -c "import json; ..."`. Plan a single Python script that does **all** edits atomically: cell-0 replacement (hook + 3 industry uses + lecture map + forward refs to later notebooks); imports cell adjustments; train/test split implementation if the original was data-leaking; downstream cell updates for the split; deletion of any in-class exercise cells (moved to `practice_exercises/`); appended closing markdown (limitations forwarding to `lec_NNb` + career framing closing the cat-7 arc). Apply the script. Run `jupyter nbconvert --execute` to verify PASS.
 - **Build out `lec_NNc`** if the existing version is thin (zero markdown, etc.). Use a Python script to write a fresh notebook with full narrative arc: title + intro, helper function, weights/parameter contrast, K-effect sweep, recap.
-- **`lec_NN_exercises.ipynb` + `_solutions.ipynb`** (in `practice_exercises/`). One required exercise per declared required goal G1..Gn (mapped 1:1). One stretch exercise per optional goal O1..On. The exercises notebook uses placeholder code (`# Your code here` comments + no-op executable cells so the notebook runs as a template); the solutions notebook has runnable answers. Both must PASS nbconvert. Author both via a single Python script for consistency.
+- **`lec_NN_exercises.ipynb` + `_solutions.ipynb`** (in `practice_exercises/`). One required exercise per declared required goal G1..Gn (mapped 1:1). One stretch exercise per optional goal O1..On. The exercises notebook uses placeholder code (`# Your code here` comments + no-op executable cells so the notebook runs as a template); the solutions notebook has runnable answers. Both must PASS nbconvert. Author both via a single Python script for consistency. Exercises define nothing: a term an exercise needs points to its definition bullet in the notebook (`term (lec_NNx)`).
+- **Edits to existing notebooks follow the same prose rules.** Every cell the script writes or rewrites meets the hard authoring rules below and the term inventory: an inline definition in a rewritten cell becomes a definition bullet, and a term an earlier lecture defines becomes a `term (lec_MMx)` pointer. In create mode, also convert the lecture's remaining old-form definitions (the eval's cat-3 Terminology sub-check scores the whole lecture). In update mode, touch only the cells the change needs and list the other hits for the maintainer in Phase 7.
 
 **Hard authoring rules for any new notebook**:
 
 - Single imports cell at top; one constant `RANDOM_STATE = 42`; seed every `train_test_split`, `make_classification`, `KMeans`, etc. **Do not** add `random_state=42` to estimators that don't have one — `KNeighborsClassifier` and `StandardScaler` have no internal randomness and will raise `TypeError` if given a `random_state`. (This is one of the classic AI-assistant hallucinations flagged in `read_agents_knn_workflows.md` §3.)
 - One concept per code cell. Explicit variable names (`X_train_scaled`, not `Xs`).
 - Markdown cells short (~150 words max each). Beginner-friendly tone. No emojis (project style).
-- **Scannable markdown — bullets and hard line breaks over dense prose.** Beginners and teachers both skim markdown cells in a notebook; a wall of prose is the dominant cause of "I scrolled past the explanation and went straight to the code". The default for any markdown cell longer than ~3 sentences is bullets, not paragraphs. The full rule is documented under the §"Scannable markdown style" pattern below; the short version is: (a) any enumeration of three or more items goes to a bulleted or numbered list (industry-use trio, model-output components, API quirks, "what this notebook covers"); (b) any sentence longer than ~25 words gets broken across visual lines with two trailing spaces + `\n` (markdown's hard-line-break syntax), so each clause renders on its own line; (c) trim ruthlessly — if a paragraph repeats the previous one's point with different wording, delete one of them. The reference example is `lec_11a` cells 0, 4, 7 (the lecture-11 intro and §§1–2). Use that file as the visual template when writing any new markdown cell.
+- **Scannable markdown — bullets, short paragraphs and definition bullets over dense prose.** Beginners and teachers both skim markdown cells in a notebook; a wall of prose is the dominant cause of "I scrolled past the explanation and went straight to the code". The full rules, with their shared numbers and scan check IDs, are under §"Pattern: scannable markdown style" below; the short version:
+  - **P1, rule 7**: one idea per paragraph, with a blank line where its job changes; at most 3 sentences and ~60 words; a long sentence becomes two sentences, never a trailing-space line break.
+  - **Rule 8**: three or more items of one kind go to a list (industry-use trio, model-output components, API quirks, "what this notebook covers"), each bullet opening `- **Item**: …`; a one-item list only for a defined term or a command to remember. Trim ruthlessly: if a paragraph repeats the previous one's point in other words, delete one of them.
+  - **P2, rules 1–4**: every course term gets one definition bullet, `- [A/An/The] **term** is/are <kind of thing> that <what sets it apart>.`, with one term per bullet, readable on its own, saying what the thing *is*; no inline definitions, no term tables.
+  - **Rules 9–11**: definitions in prerequisite order with a complete chain (add a missing definition first) and one meaning per word; a term an earlier notebook defines gets a `term (lec_NNx)` pointer, not a second definition (Phase 0 step 6 builds the term inventory).
+  - **Rules 5–6**: bold only for vocabulary, list anchors, opening labels and callouts, emphasis in *italics*; list continuation lines indented and one blank line between blocks.
+
+  The visual template for bullets and trimming is `lec_11a` cells 0, 4, 7 (the lecture-11 intro and §§1–2); the template for paragraphs and definitions is `teach-llm-system`'s `lec_01a`, quoted in the pattern.
 - No in-notebook exercises — they live in `practice_exercises/`.
 - All notebooks must pass `nbconvert --execute` under `course_venv` at the 120-s default timeout.
 - **Forward-reference, never pre-teach.** If a new notebook needs to point at content that belongs to a later lecture (alternative algorithms, advanced techniques), use a *theory-only* reference structure (à la `lec_09f_other_clustering_algos.ipynb`): minimal or zero worked code, one-paragraph descriptions, "when to prefer over <this lecture's algo>" bullets, scikit-learn doc links, and an explicit "the full worked treatment lives in lecture <MM>" pointer. Worked code that depends on an unknown classifier/regressor is the most reliable way to confuse a beginner — keep it out.
@@ -217,8 +233,24 @@ Before running the eval, do a one-pass consistency check. The eval catches most 
    - **Across notebooks**: `grep -F` a distinctive ~10-line signature from each notebook against every other notebook in the lecture folder. Typical false-finding source: a content lift between files (e.g., we moved `lec_10d` §7 into `lec_10f` but forgot to delete the source) leaves near-duplicate cells in both places. A real positive is two notebooks both containing the same `make_classification(...)` boilerplate verbatim, the same intro paragraph, or the same helper function.
    - **Within a single notebook**: scan for two code cells that produce the same output (same DataFrame head, same plot title), and for markdown cells that restate the same definition in similar language more than twice.
    - **Apply the cat-3 reinforcement carve-out.** Deliberate "explain three times" repetition at different abstraction levels is the point of cat 3 strong tier. Mechanical copy-paste is the failure mode. The test: *does the second occurrence add value the first did not?* If yes, leave it. If no, consolidate or cite-and-defer.
+9. **Prose and terminology sweep.** The eval runs the same scan script for its cat-3 Markdown readability and Terminology sub-checks and its "Prose and terminology" table, so fix its hits first:
 
-This sweep is conversational and takes ~5 minutes. It is not a deliverable; it is a pre-flight before the eval.
+   ```
+   python3 .claude/skills/uoa-py-course-lecture-eval/scripts/scan_notebook_prose.py --lecture NN
+   ```
+
+   - **Read the report.** Each line is `short_name cell N  check-id  excerpt`; the check IDs map to the rules table in §"Pattern: scannable markdown style". After fixing one class of hit, re-run just that class with `--only` (e.g. `--only def-form,def-multi-term`).
+   - **The non-rule IDs.** `wall-of-prose`, `oversize-cell` and `cell-words` call for bullets, a split or trimming. `def-duplicate` and `used-before-defined` call for one definition in the first notebook that uses the term, mandatory before optional. `def-in-exercises` moves the definition into the notebook.
+   - **False positives and scope.** Leave a false positive (an opening label caught by `bold-emphasis`) and say why in Phase 7. In update mode, fix the hits in the cells the change touched and list the rest for the maintainer.
+
+   Then do the editorial read the script cannot. Run the script with `--terms --lecture NN` and read every definition bullet with its `uses:` line:
+   - **Rule 2**: does the bullet read alone, with no pronoun pointing outside it?
+   - **Rule 3**: does it say what the thing *is*, or only what it does and why it matters?
+   - **Rule 10**: is every technical word it relies on defined, above it or in an earlier lecture, and does each `term (lec_NNx)` pointer lead to the defining notebook?
+   - **Rule 11**: does any defined term take a second meaning elsewhere in the lecture?
+   - **P1**: in each cell you wrote or rewrote, does every paragraph do one job?
+
+Steps 1–8 are conversational and take ~5 minutes; step 9 takes longer on a lecture written before the prose rules. None of it is a deliverable; it is a pre-flight before the eval.
 
 ### Phase 6 — Re-evaluate
 
@@ -269,6 +301,7 @@ For each **new** notebook (`lec_NNb`, `lec_NNd`, `lec_NNe`) and for `read_agents
 - Point at the new `goals_<NN>.md` for the goal mapping.
 - Specify the size target (cells, words) from the outline's Phase 5 estimates.
 - Require execution verification via `jupyter nbconvert --execute` before returning.
+- Include the Phase 0 term inventory and the rules table from §"Pattern: scannable markdown style", and require a clean `scan_notebook_prose.py` report on the new notebook alongside the execution check.
 - Explicitly forbid in-notebook exercises (those live in `practice_exercises/`).
 
 The four-subagents-in-parallel pattern cut Lecture 10's authoring time roughly 4× vs. doing them sequentially.
@@ -324,55 +357,128 @@ The Lecture-10 initial `lec_10e` violated this — it fitted KNN / LogReg / Deci
 
 ### Pattern: scannable markdown style (the Lecture-11 readability lesson)
 
-A notebook's markdown cells are where the *teaching* happens — the code cells are the *evidence*. If the teaching cell is a 200-word unbroken paragraph, beginners scroll past it and teachers cannot find a clean place to pause. The fix is structural, not stylistic: bullets instead of prose where possible, and visual line breaks inside long sentences so the eye can find the parts.
+A notebook's markdown cells are where the *teaching* happens — the code cells are the *evidence*. If the teaching cell is a 200-word unbroken paragraph, beginners scroll past it and teachers cannot find a clean place to pause. The fix is structural, not stylistic: bullets instead of prose where possible, short paragraphs that each do one job, and one definition bullet per course term so a student can find what a word means.
 
-The Lecture-11 origin: the maintainer reviewed all six notebooks in `lectures_07_13_pandas_plots_scikit/lecture_11_regression_linear_polynomial/` after the first composite-`strong` pass and reported them as "too verbose" — every section had a 150–250-word prose paragraph where a bulleted list would have read in half the time. The reference fix that established this pattern is the rewrite of `lec_11a` cells 0, 4, and 7 (intro, §1 Load the data, §2 Visualise first) — open those three cells side-by-side with any other notebook in the lecture for the visual contrast.
+The Lecture-11 origin: the maintainer reviewed all six notebooks in `lectures_07_13_pandas_plots_scikit/lecture_11_regression_linear_polynomial/` after the first composite-`strong` pass and reported them as "too verbose" — every section had a 150–250-word prose paragraph where a bulleted list would have read in half the time. The reference fix that established this pattern is the rewrite of `lec_11a` cells 0, 4, and 7 (intro, §1 Load the data, §2 Visualise first) — open those three cells side-by-side with any other notebook in the lecture for the visual contrast. Those cells predate the paragraph and definition rules below: cells 4 and 7 still break sentences with trailing spaces, and cell 0 still bolds emphasis and leaves list continuation lines unindented. Copy their bullets and their trimming, not their line breaks.
 
-**The three rules**:
+The paragraph and definition rules come from the sibling course [`teach-llm-system`](https://github.com/argythana/teach-llm-system), where the maintainer first applied them to `lec_01a_first_call_tokens_context.ipynb`. The before/after pairs under habit 4 quote that notebook (its prose is CC BY 4.0).
 
-1. **Bullets over prose whenever you are enumerating.** Three or more items of the same kind — three industry uses, four summary-table columns, three API quirks, five "what this notebook covers" sub-points — go into a bulleted or numbered list, never into a sentence joined by commas and "and". Each bullet starts with the named item in bold or backticks: `- **R-squared** — fraction of variance...`, not `- The R-squared column reports the fraction of variance...`. The bold/code prefix gives the eye an anchor.
+**The rules.** Their numbers (P1, P2, 1–11) are shared with `uoa-py-course-lecture-eval` (the cat-3 Terminology sub-check and the "Prose and terminology" table of its report) and with the check IDs of its scan script, `scripts/scan_notebook_prose.py`. "Rule N" anywhere in this skill means this table.
 
-2. **Hard line breaks for long sentences.** Markdown collapses adjacent lines into one paragraph unless the previous line ends in **two trailing spaces** before the newline. Use that to break any sentence longer than ~25 words into one clause per visual line. The literal source looks like:
+| # | Rule | Scan check ID |
+| --- | --- | --- |
+| P1 | One idea per paragraph: a blank line where a paragraph's job changes (main point, mechanism, lesson, instruction, pointer); a cause and its effect stay together. | editorial; length via `para-long` |
+| P2 | Definition bullets for course terms, strict form `- [A/An/The] **term** is/are <kind of thing> that <what sets it apart>.` List bullets keep `- **Item**: …`, so "is/are" marks a definition. | `def-form` |
+| 1 | One term per definition bullet (one bold span). | `def-multi-term` |
+| 2 | Self-contained: no pronoun pointing to text outside the bullet, so it can be copied into a glossary. | `def-pronoun` + editorial |
+| 3 | Define, don't describe: say what the thing *is*; why it matters goes in the next sentence. | editorial with `--terms` |
+| 4 | One form for every course term: no inline "**X**, a …" definitions, no `\| Term \| Meaning \|` tables. | `def-inline`, `term-table`, `term-undefined` |
+| 5 | Bold means vocabulary: bold only for a term in its definition bullet, a list-bullet or table-row anchor, a defined term in a recap or "What this notebook covers" list, an opening label, and callouts. Emphasis uses italics. | `bold-emphasis` |
+| 6 | Source matches render: list continuation lines indented; one blank line between blocks; a sentence between a definition group and another list, because two lists separated only by a blank line render as one. | `lazy-continuation`, `blank-lines`, `list-merge` |
+| 7 | Paragraph limit: at most 3 sentences and about 60 words; a long sentence becomes two sentences. Trailing-two-space hard line breaks are deprecated (invisible in the source, stripped by editors and formatters). | `para-long` |
+| 8 | A one-item list only for a defined term or a backticked command/API to remember. | `single-bullet` |
+| 9 | Prerequisite order: a definition uses only everyday words, words from earlier lectures, and terms defined before it; within a group each bullet builds on those above; parts before the whole (node, edge → graph); related definitions form one tight list. | `def-order` |
+| 10 | Complete chain: every technical word a definition relies on has its own earlier definition; add a missing one first (request and response before server and client); a "term (`lec_NNx`)" pointer leads to the notebook that defines the term. | `backref-mismatch` + editorial |
+| 11 | One word, one meaning: a defined term keeps one meaning; a second sense gets its own name or other words (the server sends a response, the model writes an answer). | editorial |
 
-   ```markdown
-   We predict a continuous number from **one** input feature using the most-used model in applied statistics:  
-   Ordinary Least Squares (OLS).  
+The script also reports `wall-of-prose` (>200 words, no list, an unbroken prose run of ≥6 lines), `oversize-cell` (>300 words), `cell-words` (>160 words), `def-duplicate`, `used-before-defined` and `def-in-exercises`.
 
-   The mathematics is one library-independent thing; the Python ecosystem offers **three** popular APIs for it, each with its own usability.
-   ```
+**The six habits** (each groups the rules named in its title):
 
-   The two spaces at the end of `applied statistics:` and after `(OLS).` force a `<br>` in the rendered output. Without them, the three lines render as one run-on sentence. (A blank line between paragraphs is *also* a paragraph break, but it gives more vertical space than the hard line break — use blank lines between *thoughts*, two-trailing-spaces between *clauses of the same thought*.)
+1. **Bullets over prose whenever you are enumerating** (rule 8). Three or more items of the same kind — three industry uses, four summary-table columns, three API quirks, five "what this notebook covers" sub-points — go into a bulleted or numbered list, never into a sentence joined by commas and "and". A bullet that explains its item starts with the item in bold or backticks and a colon: `- **Real-estate price from one feature**: a first-pass valuation from square metres alone`, not `- One use is valuing an apartment from its square metres`. The bold/code prefix gives the eye an anchor, and the colon keeps a list bullet apart from a definition bullet, whose verb is "is". A one-item list is only for a defined term or a backticked command or API worth remembering; anything else is a sentence.
+
+2. **One idea per paragraph, at most three sentences** (P1, rule 7). Leave a blank line wherever the paragraph's job changes: the main point, how it works, the lesson, an instruction, a pointer. Keep a cause and its effect in one paragraph. A paragraph holds at most 3 sentences and about 60 words, and a sentence longer than ~25 words becomes two sentences. Do not use trailing-space hard line breaks (two spaces before a newline), which earlier versions of this skill recommended: they are invisible in the source, and editors and formatters strip them silently, so the layout breaks without a visible diff. `lec_11a` cell 7 needs exactly this fix: its four trailing-space lines become two paragraphs, first the instruction with its reason (plot the data first, because the eye spots curves faster than any test statistic), then how to read the plot (a clean line versus a U-shape).
 
 3. **Trim ruthlessly.** If two consecutive sentences make the same point in different words, delete one. If a list of bullets has an "obvious" entry the rest of the list implies, delete it. If a parenthetical aside ("note that...", "you might wonder...") restates what the previous sentence already said, delete it. The target for a teaching markdown cell is ≤150 words of *new* information; 200+ words is a smell, 300+ words is a refactor.
 
-**Concrete before/after**:
+4. **Definition bullets for course terms** (P2, rules 1–4, 9–11). A course term is defined once, in one form:
 
-> *Before* — one 70-word prose paragraph, no visual structure:
+   ```markdown
+   - [A/An/The] **term** is/are <kind of thing> that <what sets it apart>.
+   ```
+
+   - **One term per bullet** (rule 1): one bold span. A bullet that bolds four terms defines none of them well.
+   - **Self-contained** (rule 2): no "it", "this" or "them" pointing outside the bullet; the bullet reads correctly when copied into a glossary.
+   - **Define, don't describe** (rule 3): the bullet says what the thing *is*; why it matters goes in the next sentence, outside the bullet.
+   - **One form only** (rule 4): no inline "**X**, a …" definitions and no `| Term | Meaning |` tables.
+   - **Course-vocabulary test**: a term gets a bullet when it comes back later (a later section or notebook, `goals_<NN>.md`, the recap, the exercises) or is industry vocabulary. A one-off word gets a short inline gloss, without bold.
+   - **Define once**: in the first notebook that uses the term in teaching order, before any code cell uses it. A forward mention is a plain-text gloss ("a word piece, section 3"). A mandatory notebook never relies on a definition in an optional one, and exercises define nothing. A later notebook or lecture points back with `term (lec_NNx)`.
+   - **Prerequisite order** (rule 9): a definition uses only everyday words, words from earlier lectures and terms defined above it. Within a group each bullet builds on the ones above, parts come before the whole (node and edge before graph), and related definitions form one tight list.
+   - **Complete chain** (rule 10): every technical word a definition relies on has its own earlier definition; if one is missing, add it first. In lecture 11, a bullet saying OLS "minimises the squared residuals" needs a definition of residual above it.
+   - **One word, one meaning** (rule 11): a defined term keeps one meaning across the course; a second sense gets its own name or other words.
+
+   **Before/after, section 2 "Your first call" of `teach-llm-system`'s `lec_01a`** (P2, rules 4, 9, 10). Before, three inline definitions, one of them resting on "special token", which nothing had defined yet:
+
+   > An LLM does one thing: given text, it predicts the next **token** (a word piece, section 3), appends it, and repeats until it emits a **stop token**, a special token that means "done".
+   >
+   > Everything else, chat, coding, summarising, is that loop with a clever **prompt**, the text you send.
+
+   After, the main point, then one tight group in prerequisite order (prompt → answer → token → stop token); "special token" gets its own bullet later in the section, where the prompt's extra tokens first need it:
+
+   ```markdown
+   An LLM does one thing: given text, it predicts the next token, appends it, and repeats until it writes a stop token.
+
+   - A **prompt** is the text you send to a model.
+   - An **answer** is the text a model writes back for a prompt.
+   - A **token** is the unit of text a model reads and writes: a word, a word piece or a punctuation mark. Section 3 looks inside.
+   - A **stop token** is a token that a model writes to end its answer.
+
+   Everything else, chat, coding, summarising, is that loop with a clever prompt.
+   ```
+
+   **Before/after, section 1's server group** (rules 9, 10, 11). Before, four bold terms inline; "request" and "response" carry the definitions without being defined, and the server "answers", a word the model's answer needs:
+
+   > [**Ollama**](https://docs.ollama.com/) does this as a **server**: a program that runs in the background, keeps the model in memory, and answers requests at the address in `OLLAMA_HOST`.
+   >
+   > Your code is the **client**: it sends a request to the server and gets a response back. Guide `01c_ollama` explains the address, its port, and the **API**, the set of requests the server understands.
+
+   After, the parts first (request, response), then the roles and the API built on them, then the instance (Ollama); the server now *handles* requests:
+
+   ```markdown
+   - A **request** is what one program sends to another program to ask for one thing.
+   - A **response** is what the program sends back for one request: the result, or an error.
+   - A **server** is a program that runs in the background and handles requests at an address.
+   - A **client** is the code that sends requests to a server and reads its responses.
+   - An **API** is the set of requests a server understands, with the shape of each request and of its response.
+   - **Ollama** is a [local model server](https://docs.ollama.com/): it keeps a model in memory and handles requests at the address in `OLLAMA_HOST`.
+
+   Your code is the client. Guide `01c_ollama` explains Ollama's address, its port, and its API.
+   ```
+
+   Two smaller pairs from the same notebook:
+
+   - **One term per bullet, parts first** (rules 1, 6, 9): section 3 "Tokens" had one bullet holding four bold terms, the whole first, with an unindented continuation line: "A **tokenizer** cuts text into **tokens**, … and replaces each with its **token ID**, its position in the **vocabulary**: the fixed list of every token the model knows". The rewrite is three bullets, parts first: vocabulary (the fixed list of every token a model knows), token ID (the number that stands for one token: its position in the vocabulary), tokenizer (the program that cuts text into tokens and replaces each with its token ID). Token itself was defined in section 2.
+   - **Self-contained** (rule 2): section 5's "**Temperature** reshapes them before the draw" points "them" at the paragraph above; the rewrite reads alone: "**Temperature** is a setting that reshapes the token probabilities before the draw".
+
+5. **Bold means vocabulary** (rule 5). Bold marks only a term in its definition bullet, the anchor at the start of a list bullet or table row, a defined term in a recap or "What this notebook covers" list, a label that opens a paragraph (`**Status: …**`, `**Next: …**`), and the callouts (`⏱ **Skip if running long.**`). Emphasis uses *italics*. `lec_11a` cell 0's "from **one** input feature" and cell 4's "**Always do this**" are emphasis, so they become *one* and *Always do this*; `lec_01a` made the same change ("You edit **one line**" became "You edit *one line*"). Once bold marks only vocabulary, a student skimming a notebook for bold finds the words to learn.
+
+6. **Source matches render** (rule 6). Indent a list item's continuation lines under the item: `lec_11a` cell 0 puts "A first-pass valuation …" flush left under `1. **Real-estate price from one feature.**`, so the source suggests a new paragraph while the render runs label and explanation together inside the item. Leave one blank line between blocks (paragraph, list, heading, table, code fence), so a list never sits glued to the sentence above it. This repo has no markdown formatter hook (in `teach-llm-system` a wrap hook does both), so the script that writes the cell must do it.
+
+**Concrete before/after** (habits 1, 2, 4 and 6):
+
+> *Before* — one 51-word paragraph: a description where a definition belongs, and a seven-item enumeration buried in a sentence:
 > `statsmodels is the Python home of formal regression statistics. Its OLS output is a multi-section .summary() table that reads like the appendix of an econometrics paper: R², coefficients with standard errors, t-statistics, p-values, F-statistic, AIC/BIC, and residual diagnostics. If your job is to write a statistics report, this is the library.`
 
-> *After* — sentence framing, then a bulleted enumeration of the table's components, then the punchline. Same content, ~half the scan time:
+> *After* — a definition bullet, the framing sentence, the enumeration as a list, then the punchline: one job per block, one blank line between blocks, no trailing punctuation on the list items. Same facts, ~half the scan time:
 > ```markdown
-> `statsmodels` is the Python home of formal regression statistics:
-> - OLS,
-> - GLMs,
-> - time-series models,
-> - hypothesis tests.  
+> - **`statsmodels`** is a Python library for statistical modelling that reports the uncertainty of every fitted coefficient.
 >
-> Its OLS output is a multi-section `.summary()` table that reads like the appendix of an econometrics paper:
-> - R²,
-> - coefficients with standard errors,
-> - t-statistics,
-> - p-values,
-> - F-statistic,
-> - AIC/BIC,
-> - residual diagnostics.  
+> `statsmodels` prints its OLS output as a multi-section `.summary()` table that reads like the appendix of an econometrics paper:
+>
+> - R²
+> - coefficients with standard errors
+> - t-statistics
+> - p-values
+> - F-statistic
+> - AIC/BIC
+> - residual diagnostics
 >
 > If your job is to *write a statistics report*, this is the library.
 > ```
 
-**When prose IS the right answer**: definitions, single-sentence aphorisms ("**The math is identical, so pick by ergonomics.**"), call-out callouts (`⏱ Skip if running long.`), and section transitions of ≤2 sentences. The rule is not "ban prose" — it is "use prose for one-sentence thoughts and lists for enumerations". A bulleted list of two items is usually worse than a single sentence; a paragraph that enumerates five items is always worse than the same five as bullets.
+**When prose IS the right answer**: single-sentence aphorisms ("*The math is identical, so pick by ergonomics.*"), call-out callouts (`⏱ Skip if running long.`), and section transitions of ≤2 sentences. The rule is not "ban prose" — it is "use prose for one-sentence thoughts and lists for enumerations". A bulleted list of two items is usually worse than a single sentence; a paragraph that enumerates five items is always worse than the same five as bullets.
 
-**Apply this when authoring any new notebook, and when editing an existing one.** Pre-flight the cells in Phase 5.5 by running a one-line scan: `python -c "import json; nb=json.load(open(F)); [print(i, len(''.join(c['source']).split())) for i,c in enumerate(nb['cells']) if c['cell_type']=='markdown']"` — every cell over 200 words is a refactor candidate, every cell over 300 words is a should-fix on the readability sub-check that `uoa-py-course-lecture-eval` cat 3 now carries.
+**Apply this when authoring any new notebook, and when editing an existing one.** Pre-flight the cells in Phase 5.5 with the eval skill's scan script: `python3 .claude/skills/uoa-py-course-lecture-eval/scripts/scan_notebook_prose.py --report --lecture NN`. Each hit reads `short_name cell N  check-id  excerpt`. `uoa-py-course-lecture-eval` reads the same report: `wall-of-prose` and `oversize-cell` feed its cat-3 Markdown readability sub-check, and the rule IDs feed its cat-3 Terminology sub-check.
 
 ### Pattern: no preview sections that duplicate the next notebook (the Lecture-11 §9 lesson)
 
