@@ -225,10 +225,18 @@ Compare against targets:
 - For each notebook, check whether `goals_NN.md`'s per-file description uses "and" to link two distinct nouns ("covers KMeans clustering and Gaussian mixtures") — flag for human review.
 - Compare against Lecture 09's notebook count and rough size as a benchmark — significant outliers in either direction are worth noting, not penalising.
 - **Description-drift scan** (feeds the cat-2 sub-check). For every file listed in `goals_NN.md`, extract the named concrete references from its description sentence — industry-use examples, dataset names, hook-example noun phrases, section citations like `*(lec_NNa §B1.3)*` — and grep the corresponding file for each. A reference that does not resolve (e.g., the description names a hook that has been replaced, or cites a section that no longer exists in the file) is a description-drift hit. Report all hits under the cat-2 should-fix sub-check with the specific drift named.
-- **Markdown readability scan** (feeds the cat-3 sub-check). For every `.ipynb` in scope, walk markdown cells and compute, per cell: (a) word count, (b) longest run of consecutive non-blank source lines that contain neither `- ` / `* ` / `1.` (no list items) nor a `  \n` hard-line-break terminator (i.e., the longest unbroken prose run, measured in source lines, not rendered lines), (c) presence of a bulleted/numbered list anywhere in the cell. Report two thresholds:
-  - **>200 words AND no list AND longest unbroken prose run ≥6 source lines** → flagged as a readability hit. The cell is a wall of prose where bullets and hard line breaks would scan better.
-  - **>300 words** → flagged regardless of list/break presence. The cell is too long; the unit is bigger than students will read in one pass.
-  Report all hits under the cat-3 should-fix sub-check with `file:cell_index` and the word count. The threshold is calibrated against the `lec_11a` rewrite (the reference for the create-skill's "Scannable markdown style" pattern): cells 0, 4, 7 of that file are ≤200 words AND use bullets/hard line breaks; they should never appear as readability hits.
+- **Prose and terminology scan** (feeds the cat-3 Markdown readability and Terminology sub-checks and the report's "Prose and terminology" table). From the repository root, run `scripts/scan_notebook_prose.py`:
+
+  ```
+  python3 .claude/skills/uoa-py-course-lecture-eval/scripts/scan_notebook_prose.py --lecture NN
+  ```
+
+  The script is standard library only (any Python ≥ 3.10, `course_venv/bin/python` included). It reads every notebook of the course, because definitions and first uses cross lectures, and prints lecture NN's hits, one per line as `short_name cell N  check-id  excerpt`, then a summary line with the count per check ID. `--only ID[,ID…]` keeps only the named checks; a notebook's bucket (mandatory / optional) comes from `goals_NN.md`, as in Phase 1. The rule numbers (P1, P2, 1–11) are shared with `uoa-py-course-create-excellent-lecture`, which states each rule in full. The checks are heuristics: read every hit before reporting it.
+  - **Readability thresholds** (unchanged; words are words of prose, fenced code not counted): `wall-of-prose`, a markdown cell with >200 words, no bulleted/numbered list, and a longest unbroken prose run ≥6 source lines (a run ends at a blank line, a list item, or a line with a trailing-two-space hard break; those breaks are deprecated by rule 7 but still end a run here); `oversize-cell`, any cell >300 words, regardless of lists. Also `cell-words`, a cell >160 words (the authoring rule is about 150).
+  - **Paragraph scan** (rule 7, the length side of P1): `para-long`, a rendered paragraph over 3 sentences or 60 words. Lines joined by hard breaks are one paragraph, as Markdown renders them.
+  - **Terminology scan**: `def-form` (P2: a bullet that opens with a bold term but is neither a definition, `- **term** is/are …`, nor a list bullet, `- **Item**: …`), `def-multi-term` (rule 1), `def-pronoun` (rule 2), `def-inline`, `term-table`, `term-undefined` (rule 4), `bold-emphasis` (rule 5), `lazy-continuation`, `blank-lines`, `list-merge` (rule 6), `single-bullet` (rule 8), `def-order` (rule 9), `backref-mismatch` (rule 10's "term (`lec_NNx`)" pointers), plus `def-duplicate` (a term defined twice), `used-before-defined` (a term used in an earlier notebook than its definition, or a mandatory notebook relying on a definition in an optional one) and `def-in-exercises` (exercises define nothing).
+
+  Report the readability and paragraph hits under the cat-3 Markdown readability sub-check and the terminology hits under the cat-3 Terminology sub-check, with `file:cell_index`. Calibration: in `lec_11a`, cells 4 and 7 are never `wall-of-prose` or `oversize-cell` hits, and cell 0 is never `wall-of-prose` (it has lists); at over 500 words, cell 0 is an `oversize-cell` and `cell-words` hit, a template for bullets, not for cell length.
 - **Fine-grained duplication scan** (feeds the cat-8 sub-check). For every pair of pedagogical files in the lecture: compute coarse similarity over markdown paragraphs (>50 words) and code blocks (>10 lines) using `difflib.SequenceMatcher.ratio()` ≥ 0.8 on the lower-cased, whitespace-stripped token sequence. Flag any pair with one or more high-similarity matches. Within each notebook: scan code cells for identical or near-identical content (and, where the cached `outputs` field is populated, identical printed results — same DataFrame head, same plot title, same scalar). All hits are reported under the cat-8 should-fix sub-check; **apply the cat-3 reinforcement carve-out described in the rubric below**.
 - **Self-described preview-duplication scan** (feeds the cat-8 sub-check). The verbatim duplication scan above only catches token-level overlap; **conceptual overlap** (notebook N walks the same diagnostic on the same data that notebook N+1 covers formally) frequently survives a SequenceMatcher because the prose is paraphrased and the code uses a different fitted model. The reliable signal for conceptual duplication is the maintainer's own skip-callout text. For every markdown cell that contains `⏱ **Skip if running long.**` (the project's pause-point convention), extract the callout's body and check for **both** of these claims:
   - the callout names another notebook in this lecture as the formal owner (`lec_NNx`, `see lec_NNb §F`, `walked through formally in lec_NN`...), AND
@@ -265,6 +273,16 @@ Read each file once with the rubric in hand. For each finding, record:
 - **Severity**: must-fix (gap or needs-work) | should-fix (solid trending down) | polish (solid trending up)
 - **Evidence**: `file_path:cell_N` for notebooks, `file_path:LN` for scripts/markdown
 - **Recommendation**: a specific, actionable change. Not "improve clarity" — say "rename `lec_05c.ipynb`'s cell 4 variable `x` to `temperature_celsius` and replace the magic number `0.5` with a named constant". For category 7 (real-world relevance), recommendations flag *what is missing*, not *what to add* — the future `create-improve-lecture` skill owns content suggestions.
+
+**Definitions and paragraphs** (the editorial half of the cat-3 Terminology sub-check, which the scan cannot judge). Run `python3 .claude/skills/uoa-py-course-lecture-eval/scripts/scan_notebook_prose.py --terms --lecture NN`: it prints every definition bullet in the lecture, each followed by a `uses:` line naming the defined terms it relies on, from this or an earlier lecture. Read each definition:
+
+- **Rule 3, define, don't describe**: after is/are, does it say what the thing *is* (a kind of thing and what sets it apart), not why it matters or when to use it?
+- **Rule 2, reads alone**: copied into a glossary, does it still make sense, with no "it", "them" or "this" pointing outside the bullet?
+- **Rule 10, complete chain**: does any technical word beyond its `uses:` line need a definition that a beginner has not had in this or an earlier lecture?
+- **Rule 11, one word, one meaning**: is any defined term used elsewhere in the lecture in a second sense?
+- **P1, one idea per paragraph**: while reading the markdown, does each paragraph do one job (main point, mechanism, lesson, instruction, pointer), with a blank line where the job changes and a cause kept with its effect?
+
+A lecture written before the prose rules has few or no definition bullets, so `--terms` prints little; run `--inventory --lecture NN` instead for the candidate terms (bold words, table terms) with their later uses and whether `goals_NN.md` names them, and flag the recurring ones that no definition bullet covers. Record each finding under category 3 with `file:cell_N` evidence.
 
 Don't pad. If a category is genuinely fine, say so in two lines and move on.
 
@@ -310,14 +328,21 @@ Each drift hit appears as a single should-fix with the specific mismatch named (
 - **gap** — Forward references throughout; concepts used before introduction; difficulty jumps are large; beginner can't follow without external help.
 - **needs work** — Notable order violations; concepts introduced via exercise rather than worked example; uneven repetition.
 - **solid** — Concepts introduced before used; one worked example per new idea; difficulty climbs steadily.
-- **strong** — Difficulty gradient deliberate and visible; hard concepts revisited in two contexts ("explain three times" principle); explicit cross-lecture prerequisites.
+- **strong** — Difficulty gradient deliberate and visible; hard concepts revisited in two contexts ("explain three times" principle); explicit cross-lecture prerequisites; every course term is defined once, in a definition bullet, before its first use.
 
-**Markdown readability sub-check** (should-fix only — does not pull the tier on its own, but a large pile is a signal that the lecture is harder to read than its content warrants). Driven by the Phase 2d markdown readability scan, the eval flags:
+**Markdown readability sub-check** (should-fix only — does not pull the tier on its own, but a large pile is a signal that the lecture is harder to read than its content warrants). Driven by the Phase 2d prose and terminology scan, the eval flags:
 
-- **Wall-of-prose cells**: markdown cells with >200 words, no bullet/numbered list, and an unbroken run of ≥6 source lines (no `  \n` hard line breaks, no list items). Beginners and teachers both skim notebook markdown; a wall of prose is the dominant cause of "I scrolled past the explanation and went straight to the code". The fix is structural: convert enumerations to bullets, break long sentences across visual lines with two trailing spaces + newline. The reference template is `lec_11a` cells 0, 4, 7 — open them side-by-side with the offending cell for the visual contrast.
-- **Oversize cells**: any markdown cell >300 words. Even with bullets and line breaks present, a 300+ word cell is bigger than the unit students will read in one pass; split it across two cells with a section subheading.
+- **Wall-of-prose cells** (`wall-of-prose`): markdown cells with >200 words, no bullet/numbered list, and an unbroken run of ≥6 source lines (no list items, no trailing-space hard breaks). Beginners and teachers both skim notebook markdown; a wall of prose is the dominant cause of "I scrolled past the explanation and went straight to the code". The fix is structural: convert enumerations to bullets, and give each paragraph one idea, with a blank line where its job changes (P1). The reference template is `lec_11a` cells 0, 4, 7 — open them side-by-side with the offending cell for the visual contrast. They predate the paragraph rules (their paragraphs still use the deprecated hard breaks and are `para-long` hits), so judge paragraphs by rule 7, not by them.
+- **Oversize cells** (`oversize-cell`): any markdown cell >300 words. Even with bullets and short paragraphs, a 300+ word cell is bigger than the unit students will read in one pass; split it across two cells with a section subheading.
+- **Long paragraphs and cells** (`para-long`, `cell-words`): a paragraph over 3 sentences or 60 words (rule 7: split a long sentence into two sentences, and split a paragraph where its job changes) and a cell over 160 words (the authoring rule is about 150; trim or split).
 
-Each hit is reported as `file:cell_index — <N> words; suggest bullets + hard line breaks (see lec_11a as template)`. A strong-tier lecture can still ship with one or two readability hits — they are cosmetic — but if every notebook in the lecture has 5+ hits, escalate the headline (the rubric does not move on this sub-check alone, but the prose density compounds with cat 9 over-volume and cat 8 within-notebook duplication; flag the pattern explicitly in the verdict's bottleneck line).
+Each hit is reported as `file:cell_index — <N> words; suggest bullets + one idea per paragraph (see lec_11a as template)`. A strong-tier lecture can still ship with one or two readability hits — they are cosmetic — but if every notebook in the lecture has 5+ hits, escalate the headline (the rubric does not move on this sub-check alone, but the prose density compounds with cat 9 over-volume and cat 8 within-notebook duplication; flag the pattern explicitly in the verdict's bottleneck line).
+
+**Terminology sub-check** (driven by the Phase 2d terminology scan and the Phase 3 definitions read). The rules make every course term easy to find: one definition bullet, `- [A/An/The] **term** is/are <kind of thing> that <what sets it apart>.`, in the first notebook that uses the term, before its first use; a mandatory notebook never relies on a definition in an optional one.
+
+- **Format hits are should-fix**: `def-form`, `def-multi-term`, `def-pronoun`, `def-inline`, `term-table`, `term-undefined`, `bold-emphasis`, `lazy-continuation`, `blank-lines`, `list-merge`, `single-bullet`, `backref-mismatch`, `def-duplicate`, `def-in-exercises`, and the Phase 3 findings on rules 2, 3, 10, 11 and P1. Report one should-fix per notebook and check ID, with its cell list, not one per hit.
+- **Order hits can lower the tier**: a course term that a mandatory notebook uses before any definition, or that only an optional notebook defines (`used-before-defined`, `def-order`), counts toward the gap criterion "concepts used before introduction" above; weigh it with the other order violations. A term introduced in the wrong form (inline, in a table) is a format hit, not an order hit.
+- **Read each hit first**: the checks are heuristics. `used-before-defined` already skips a mention that names the defining `lec_NNx`, or its lecture ("lecture NN"), within 150 characters (a forward pointer); drop the remaining false positives (an opening label caught by `bold-emphasis`, a pointer list caught by `def-form`) and say why.
 
 ### 4. Exercises & assessment — required goals + optional/stretch tier
 
@@ -539,6 +564,20 @@ Total mandatory code cells: <N> (target ≤70; needs-work 70–90; gap >90; Lect
 - Largest file: <name>, <size>
 - Split candidates: <list or "none">
 - Merge candidates: <list or "none">
+
+### Prose and terminology
+
+From `scan_notebook_prose.py --lecture <NN>` (Phase 2d), after dropping false positives. Definition bullets in the lecture: <N> (`--terms`).
+
+| Check ID | Rule | Hits | Notebooks |
+| --- | --- | ---: | --- |
+| `para-long` | 7 | <N> | <lec_NNa (N), ...> |
+| `<check-id>` | <rule> | <N> | <...> |
+
+One row per check ID in the scan's summary line. Readability and paragraph checks feed the cat-3 Markdown readability sub-check; the others feed the Terminology sub-check.
+
+- **Defined twice** (`def-duplicate`): <term — `file:cell` and `file:cell`, or "none">
+- **Used before its definition** (`used-before-defined`, `def-order`): <term — used at `file:cell`, defined at `file:cell` (mandatory / optional), or "none">
 
 ## Inventory
 
