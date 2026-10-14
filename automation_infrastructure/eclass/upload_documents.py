@@ -74,7 +74,7 @@ PROFILES = {
     "teach-llm-system": Profile(
         course="ECON875",
         repo=REPO_ROOT.parent / "teach-llm-system",
-        include=("lecture_*", "README.md", "troubleshooting.md"),
+        include=("lecture_*", "README.md", "troubleshooting.md", "glossary.md"),
         pdf_glob="lecture_*/infra_tools/*.pdf",
         pdf_folder="Instructions",
     ),
